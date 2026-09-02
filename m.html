@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/ironvibe-tg/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta http-equiv="Cache-Control" content="no-store">
+  <meta name="description" content="IronVibe — offline-first workout tracker inside Telegram.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="IronVibe">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>IronVibe</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      height: var(--tg-viewport-stable-height, 100%);
+      background: #121212;
+      overflow: hidden;
+    }
+    #iv-boot {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+      color: #e8e4dc;
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-align: center;
+      white-space: pre-wrap;
+    }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            regs.forEach(function (r) { r.unregister(); });
+          });
+        }
+        if (window.caches) {
+          caches.keys().then(function (keys) {
+            keys.forEach(function (k) { caches.delete(k); });
+          });
+        }
+      } catch (e) {}
+
+      try {
+        if (window.Telegram && Telegram.WebApp) {
+          Telegram.WebApp.ready();
+          Telegram.WebApp.expand();
+        }
+      } catch (e) {}
+
+      if (typeof WebAssembly !== 'undefined') {
+        WebAssembly.compileStreaming = function (source) {
+          return Promise.resolve(source).then(function (src) {
+            if (src instanceof Response) return src.arrayBuffer();
+            if (src && typeof src.arrayBuffer === 'function') return src.arrayBuffer();
+            return src;
+          }).then(function (bytes) {
+            return WebAssembly.compile(bytes);
+          });
+        };
+        WebAssembly.instantiateStreaming = function (source, imports) {
+          return Promise.resolve(source).then(function (src) {
+            if (src instanceof Response) return src.arrayBuffer();
+            if (src && typeof src.arrayBuffer === 'function') return src.arrayBuffer();
+            return src;
+          }).then(function (bytes) {
+            return WebAssembly.instantiate(bytes, imports);
+          });
+        };
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div id="iv-boot">IRONVIBE 74d</div>
+  <script>
+    (function () {
+      var boot = document.getElementById('iv-boot');
+      function show(text) {
+        if (boot) {
+          boot.style.letterSpacing = '0';
+          boot.textContent = text;
+        }
+      }
+      window.ironVibeShowBoot = show;
+      window.ironVibeHideBoot = function () {
+        if (boot && boot.parentNode) boot.parentNode.removeChild(boot);
+        boot = null;
+      };
+      window.addEventListener('error', function (ev) {
+        show('Error: ' + (ev.message || 'script'));
+      });
+      window.addEventListener('unhandledrejection', function (ev) {
+        var r = ev.reason;
+        show('Error: ' + (r && r.message ? r.message : String(r)));
+      });
+    })();
+  </script>
+  <script src="flutter_bootstrap.js?v=74d"></script>
+</body>
+</html>
