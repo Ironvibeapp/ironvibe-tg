@@ -2,6 +2,7 @@ part of 'package:fitness_app/main.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await _ironVibeWaitForNonZeroView();
   await IronVibeTelegram.boot();
   if (IronVibeTelegram.deviceRaw != null) {
     await IronVibeStore.useChunked(
@@ -20,6 +21,16 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(ironVibeSystemOverlayFor(ironVibeThemeMode.value));
   final spike = Uri.base.queryParameters.containsKey('spike');
   runApp(IronVibeApp(home: spike ? const IronVibeSpikeScreen() : const HomeScreen()));
+}
+
+Future<void> _ironVibeWaitForNonZeroView() async {
+  for (var i = 0; i < 40; i++) {
+    final view = WidgetsBinding.instance.platformDispatcher.implicitView;
+    if (view != null && view.physicalSize.width > 0 && view.physicalSize.height > 0) {
+      return;
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+  }
 }
 
 class IronVibeApp extends StatelessWidget {

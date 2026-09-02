@@ -43,7 +43,7 @@ class _JsRawStore implements IronVibeRawStringStore {
     }
 
     _storage.callMethod('getItem'.toJS, key.toJS, cb.toJS);
-    return c.future;
+    return c.future.timeout(const Duration(seconds: 4), onTimeout: () => null);
   }
 
   @override

@@ -25,7 +25,8 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter build web --release --base-href /ironvibe-tg/
+      - run: flutter build web --release --base-href /ironvibe-tg/ --no-web-resources-cdn --no-wasm-dry-run
+      - run: cp build/web/index.html build/web/m.html
       - name: Do not publish custom domain until DNS exists
         run: rm -f build/web/CNAME
       - uses: peaceiris/actions-gh-pages@v4

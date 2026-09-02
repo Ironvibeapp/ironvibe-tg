@@ -16,7 +16,7 @@
 /mybots → IronVibe → Bot Settings → Menu Button
 ```
 
-- Configure menu button → URL: `https://tg.ironvibe.app/`
+- Configure menu button → URL: `https://ironvibeapp.github.io/ironvibe-tg/m.html`
 - Текст кнопки: `IronVibe`
 
 Либо:
@@ -25,7 +25,7 @@
 /newapp
 ```
 
-и указать тот же HTTPS URL.
+и указать тот же HTTPS URL (`https://ironvibeapp.github.io/ironvibe-tg/m.html`).
 
 Direct link (после регистрации приложения): `https://t.me/<bot>/<short_name>`
 
