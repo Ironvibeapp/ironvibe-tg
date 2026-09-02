@@ -3,10 +3,21 @@
 
 _flutter.loader.load({
   onEntrypointLoaded: async function (engineInitializer) {
-    const appRunner = await engineInitializer.initializeEngine({
-      // Telegram Android WebView often has no usable WebGL; CPU Skia still paints.
-      canvasKitForceCpuOnly: true,
-    });
-    await appRunner.runApp();
+    try {
+      const appRunner = await engineInitializer.initializeEngine({
+        canvasKitForceCpuOnly: true,
+      });
+      if (typeof window.ironVibeHideBoot === 'function') {
+        window.ironVibeHideBoot();
+      }
+      await appRunner.runApp();
+    } catch (err) {
+      var boot = document.getElementById('iv-boot');
+      if (boot) {
+        boot.style.letterSpacing = '0';
+        boot.textContent = 'Error: ' + (err && err.message ? err.message : String(err));
+      }
+      throw err;
+    }
   },
 });
