@@ -74,6 +74,27 @@ bool _jsonPickBool(Map<String, dynamic> json, List<String> preferredKeys) {
   return false;
 }
 
+String? _jsonOptionalId(dynamic value) {
+  if (value == null) return null;
+  if (value is String) {
+    final t = value.trim();
+    return t.isEmpty ? null : t;
+  }
+  if (value is num) return value.toString();
+  final t = value.toString().trim();
+  return t.isEmpty ? null : t;
+}
+
+int? _jsonOptionalInt(dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) return int.tryParse(value.trim());
+  return null;
+}
+
+String ironVibeNewEntityId() => const Uuid().v4();
+
 SetLog? _setLogFromDecoded(
   dynamic item, {
   required bool parentExerciseIsCardio,
@@ -103,10 +124,17 @@ SetLog? _setLogFromDecoded(
 /// Единый формат названий упражнений в хранилище и UI (без путаницы регистра).
 String normalizeExerciseName(String raw) => raw.trim().toUpperCase();
 
+/// Вес / повторы / длительность: trim, запятая как десятичная, double.
+double? ironVibeParseQuantity(String raw) {
+  final t = raw.trim().replaceAll(',', '.');
+  if (t.isEmpty) return null;
+  return double.tryParse(t);
+}
+
 /// Объём подхода, кг (вес × повторы), если оба значения валидны.
 double? ironVibeVolumeKgFromFields(String weightText, String repsText) {
-  final w = double.tryParse(weightText.trim().replaceAll(',', '.'));
-  final r = double.tryParse(repsText.trim().replaceAll(',', '.'));
+  final w = ironVibeParseQuantity(weightText);
+  final r = ironVibeParseQuantity(repsText);
   if (w == null || r == null || w <= 0 || r < 1) return null;
   return w * r;
 }
@@ -199,7 +227,7 @@ List<String> ironVibeCompletedExerciseNames({String? clientName}) {
   }
 
   for (final s in trainerSchedule) {
-    if (s.clientName != scoped) continue;
+    if (!ironVibeSessionBelongsToClient(s, clientName: scoped)) continue;
     if (s.isImportedHistory) continue;
     if (!ironVibeTrainerSessionIsCompleted(s)) continue;
     for (final ex in s.exercises) {
@@ -297,6 +325,7 @@ TrainerSession _normalizeTrainerSessionExerciseNames(TrainerSession s) {
     s.note,
     exercises: exs,
     id: s.id,
+    clientId: s.clientId,
     isLiveCurrent: s.isLiveCurrent,
     isScheduledPlan: s.isScheduledPlan,
     isCompleted: s.isCompleted,
@@ -309,9 +338,9 @@ String _encodeJsonPayload(Map<String, dynamic> payload) {
   return const JsonEncoder.withIndent('  ').convert(payload);
 }
 
-/// Семейное правило версий: … 1.7.2+72, 1.7.3+73 …
-const String kAppVersion = '1.7.3';
-const int kAppBuildNumber = 73;
+/// Семейное правило версий: … 1.7.3+73, 1.7.4+74 …
+const String kAppVersion = '1.7.4';
+const int kAppBuildNumber = 74;
 
 /// График прогресса: вес (красный) и повторы (как цвет фокуса полей).
 const Color kProgressChartWeightColor = Color(0xFFFF1744);

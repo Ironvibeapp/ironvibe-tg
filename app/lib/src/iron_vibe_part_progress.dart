@@ -15,8 +15,10 @@ _getProgressDataForExercise(String exerciseName, {String? clientName}) {
     final key = DateTime(d.year, d.month, d.day);
     for (final s in sets) {
       if (s.isCardio) continue;
-      final weight = double.tryParse(s.weight) ?? 0;
-      final reps = int.tryParse(s.reps) ?? 0;
+      final weight = ironVibeParseQuantity(s.weight) ?? 0;
+      final repsRaw = ironVibeParseQuantity(s.reps) ?? 0;
+      if (weight <= 0 && repsRaw < 1) continue;
+      final reps = repsRaw < 1 ? 0 : repsRaw.round();
       byDate.putIfAbsent(key, () => []).add((w: weight, r: reps));
     }
   }
@@ -31,7 +33,9 @@ _getProgressDataForExercise(String exerciseName, {String? clientName}) {
     }
   } else {
     final sessions = trainerSchedule.where(
-      (s) => s.clientName == clientName && ironVibeTrainerSessionIsCompleted(s),
+      (s) =>
+          ironVibeSessionBelongsToClient(s, clientName: clientName) &&
+          ironVibeTrainerSessionCountsAsWork(s),
     );
     for (final session in sessions) {
       final d = DateTime(

@@ -392,6 +392,23 @@ class AppLocalizationsUk extends AppLocalizations {
       'Спочатку заповніть поточну вправу, перш ніж додавати наступну.';
 
   @override
+  String get switchWorkoutTypeTitle => 'Змінити тип тренування?';
+
+  @override
+  String get switchWorkoutTypeBody =>
+      'Підходи іншого типу не збережуться в цьому тренуванні.';
+
+  @override
+  String get switchWorkoutTypeConfirm => 'Змінити';
+
+  @override
+  String get saveWorkoutNothingToSave =>
+      'Поки немає що зберігати. Вкажіть вагу й повтори або тривалість кардіо.';
+
+  @override
+  String get importedHistoryBadge => 'Імпорт';
+
+  @override
   String get clientWorkoutHistoryEmpty => 'Історія порожня';
 
   @override

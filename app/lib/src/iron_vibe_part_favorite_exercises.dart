@@ -6,9 +6,11 @@ List<String> _ironVibeFavoriteListFor({String? clientName}) {
     return ironVibeAthleteFavoriteExercises;
   }
   for (final client in clients) {
-    if (client.name == scopedClient) return client.favoriteExercises;
+    if (ironVibeClientNameKey(client.name) == ironVibeClientNameKey(scopedClient)) {
+      return client.favoriteExercises;
+    }
   }
-  return ironVibeAthleteFavoriteExercises;
+  return const <String>[];
 }
 
 List<String> ironVibeFavoriteExerciseNames({String? clientName}) {
@@ -28,7 +30,13 @@ Future<void> ironVibeToggleFavoriteExercise(
 }) async {
   final name = normalizeExerciseName(rawName);
   if (name.isEmpty) return;
+  final scoped = clientName?.trim();
+  if (scoped != null && scoped.isNotEmpty) {
+    final client = ironVibeFindClient(name: scoped);
+    if (client == null) return;
+  }
   final list = _ironVibeFavoriteListFor(clientName: clientName);
+  if (identical(list, const <String>[])) return;
   final idx = list.indexWhere((e) => normalizeExerciseName(e) == name);
   if (idx >= 0) {
     list.removeAt(idx);

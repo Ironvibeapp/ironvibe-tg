@@ -378,6 +378,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fillCurrentExerciseBeforeAdd => '请先完成当前动作，再添加下一个。';
 
   @override
+  String get switchWorkoutTypeTitle => '切换训练类型？';
+
+  @override
+  String get switchWorkoutTypeBody => '另一种类型已填写的组不会保存在这次训练中。';
+
+  @override
+  String get switchWorkoutTypeConfirm => '切换';
+
+  @override
+  String get saveWorkoutNothingToSave => '还没有可保存的内容。请填写重量和次数，或有氧时长。';
+
+  @override
+  String get importedHistoryBadge => '已导入';
+
+  @override
   String get clientWorkoutHistoryEmpty => '暂无训练记录';
 
   @override

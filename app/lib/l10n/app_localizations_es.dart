@@ -396,6 +396,23 @@ class AppLocalizationsEs extends AppLocalizations {
       'Termina el ejercicio actual antes de añadir otro.';
 
   @override
+  String get switchWorkoutTypeTitle => '¿Cambiar el tipo de entrenamiento?';
+
+  @override
+  String get switchWorkoutTypeBody =>
+      'Las series del otro tipo no se guardarán en este entrenamiento.';
+
+  @override
+  String get switchWorkoutTypeConfirm => 'Cambiar';
+
+  @override
+  String get saveWorkoutNothingToSave =>
+      'Aún no hay nada que guardar. Añade peso y repeticiones, o duración de cardio.';
+
+  @override
+  String get importedHistoryBadge => 'Importado';
+
+  @override
   String get clientWorkoutHistoryEmpty => 'Aún no hay entrenos';
 
   @override

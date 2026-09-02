@@ -392,6 +392,23 @@ class AppLocalizationsEn extends AppLocalizations {
       'Finish the current exercise before adding another one.';
 
   @override
+  String get switchWorkoutTypeTitle => 'Switch workout type?';
+
+  @override
+  String get switchWorkoutTypeBody =>
+      'Sets already entered for the other type will not be saved with this workout.';
+
+  @override
+  String get switchWorkoutTypeConfirm => 'Switch';
+
+  @override
+  String get saveWorkoutNothingToSave =>
+      'Nothing to save yet. Add weight and reps, or duration for cardio.';
+
+  @override
+  String get importedHistoryBadge => 'Imported';
+
+  @override
   String get clientWorkoutHistoryEmpty => 'No workouts yet';
 
   @override

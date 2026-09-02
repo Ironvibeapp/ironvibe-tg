@@ -397,6 +397,23 @@ class AppLocalizationsDe extends AppLocalizations {
       'Schließe zuerst die aktuelle Übung ab, bevor du eine weitere hinzufügst.';
 
   @override
+  String get switchWorkoutTypeTitle => 'Trainingstyp wechseln?';
+
+  @override
+  String get switchWorkoutTypeBody =>
+      'Bereits eingegebene Sätze des anderen Typs werden mit diesem Training nicht gespeichert.';
+
+  @override
+  String get switchWorkoutTypeConfirm => 'Wechseln';
+
+  @override
+  String get saveWorkoutNothingToSave =>
+      'Noch nichts zu speichern. Gewicht und Wiederholungen oder Cardio-Dauer eintragen.';
+
+  @override
+  String get importedHistoryBadge => 'Importiert';
+
+  @override
   String get clientWorkoutHistoryEmpty => 'Noch keine Einheiten';
 
   @override

@@ -194,6 +194,73 @@ class SetData {
   }
 }
 
+bool ironVibeDraftHasOpposingModeInput(
+  List<ExerciseData> exercises, {
+  required bool switchingToCardio,
+}) {
+  for (final ex in exercises) {
+    for (final s in ex.sets) {
+      if (switchingToCardio) {
+        if (s.weight.text.trim().isNotEmpty ||
+            s.reps.text.trim().isNotEmpty ||
+            rirIndicatesMeaningfulUserChoice(s.rir.text)) {
+          return true;
+        }
+      } else if (s.duration.text.trim().isNotEmpty ||
+          s.intensity.text.trim().isNotEmpty) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+Future<bool> ironVibeConfirmSwitchWorkoutType(BuildContext context) async {
+  final l = AppLocalizations.of(context)!;
+  final result = await showDialog<bool>(
+    context: context,
+    builder: (ctx) {
+      final dpal = IronVibePalette.of(ctx);
+      return AlertDialog(
+        backgroundColor: dpal.dialog,
+        shape: ironVibeDialogShape(dpal),
+        title: Text(
+          l.switchWorkoutTypeTitle,
+          style: TextStyle(
+            color: dpal.textPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          l.switchWorkoutTypeBody,
+          style: TextStyle(color: dpal.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              l.cancel,
+              style: TextStyle(color: dpal.textMuted),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(
+              l.switchWorkoutTypeConfirm,
+              style: TextStyle(
+                color: dpal.textPrimary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+  return result == true;
+}
+
 Map<String, dynamic> ironVibeSetDataToDraftJson(SetData s) => {
   'weight': s.weight.text,
   'reps': s.reps.text,
@@ -482,7 +549,7 @@ Widget _buildAppBarLogo(BuildContext context) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
   return GestureDetector(
     onTap: () {
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).maybePop();
     },
     child: SvgPicture.asset(
       isDark ? 'assets/logo_on_dark.svg' : 'assets/logo_on_light.svg',

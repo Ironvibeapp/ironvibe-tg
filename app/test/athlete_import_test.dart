@@ -141,6 +141,22 @@ void main() {
     expect(clients, hasLength(1));
   });
 
+  test('re-import without ids is skipped by content fingerprint', () {
+    final day = _athleteDay(DateTime(2026, 6, 1), exercise: 'Row');
+    expect(day.id, isNull);
+    expect(
+      ironVibeImportAthleteHistory(workouts: [day], clientName: 'Alex').status,
+      IronVibeAthleteImportStatus.success,
+    );
+    expect(trainerSchedule, hasLength(1));
+    expect(
+      ironVibeImportAthleteHistory(workouts: [day], clientName: 'Boris').status,
+      IronVibeAthleteImportStatus.nothingNew,
+    );
+    expect(clients, hasLength(1));
+    expect(trainerSchedule, hasLength(1));
+  });
+
   test('re-import of the same workout ids adds nothing', () {
     final workouts = [
       _athleteDay(DateTime(2026, 3, 1), id: 'same-id'),

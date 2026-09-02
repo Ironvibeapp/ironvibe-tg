@@ -12,9 +12,7 @@ DateTime _rhythmMondayOf(DateTime d) {
   return day.subtract(Duration(days: day.weekday - 1));
 }
 
-double? _rhythmParseNum(String raw) {
-  return double.tryParse(raw.trim().replaceAll(',', '.'));
-}
+double? _rhythmParseNum(String raw) => ironVibeParseQuantity(raw);
 
 /// Силовая нагрузка за календарный день. Кардио полностью игнорируется.
 class IronVibeDayLoad {
@@ -70,7 +68,9 @@ Iterable<WorkoutLog> ironVibeRhythmHistoryFor({String? clientName}) {
   if (scoped == null || scoped.isEmpty) return workoutHistory;
   return trainerSchedule
       .where(
-        (s) => s.clientName == scoped && ironVibeTrainerSessionIsCompleted(s),
+        (s) =>
+            ironVibeSessionBelongsToClient(s, clientName: scoped) &&
+            ironVibeTrainerSessionCountsAsWork(s),
       )
       .map((s) => WorkoutLog(s.dateTime, s.exercises, id: s.id));
 }

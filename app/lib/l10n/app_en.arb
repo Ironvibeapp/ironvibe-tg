@@ -129,6 +129,11 @@
   "workoutRecoveryDelete": "Delete workout",
   "workoutRecoverySessionMissing": "The scheduled client workout was removed. The unsaved draft has been cleared.",
   "fillCurrentExerciseBeforeAdd": "Finish the current exercise before adding another one.",
+  "switchWorkoutTypeTitle": "Switch workout type?",
+  "switchWorkoutTypeBody": "Sets already entered for the other type will not be saved with this workout.",
+  "switchWorkoutTypeConfirm": "Switch",
+  "saveWorkoutNothingToSave": "Nothing to save yet. Add weight and reps, or duration for cardio.",
+  "importedHistoryBadge": "Imported",
   "clientWorkoutHistoryEmpty": "No workouts yet",
   "exerciseNumberedTitle": "Exercise #{n}",
   "@exerciseNumberedTitle": {

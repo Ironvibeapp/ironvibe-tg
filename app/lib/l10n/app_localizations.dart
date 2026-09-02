@@ -846,6 +846,36 @@ abstract class AppLocalizations {
   /// **'Finish the current exercise before adding another one.'**
   String get fillCurrentExerciseBeforeAdd;
 
+  /// No description provided for @switchWorkoutTypeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch workout type?'**
+  String get switchWorkoutTypeTitle;
+
+  /// No description provided for @switchWorkoutTypeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets already entered for the other type will not be saved with this workout.'**
+  String get switchWorkoutTypeBody;
+
+  /// No description provided for @switchWorkoutTypeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch'**
+  String get switchWorkoutTypeConfirm;
+
+  /// No description provided for @saveWorkoutNothingToSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to save yet. Add weight and reps, or duration for cardio.'**
+  String get saveWorkoutNothingToSave;
+
+  /// No description provided for @importedHistoryBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported'**
+  String get importedHistoryBadge;
+
   /// No description provided for @clientWorkoutHistoryEmpty.
   ///
   /// In en, this message translates to:

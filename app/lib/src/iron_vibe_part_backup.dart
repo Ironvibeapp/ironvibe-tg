@@ -79,7 +79,9 @@ List<WorkoutLog> ironVibeAthleteWorkoutsFromBackupMap(Map<String, dynamic> data)
   for (final item in list) {
     final map = _jsonMap(item);
     if (map == null) continue;
-    out.add(WorkoutLog.fromJson(map));
+    try {
+      out.add(WorkoutLog.fromJson(map));
+    } catch (_) {}
   }
   return out;
 }
@@ -151,9 +153,17 @@ IronVibeAthleteImportOutcome ironVibeImportAthleteHistory({
     );
   }
 
-  clients.add(
-    Client(name, '', weight: weight.trim(), height: height.trim()),
+  final client = Client(
+    name,
+    '',
+    id: ironVibeNewEntityId(),
+    weight: weight.trim(),
+    height: height.trim(),
   );
+  for (final s in sessions) {
+    s.clientId = client.id;
+  }
+  clients.add(client);
   trainerSchedule.addAll(sessions);
   trainerSchedule.sort((a, b) => a.dateTime.compareTo(b.dateTime));
   return IronVibeAthleteImportOutcome(
@@ -237,28 +247,25 @@ Future<void> _exportToJson(
   var loadingOpen = false;
   try {
     const uuid = Uuid();
-    if (!isTrainer) {
-      for (var w in workoutHistory) {
-        w.id ??= uuid.v4();
-      }
-    } else {
-      for (var s in trainerSchedule) {
-        s.id ??= uuid.v4();
-      }
+    for (var w in workoutHistory) {
+      w.id ??= uuid.v4();
+    }
+    for (var s in trainerSchedule) {
+      s.id ??= uuid.v4();
+    }
+    for (var c in clients) {
+      c.id ??= uuid.v4();
     }
     await DataService.saveData();
 
     final Map<String, dynamic> payload = {
       'version': _kExportDataVersion,
       'exerciseBank': exerciseBank,
-      if (!isTrainer)
-        'workoutHistory': workoutHistory.map((e) => e.toJson()).toList(),
-      if (!isTrainer) 'favoriteExercises': ironVibeAthleteFavoriteExercises,
+      'workoutHistory': workoutHistory.map((e) => e.toJson()).toList(),
+      'favoriteExercises': ironVibeAthleteFavoriteExercises,
       'exerciseMuscleGroups': ironVibeExerciseMuscleGroupsToJsonMap(),
-      if (isTrainer) ...{
-        'clients': clients.map((e) => e.toJson()).toList(),
-        'trainerSchedule': trainerSchedule.map((e) => e.toJson()).toList(),
-      },
+      'clients': clients.map((e) => e.toJson()).toList(),
+      'trainerSchedule': trainerSchedule.map((e) => e.toJson()).toList(),
     };
 
     if (!context.mounted) return;
@@ -387,7 +394,7 @@ Future<Map<String, dynamic>?> _pickBackupJsonMap(BuildContext context) async {
       return null;
     }
 
-    final version = data['version'] as int? ?? 1;
+    final version = _jsonOptionalInt(data['version']) ?? 1;
     if (version > _kExportDataVersion) {
       _showImportSnackBar(
         context,
@@ -423,51 +430,125 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
       return;
     }
 
-    final existingWorkoutIds = workoutHistory
-        .map((w) => w.id)
-        .whereType<String>()
-        .toSet();
-    final existingSessionIds = trainerSchedule
-        .map((s) => s.id)
-        .whereType<String>()
-        .toSet();
-    final existingClientNames = clients.map((c) => c.name).toSet();
+    final savedHistory = List<WorkoutLog>.from(workoutHistory);
+    final savedClients = [
+      for (final c in clients)
+        Client(
+          c.name,
+          c.goal,
+          id: c.id,
+          weight: c.weight,
+          height: c.height,
+          notes: c.notes,
+          favoriteExercises: List<String>.from(c.favoriteExercises),
+        ),
+    ];
+    final savedSchedule = [
+      for (final s in trainerSchedule)
+        TrainerSession(
+          s.dateTime,
+          s.clientName,
+          s.note,
+          exercises: [
+            for (final ex in s.exercises)
+              ExerciseLog(
+                ex.name,
+                List<SetLog>.from(ex.sets),
+                isCardio: ex.isCardio,
+              ),
+          ],
+          id: s.id,
+          clientId: s.clientId,
+          isLiveCurrent: s.isLiveCurrent,
+          isScheduledPlan: s.isScheduledPlan,
+          isCompleted: s.isCompleted,
+          isImportedHistory: s.isImportedHistory,
+        ),
+    ];
+    final savedBank = List<String>.from(exerciseBank);
+    final savedFav = List<String>.from(ironVibeAthleteFavoriteExercises);
+    final savedMuscles = Map<String, IronVibeMuscleGroup>.from(
+      ironVibeExerciseMuscleGroups,
+    );
+
+    void restoreSnapshot() {
+      workoutHistory = savedHistory;
+      clients = savedClients;
+      trainerSchedule = savedSchedule;
+      exerciseBank = savedBank;
+      ironVibeAthleteFavoriteExercises = savedFav;
+      ironVibeExerciseMuscleGroups
+        ..clear()
+        ..addAll(savedMuscles);
+    }
 
     try {
-      if (!isTrainer) {
-        final list = data['workoutHistory'] as List? ?? [];
-        for (var item in list) {
-          final map = _jsonMap(item);
-          if (map == null) continue;
-          final id = map['id'] as String?;
-          if (id != null && existingWorkoutIds.contains(id)) continue;
-          final w = WorkoutLog.fromJson(map);
-          if (w.id != null) existingWorkoutIds.add(w.id!);
-          workoutHistory.add(w);
-        }
-      } else {
-        final clientList = data['clients'] as List? ?? [];
-        for (var item in clientList) {
-          final map = _jsonMap(item);
-          if (map == null) continue;
-          final c = Client.fromJson(map);
-          if (existingClientNames.contains(c.name)) continue;
-          existingClientNames.add(c.name);
-          clients.add(c);
-        }
-        final scheduleList = data['trainerSchedule'] as List? ?? [];
-        for (var item in scheduleList) {
-          final map = _jsonMap(item);
-          if (map == null) continue;
-          final id = map['id'] as String?;
-          if (id != null && existingSessionIds.contains(id)) continue;
-          final s = TrainerSession.fromJson(map);
-          if (s.id != null) existingSessionIds.add(s.id!);
-          trainerSchedule.add(s);
-        }
+      List<dynamic> asList(dynamic raw) {
+        if (raw == null) return const [];
+        if (raw is List) return raw;
+        throw const FormatException('expected list');
       }
 
-      final bank = data['exerciseBank'] as List? ?? [];
+      final existingWorkoutIds = workoutHistory
+          .map((w) => w.id)
+          .whereType<String>()
+          .toSet();
+      final existingWorkoutFingerprints = workoutHistory
+          .map(ironVibeWorkoutContentFingerprint)
+          .toSet();
+      final existingSessionIds = trainerSchedule
+          .map((s) => s.id)
+          .whereType<String>()
+          .toSet();
+      final existingSessionFingerprints = trainerSchedule
+          .map(ironVibeTrainerSessionContentFingerprint)
+          .toSet();
+
+      for (final item in asList(data['workoutHistory'])) {
+        final map = _jsonMap(item);
+        if (map == null) continue;
+        final w = WorkoutLog.fromJson(map);
+        final id = w.id?.trim();
+        if (id != null && id.isNotEmpty && existingWorkoutIds.contains(id)) {
+          continue;
+        }
+        final fp = ironVibeWorkoutContentFingerprint(w);
+        if (existingWorkoutFingerprints.contains(fp)) continue;
+        w.id = (id == null || id.isEmpty) ? ironVibeNewEntityId() : id;
+        existingWorkoutIds.add(w.id!);
+        existingWorkoutFingerprints.add(fp);
+        workoutHistory.add(w);
+      }
+
+      for (final item in asList(data['clients'])) {
+        final map = _jsonMap(item);
+        if (map == null) continue;
+        final c = Client.fromJson(map);
+        if (c.id != null && clients.any((x) => x.id == c.id)) continue;
+        if (ironVibeClientNameTaken(c.name)) continue;
+        c.id ??= ironVibeNewEntityId();
+        clients.add(c);
+      }
+
+      for (final item in asList(data['trainerSchedule'])) {
+        final map = _jsonMap(item);
+        if (map == null) continue;
+        final s = TrainerSession.fromJson(map);
+        final id = s.id?.trim();
+        if (id != null && id.isNotEmpty && existingSessionIds.contains(id)) {
+          continue;
+        }
+        final fp = ironVibeTrainerSessionContentFingerprint(s);
+        if (existingSessionFingerprints.contains(fp)) continue;
+        s.id = (id == null || id.isEmpty) ? ironVibeNewEntityId() : id;
+        final owner = ironVibeFindClient(name: s.clientName, id: s.clientId);
+        if (owner != null) s.clientId = owner.id;
+        existingSessionIds.add(s.id!);
+        existingSessionFingerprints.add(fp);
+        trainerSchedule.add(s);
+      }
+
+      final bank = asList(data['exerciseBank']);
       for (var name in bank) {
         final s = normalizeExerciseName(
           name is String ? name : name.toString(),
@@ -475,18 +556,16 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
         if (s.isNotEmpty) ensureExerciseInBank(s);
       }
 
-      if (!isTrainer) {
-        final favorites = data['favoriteExercises'] as List? ?? [];
-        for (var name in favorites) {
-          final s = normalizeExerciseName(
-            name is String ? name : name.toString(),
-          );
-          if (s.isEmpty) continue;
-          if (!ironVibeAthleteFavoriteExercises.any(
-            (e) => normalizeExerciseName(e) == s,
-          )) {
-            ironVibeAthleteFavoriteExercises.add(s);
-          }
+      final favorites = asList(data['favoriteExercises']);
+      for (var name in favorites) {
+        final s = normalizeExerciseName(
+          name is String ? name : name.toString(),
+        );
+        if (s.isEmpty) continue;
+        if (!ironVibeAthleteFavoriteExercises.any(
+          (e) => normalizeExerciseName(e) == s,
+        )) {
+          ironVibeAthleteFavoriteExercises.add(s);
         }
       }
 
@@ -505,13 +584,11 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
       trainerSchedule = trainerSchedule
           .map(_normalizeTrainerSessionExerciseNames)
           .toList();
+      ironVibeEnsurePersistentIds();
       ironVibeRebuildExerciseBankFromCompletedWorkouts();
 
-      if (!isTrainer) {
-        workoutHistory.sort((a, b) => a.date.compareTo(b.date));
-      } else {
-        trainerSchedule.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-      }
+      workoutHistory.sort((a, b) => a.date.compareTo(b.date));
+      trainerSchedule.sort((a, b) => a.dateTime.compareTo(b.dateTime));
       await DataService.saveData();
 
       if (context.mounted) {
@@ -525,6 +602,7 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
         );
       }
     } catch (e, stack) {
+      restoreSnapshot();
       debugPrint('Import parse error: $e\n$stack');
       showError(locale.importInvalidBackupFile);
     }

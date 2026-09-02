@@ -354,24 +354,25 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     }
   }
 
-  void _flushAutoSaveDraft() {
-    if (!_hasDraftWorkout) return;
-    unawaited(
-      DataService.saveActiveWorkoutDraft(
-        ActiveWorkoutDraft(
-          kind: ActiveWorkoutDraftKind.personal,
-          targetDate: widget.targetDate ?? widget.restoredDraft?.targetDate,
-          isCardio: _isCardio,
-          exercisesJson: ironVibeExerciseListToDraftJson(_exercises),
-          savedAt: DateTime.now(),
-        ),
-      ),
-    );
-  }
-
   Future<void> _clearAutoSaveDraft() async {
     ironVibeStopWorkoutAutoSave();
+    await _draftWrite;
     await DataService.clearActiveWorkoutDraft();
+  }
+
+  Future<void>? _draftWrite;
+
+  void _flushAutoSaveDraft() {
+    if (!_hasDraftWorkout) return;
+    _draftWrite = DataService.saveActiveWorkoutDraft(
+      ActiveWorkoutDraft(
+        kind: ActiveWorkoutDraftKind.personal,
+        targetDate: widget.targetDate ?? widget.restoredDraft?.targetDate,
+        isCardio: _isCardio,
+        exercisesJson: ironVibeExerciseListToDraftJson(_exercises),
+        savedAt: DateTime.now(),
+      ),
+    );
   }
 
   @override
@@ -504,6 +505,18 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     );
   }
 
+  Future<void> _setSessionCardio(bool cardio) async {
+    if (_isCardio == cardio) return;
+    if (ironVibeDraftHasOpposingModeInput(
+      _exercises,
+      switchingToCardio: cardio,
+    )) {
+      final ok = await ironVibeConfirmSwitchWorkoutType(context);
+      if (!ok || !mounted) return;
+    }
+    setState(() => _isCardio = cardio);
+  }
+
   Future<void> _finishWorkout({bool celebrate = false}) async {
     final logs = _logsFromCurrentDraft();
     for (final log in logs) {
@@ -511,11 +524,13 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
     }
 
     if (logs.isNotEmpty) {
-      workoutHistory.add(WorkoutLog(widget.targetDate ?? DateTime.now(), logs));
+      workoutHistory.add(
+        ironVibeNewWorkoutLog(widget.targetDate ?? DateTime.now(), logs),
+      );
     }
 
-    unawaited(_clearAutoSaveDraft());
-    DataService.saveData();
+    await _clearAutoSaveDraft();
+    await DataService.saveData();
 
     if (celebrate && logs.isNotEmpty && mounted) {
       await ironVibeShowWorkoutComplete(context);
@@ -617,11 +632,23 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
           case null:
             break;
           case _WorkoutSessionExitAction.discard:
-            unawaited(_clearAutoSaveDraft());
+            await _clearAutoSaveDraft();
+            if (!context.mounted) return;
             _exercises.clear();
             Navigator.of(context).pop();
             break;
           case _WorkoutSessionExitAction.saveAndLeave:
+            if (!_canFinishWorkout) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    AppLocalizations.of(context)!.saveWorkoutNothingToSave,
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+              break;
+            }
             await _finishWorkout(celebrate: true);
             break;
         }
@@ -663,7 +690,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                           children: [
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _isCardio = false),
+                                onTap: () => _setSessionCardio(false),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 12,
@@ -689,7 +716,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                             const SizedBox(width: 8),
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _isCardio = true),
+                                onTap: () => _setSessionCardio(true),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 12,
@@ -1087,6 +1114,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           return Padding(
             padding: const EdgeInsets.only(bottom: 30),
             child: _EditableHistoryExerciseBlock(
+              key: ObjectKey(entry.value),
               workout: workout,
               exerciseIndex: exIndex,
               onDataChanged: () => setState(() {}),
@@ -1208,6 +1236,7 @@ class _EditableHistoryExerciseBlock extends StatefulWidget {
   final VoidCallback onDataChanged;
 
   const _EditableHistoryExerciseBlock({
+    super.key,
     required this.workout,
     required this.exerciseIndex,
     required this.onDataChanged,
@@ -1255,6 +1284,15 @@ class _EditableHistoryExerciseBlockState
       sets: _setDataList,
       isCardio: false,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant _EditableHistoryExerciseBlock oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.exerciseIndex >= widget.workout.exercises.length) return;
+    final next = widget.workout.exercises[widget.exerciseIndex];
+    if (identical(next, _exercise)) return;
+    _exercise = next;
   }
 
   Future<void> _pickExerciseName() async {
@@ -1373,6 +1411,9 @@ class _EditableHistoryExerciseBlockState
       exList.removeAt(widget.exerciseIndex);
       _setDataList.clear();
     });
+    if (exList.isEmpty) {
+      workoutHistory.remove(widget.workout);
+    }
     DataService.saveData();
     widget.onDataChanged();
   }

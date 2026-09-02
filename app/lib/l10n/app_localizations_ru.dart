@@ -394,6 +394,23 @@ class AppLocalizationsRu extends AppLocalizations {
       'Сначала заполните текущее упражнение.';
 
   @override
+  String get switchWorkoutTypeTitle => 'Сменить тип тренировки?';
+
+  @override
+  String get switchWorkoutTypeBody =>
+      'Подходы другого типа не сохранятся в этой тренировке.';
+
+  @override
+  String get switchWorkoutTypeConfirm => 'Сменить';
+
+  @override
+  String get saveWorkoutNothingToSave =>
+      'Пока нечего сохранять. Укажите вес и повторы или длительность кардио.';
+
+  @override
+  String get importedHistoryBadge => 'Импорт';
+
+  @override
   String get clientWorkoutHistoryEmpty => 'История пуста';
 
   @override

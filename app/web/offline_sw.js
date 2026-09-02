@@ -1,4 +1,4 @@
-const CACHE = 'ironvibe-tg-1.7.3';
+const CACHE = 'ironvibe-tg-1.7.4';
 const PRECACHE = [
   './',
   './index.html',

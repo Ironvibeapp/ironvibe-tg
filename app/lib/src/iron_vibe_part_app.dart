@@ -12,7 +12,6 @@ void main() async {
     await IronVibeStore.init();
   }
   IronVibeSync.onRemoteApplied = DataService.loadData;
-  // Не блокируем первый кадр: нативный AudioPlayer; при первом бипе всё равно await initialize().
   unawaited(IronVibeTimerSounds.initialize());
   await DataService.loadData();
   await ironVibeLoadThemePreference();
@@ -62,9 +61,6 @@ class IronVibeApp extends StatelessWidget {
           theme: ironVibeBuildTheme(Brightness.light),
           darkTheme: ironVibeBuildTheme(Brightness.dark),
           themeMode: mode,
-          builder: (context, child) {
-            return child ?? const SizedBox.shrink();
-          },
           home: home,
         );
       },
@@ -291,6 +287,19 @@ class _HomeScreenState extends State<HomeScreen>
             SnackBar(
               content: Text(AppLocalizations.of(context)!.workoutRecoverySessionMissing),
               duration: const Duration(seconds: 3),
+            ),
+          );
+          return;
+        }
+        if (ironVibeTrainerSessionIsCompleted(session)) {
+          unawaited(DataService.clearActiveWorkoutDraft());
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TrainerWorkoutSessionScreen(
+                session: session,
+                mode: TrainerSessionUiMode.history,
+              ),
             ),
           );
           return;
