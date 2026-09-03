@@ -113,9 +113,21 @@ void ironVibeRenameMuscleGroup(String oldName, String newName) {
   ironVibeExerciseMuscleGroups.putIfAbsent(n, () => group);
 }
 
-void ironVibeMergeMuscleGroupsFromBackup(dynamic decoded) {
+void ironVibeMergeMuscleGroupsFromBackup(
+  dynamic decoded, {
+  Iterable<String>? onlyNames,
+}) {
   final incoming = ironVibeParseExerciseMuscleGroups(decoded);
+  Set<String>? allow;
+  if (onlyNames != null) {
+    allow = <String>{};
+    for (final raw in onlyNames) {
+      final name = normalizeExerciseName(raw);
+      if (name.isNotEmpty) allow.add(name);
+    }
+  }
   incoming.forEach((name, group) {
+    if (allow != null && !allow.contains(name)) return;
     ironVibeExerciseMuscleGroups.putIfAbsent(name, () => group);
   });
 }

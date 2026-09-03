@@ -106,9 +106,10 @@ void main() {
     );
     expect(ironVibeLastLoggedTrainerSessionForClient('Ivan'), isNull);
     expect(ironVibePersonalProgressRows(clientName: 'Ivan'), isEmpty);
+    expect(ironVibeRhythmHistoryFor(clientName: 'Ivan'), hasLength(1));
     expect(
-      ironVibeRhythmHistoryFor(clientName: 'Ivan'),
-      isEmpty,
+      ironVibeRhythmHistoryFor(clientName: 'Ivan').single.exercises.single.name,
+      'Curl',
     );
   });
 

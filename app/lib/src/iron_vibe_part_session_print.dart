@@ -326,6 +326,57 @@ Future<void> ironVibeShareSessionPdf(
     Navigator.of(context).pop();
     loadingOpen = false;
 
+    if (kIsWeb) {
+      if (!context.mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) {
+          final dpal = IronVibePalette.of(ctx);
+          return AlertDialog(
+            backgroundColor: dpal.dialog,
+            shape: ironVibeDialogShape(dpal),
+            title: Text(
+              l.printSession,
+              style: TextStyle(
+                color: dpal.textPrimary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(l.cancel, style: TextStyle(color: dpal.textMuted)),
+              ),
+              TextButton(
+                onPressed: () {
+                  ironVibeTriggerDownload(
+                    bytes,
+                    safeFileName,
+                    'application/pdf',
+                  );
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                    SnackBar(
+                      content: Text(safeFileName),
+                      duration: const Duration(seconds: 3),
+                    ),
+                  );
+                },
+                child: Text(
+                  l.save,
+                  style: TextStyle(
+                    color: dpal.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     try {
       await ironVibeShareFile(
         bytes: bytes,

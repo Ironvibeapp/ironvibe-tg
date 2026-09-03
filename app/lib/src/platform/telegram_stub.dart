@@ -19,6 +19,14 @@ class IronVibeTelegram {
 
   static Future<void> boot() async {}
 
+  static void syncBackButton(bool canPop) {}
+
+  static bool requestFileDownload({
+    required String url,
+    required String fileName,
+  }) =>
+      false;
+
   static void applyChrome(ThemeMode mode) {}
 
   static Future<void> openUrl(Uri uri) async {

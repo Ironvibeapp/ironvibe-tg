@@ -13,6 +13,26 @@ List<String> _ironVibeFavoriteListFor({String? clientName}) {
   return const <String>[];
 }
 
+List<String> ironVibeNormalizedNamesFromJsonList(dynamic raw) {
+  if (raw is! List) return const [];
+  final out = <String>[];
+  for (final item in raw) {
+    if (item == null) continue;
+    final s = normalizeExerciseName(item is String ? item : item.toString());
+    if (s.isNotEmpty) out.add(s);
+  }
+  return _dedupeNormalizedExerciseBank(out);
+}
+
+void ironVibeMergeFavoriteNames(List<String> target, Iterable<String> incoming) {
+  for (final raw in incoming) {
+    final s = normalizeExerciseName(raw);
+    if (s.isEmpty) continue;
+    if (target.any((e) => normalizeExerciseName(e) == s)) continue;
+    target.add(s);
+  }
+}
+
 List<String> ironVibeFavoriteExerciseNames({String? clientName}) {
   return List<String>.from(_ironVibeFavoriteListFor(clientName: clientName));
 }

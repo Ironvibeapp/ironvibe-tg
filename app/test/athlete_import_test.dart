@@ -16,16 +16,22 @@ void main() {
   late List<TrainerSession> savedSchedule;
   late List<Client> savedClients;
   late List<String> savedBank;
+  late List<String> savedAthleteFavorites;
+  late Map<String, IronVibeMuscleGroup> savedMuscleGroups;
 
   setUp(() {
     savedHistory = List.of(workoutHistory);
     savedSchedule = List.of(trainerSchedule);
     savedClients = List.of(clients);
     savedBank = List.of(exerciseBank);
+    savedAthleteFavorites = List.of(ironVibeAthleteFavoriteExercises);
+    savedMuscleGroups = Map.of(ironVibeExerciseMuscleGroups);
     workoutHistory = [];
     trainerSchedule = [];
     clients = [];
     exerciseBank = [];
+    ironVibeAthleteFavoriteExercises = [];
+    ironVibeExerciseMuscleGroups = {};
   });
 
   tearDown(() {
@@ -33,6 +39,10 @@ void main() {
     trainerSchedule = savedSchedule;
     clients = savedClients;
     exerciseBank = savedBank;
+    ironVibeAthleteFavoriteExercises = savedAthleteFavorites;
+    ironVibeExerciseMuscleGroups
+      ..clear()
+      ..addAll(savedMuscleGroups);
   });
 
   test('client name uniqueness ignores case and trim', () {
@@ -128,6 +138,7 @@ void main() {
       trainerSchedule.where(ironVibeTrainerSessionIsCompleted),
       hasLength(2),
     );
+    expect(ironVibeRhythmHistoryFor(clientName: 'Ivan'), hasLength(2));
   });
 
   test('import refuses a taken name and does not write sessions', () {
@@ -304,5 +315,67 @@ void main() {
     final second = ironVibeAthleteImportSessionId(w);
     expect(first, second);
     expect(first, startsWith('athleteImport:'));
+  });
+
+  test('athlete backup catalog merge keeps favorites and muscle tags', () {
+    ironVibeMergeAthleteBackupCatalog({
+      'favoriteExercises': ['Bench Press', 'bench press', 'Row'],
+      'exerciseMuscleGroups': {
+        'BENCH PRESS': 'chest',
+        'Row': 'back',
+        'unknown': 'not-a-group',
+      },
+    });
+
+    expect(ironVibeAthleteFavoriteExercises, ['BENCH PRESS', 'ROW']);
+    expect(ironVibeMuscleGroupForName('bench press'), IronVibeMuscleGroup.chest);
+    expect(ironVibeMuscleGroupForName('row'), IronVibeMuscleGroup.back);
+    expect(ironVibeMuscleGroupForName('unknown'), isNull);
+  });
+
+  test('import copies athlete favorites and tags without mixing names', () {
+    exerciseBank.add('SQUAT');
+    ironVibeAthleteFavoriteExercises.add('SQUAT');
+    ironVibeExerciseMuscleGroups['SQUAT'] = IronVibeMuscleGroup.chest;
+
+    final workouts = [
+      _athleteDay(DateTime(2026, 3, 1), id: 'w-curl', exercise: 'Weird Curl'),
+      _athleteDay(DateTime(2026, 3, 2), id: 'w-press', exercise: 'Weird Press'),
+    ];
+
+    final outcome = ironVibeImportAthleteHistory(
+      workouts: workouts,
+      clientName: 'Ivan',
+      favoriteExercises: ['weird curl', 'Ghost Fly'],
+      exerciseMuscleGroups: {
+        'WEIRD CURL': 'armFlex',
+        'WEIRD PRESS': 'chest',
+        'GHOST FLY': 'shoulders',
+        'SQUAT': 'quad',
+        'DEADLIFT': 'back',
+      },
+    );
+
+    expect(outcome.status, IronVibeAthleteImportStatus.success);
+    expect(clients.single.favoriteExercises, ['WEIRD CURL', 'GHOST FLY']);
+    expect(
+      ironVibeIsFavoriteExercise('Weird Curl', clientName: 'Ivan'),
+      isTrue,
+    );
+    expect(
+      ironVibeIsFavoriteExercise('Ghost Fly', clientName: 'Ivan'),
+      isTrue,
+    );
+    expect(ironVibeAthleteFavoriteExercises, ['SQUAT']);
+    expect(exerciseBank, ['SQUAT']);
+    expect(ironVibeMuscleGroupForName('Weird Curl'), IronVibeMuscleGroup.armFlex);
+    expect(ironVibeMuscleGroupForName('Weird Press'), IronVibeMuscleGroup.chest);
+    expect(ironVibeMuscleGroupForName('Ghost Fly'), IronVibeMuscleGroup.shoulders);
+    expect(ironVibeMuscleGroupForName('Squat'), IronVibeMuscleGroup.chest);
+    expect(ironVibeMuscleGroupForName('Deadlift'), isNull);
+    expect(
+      ironVibeRhythmHistoryFor(clientName: 'Ivan').map((w) => w.exercises.single.name).toSet(),
+      {'Weird Curl', 'Weird Press'},
+    );
   });
 }

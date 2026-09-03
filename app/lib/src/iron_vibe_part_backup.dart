@@ -102,11 +102,32 @@ String ironVibeAthleteImportSessionId(WorkoutLog w) {
   return 'athleteImport:${parts.join('~')}';
 }
 
+void ironVibeMergeAthleteBackupCatalog(Map<String, dynamic> data) {
+  ironVibeMergeFavoriteNames(
+    ironVibeAthleteFavoriteExercises,
+    ironVibeNormalizedNamesFromJsonList(data['favoriteExercises']),
+  );
+  ironVibeMergeMuscleGroupsFromBackup(data['exerciseMuscleGroups']);
+}
+
+Set<String> ironVibeExerciseNamesFromWorkouts(Iterable<WorkoutLog> workouts) {
+  final names = <String>{};
+  for (final w in workouts) {
+    for (final ex in w.exercises) {
+      final n = normalizeExerciseName(ex.name);
+      if (n.isNotEmpty) names.add(n);
+    }
+  }
+  return names;
+}
+
 IronVibeAthleteImportOutcome ironVibeImportAthleteHistory({
   required List<WorkoutLog> workouts,
   required String clientName,
   String weight = '',
   String height = '',
+  List<String> favoriteExercises = const [],
+  dynamic exerciseMuscleGroups,
 }) {
   final name = clientName.trim();
   if (name.isEmpty) {
@@ -153,12 +174,23 @@ IronVibeAthleteImportOutcome ironVibeImportAthleteHistory({
     );
   }
 
+  final favorites = _dedupeNormalizedExerciseBank(
+    favoriteExercises.map(normalizeExerciseName),
+  );
   final client = Client(
     name,
     '',
     id: ironVibeNewEntityId(),
     weight: weight.trim(),
     height: height.trim(),
+    favoriteExercises: favorites,
+  );
+  ironVibeMergeMuscleGroupsFromBackup(
+    exerciseMuscleGroups,
+    onlyNames: {
+      ...ironVibeExerciseNamesFromWorkouts(workouts),
+      ...favorites,
+    },
   );
   for (final s in sessions) {
     s.clientId = client.id;
@@ -256,7 +288,6 @@ Future<void> _exportToJson(
     for (var c in clients) {
       c.id ??= uuid.v4();
     }
-    await DataService.saveData();
 
     final Map<String, dynamic> payload = {
       'version': _kExportDataVersion,
@@ -267,6 +298,41 @@ Future<void> _exportToJson(
       'clients': clients.map((e) => e.toJson()).toList(),
       'trainerSchedule': trainerSchedule.map((e) => e.toJson()).toList(),
     };
+    // Encode on this isolate. `compute` + any `await` before the download
+    // click eats the user gesture in Telegram's WebView, so the button
+    // appears to do nothing.
+    final jsonString = _encodeJsonPayload(payload);
+    final bytes = Uint8List.fromList(utf8.encode(jsonString));
+    final now = DateTime.now();
+    final datePart =
+        '${now.year}_${now.month.toString().padLeft(2, '0')}_${now.day.toString().padLeft(2, '0')}';
+    final baseName = isTrainer ? 'IronVibe_Backup_Coach' : 'IronVibe_Backup';
+    final safeFileName = '${baseName}_$datePart.json';
+
+    if (kIsWeb) {
+      // Download before any Navigator.pop: popping the sheet can drop the
+      // user-gesture in Telegram's WebView, so the tap looks dead.
+      final messenger =
+          context.mounted ? ScaffoldMessenger.maybeOf(context) : null;
+      ironVibeTriggerDownload(bytes, safeFileName, 'application/json');
+      if (popHostDialog && context.mounted) {
+        Navigator.of(context).pop();
+      }
+      messenger?.showSnackBar(
+        SnackBar(
+          content: Text(safeFileName),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      unawaited(DataService.saveData());
+      unawaited(ironVibeMarkBackupNudgeAcknowledged());
+      return;
+    }
+
+    if (popHostDialog) {
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+    }
 
     if (!context.mounted) return;
     showDialog<void>(
@@ -284,21 +350,9 @@ Future<void> _exportToJson(
     );
     loadingOpen = true;
 
-    final jsonString = await compute(_encodeJsonPayload, payload);
-    final bytes = Uint8List.fromList(utf8.encode(jsonString));
-    final now = DateTime.now();
-    final datePart =
-        '${now.year}_${now.month.toString().padLeft(2, '0')}_${now.day.toString().padLeft(2, '0')}';
-    final baseName = isTrainer ? 'IronVibe_Backup_Coach' : 'IronVibe_Backup';
-    final safeFileName = '${baseName}_$datePart.json';
-
     if (!context.mounted) return;
     Navigator.of(context).pop();
     loadingOpen = false;
-    if (popHostDialog) {
-      if (!context.mounted) return;
-      Navigator.of(context).pop();
-    }
 
     try {
       await ironVibeShareFile(
@@ -308,6 +362,7 @@ Future<void> _exportToJson(
         text: locale.shareText,
       );
       await ironVibeMarkBackupNudgeAcknowledged();
+      await DataService.saveData();
     } catch (shareError) {
       debugPrint('Share error: $shareError');
       if (context.mounted) {
@@ -356,17 +411,13 @@ Future<Map<String, dynamic>?> _pickBackupJsonMap(BuildContext context) async {
   final locale = AppLocalizations.of(context)!;
   try {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
+      type: kIsWeb ? FileType.any : FileType.custom,
+      allowedExtensions: kIsWeb ? null : const ['json'],
       withData: true,
     );
     if (result == null || result.files.isEmpty) return null;
 
     final file = result.files.single;
-    final name = file.name.toLowerCase();
-    if (!name.endsWith('.json')) {
-      _showImportSnackBar(context, locale.importInvalidBackupFile);
-      return null;
-    }
     final bytes = file.bytes;
     if (bytes == null || bytes.isEmpty) {
       _showImportSnackBar(context, locale.importInvalidBackupFile);
@@ -556,20 +607,7 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
         if (s.isNotEmpty) ensureExerciseInBank(s);
       }
 
-      final favorites = asList(data['favoriteExercises']);
-      for (var name in favorites) {
-        final s = normalizeExerciseName(
-          name is String ? name : name.toString(),
-        );
-        if (s.isEmpty) continue;
-        if (!ironVibeAthleteFavoriteExercises.any(
-          (e) => normalizeExerciseName(e) == s,
-        )) {
-          ironVibeAthleteFavoriteExercises.add(s);
-        }
-      }
-
-      ironVibeMergeMuscleGroupsFromBackup(data['exerciseMuscleGroups']);
+      ironVibeMergeAthleteBackupCatalog(data);
 
       exerciseBank = _dedupeNormalizedExerciseBank(exerciseBank);
       ironVibeAthleteFavoriteExercises =
@@ -743,6 +781,10 @@ Future<void> _importAthleteHistoryFromJson(BuildContext context) async {
                       clientName: nameController.text,
                       weight: weightController.text,
                       height: heightController.text,
+                      favoriteExercises: ironVibeNormalizedNamesFromJsonList(
+                        data['favoriteExercises'],
+                      ),
+                      exerciseMuscleGroups: data['exerciseMuscleGroups'],
                     );
                     switch (outcome.status) {
                       case IronVibeAthleteImportStatus.nameEmpty:

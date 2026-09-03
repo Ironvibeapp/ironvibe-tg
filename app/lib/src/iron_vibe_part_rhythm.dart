@@ -70,7 +70,7 @@ Iterable<WorkoutLog> ironVibeRhythmHistoryFor({String? clientName}) {
       .where(
         (s) =>
             ironVibeSessionBelongsToClient(s, clientName: scoped) &&
-            ironVibeTrainerSessionCountsAsWork(s),
+            ironVibeTrainerSessionInClientHistory(s),
       )
       .map((s) => WorkoutLog(s.dateTime, s.exercises, id: s.id));
 }

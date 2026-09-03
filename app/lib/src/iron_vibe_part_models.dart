@@ -899,28 +899,56 @@ class DataService {
 
   static Future<void> loadData() async {
     final prefs = IronVibeStore.kv;
+    var persistBackfill = true;
 
-    final bankJson = await prefs.getStringList(_keyExerciseBank);
+    Future<T?> readOrSkip<T>(Future<T?> Function() load) async {
+      try {
+        return await load();
+      } catch (err, st) {
+        persistBackfill = false;
+        debugPrint('IronVibe: skip persist backfill after load error: $err\n$st');
+        return null;
+      }
+    }
+
+    final bankJson = await readOrSkip(() => prefs.getStringList(_keyExerciseBank));
     if (bankJson != null) {
       exerciseBank = bankJson;
     }
 
-    final historyJson = await prefs.getString(_keyWorkoutHistory);
+    final historyJson = await readOrSkip(() => prefs.getString(_keyWorkoutHistory));
     if (historyJson != null) {
-      workoutHistory = _parseWorkoutHistoryDecoded(jsonDecode(historyJson));
+      try {
+        workoutHistory = _parseWorkoutHistoryDecoded(jsonDecode(historyJson));
+      } catch (err, st) {
+        persistBackfill = false;
+        debugPrint('IronVibe: не удалось разобрать историю: $err\n$st');
+      }
     }
 
-    final clientsJson = await prefs.getString(_keyClients);
+    final clientsJson = await readOrSkip(() => prefs.getString(_keyClients));
     if (clientsJson != null) {
-      clients = _parseClientsDecoded(jsonDecode(clientsJson));
+      try {
+        clients = _parseClientsDecoded(jsonDecode(clientsJson));
+      } catch (err, st) {
+        persistBackfill = false;
+        debugPrint('IronVibe: не удалось разобрать клиентов: $err\n$st');
+      }
     }
 
-    final scheduleJson = await prefs.getString(_keyTrainerSchedule);
+    final scheduleJson = await readOrSkip(() => prefs.getString(_keyTrainerSchedule));
     if (scheduleJson != null) {
-      trainerSchedule = _parseTrainerScheduleDecoded(jsonDecode(scheduleJson));
+      try {
+        trainerSchedule = _parseTrainerScheduleDecoded(jsonDecode(scheduleJson));
+      } catch (err, st) {
+        persistBackfill = false;
+        debugPrint('IronVibe: не удалось разобрать расписание: $err\n$st');
+      }
     }
 
-    final draftJson = await prefs.getString(_keyActiveWorkoutDraft);
+    final draftJson = await readOrSkip(
+      () => prefs.getString(_keyActiveWorkoutDraft),
+    );
     if (draftJson != null) {
       try {
         final decoded = jsonDecode(draftJson);
@@ -936,12 +964,16 @@ class DataService {
       activeWorkoutDraft = null;
     }
 
-    final favoritesJson = await prefs.getStringList(_keyAthleteFavoriteExercises);
+    final favoritesJson = await readOrSkip(
+      () => prefs.getStringList(_keyAthleteFavoriteExercises),
+    );
     if (favoritesJson != null) {
       ironVibeAthleteFavoriteExercises = favoritesJson;
     }
 
-    final muscleGroupsJson = await prefs.getString(_keyExerciseMuscleGroups);
+    final muscleGroupsJson = await readOrSkip(
+      () => prefs.getString(_keyExerciseMuscleGroups),
+    );
     if (muscleGroupsJson != null && muscleGroupsJson.isNotEmpty) {
       try {
         ironVibeExerciseMuscleGroups = ironVibeParseExerciseMuscleGroups(
@@ -966,33 +998,41 @@ class DataService {
     ironVibePurgeExpiredUnloggedTrainerSessions();
     ironVibeEnsurePersistentIds();
     ironVibeRebuildExerciseBankFromCompletedWorkouts();
-    await saveData(enqueueSync: false);
+    if (persistBackfill) {
+      await saveData(enqueueSync: false);
+    }
   }
 
   static Future<void> saveData({bool enqueueSync = true}) async {
     final prefs = IronVibeStore.kv;
+    try {
+      await prefs.setStringList(_keyExerciseBank, exerciseBank);
+      await prefs.setStringList(
+        _keyAthleteFavoriteExercises,
+        ironVibeAthleteFavoriteExercises,
+      );
 
-    await prefs.setStringList(_keyExerciseBank, exerciseBank);
-    await prefs.setStringList(
-      _keyAthleteFavoriteExercises,
-      ironVibeAthleteFavoriteExercises,
-    );
-    
-    final historyJson = jsonEncode(workoutHistory.map((e) => e.toJson()).toList());
-    await prefs.setString(_keyWorkoutHistory, historyJson);
+      final historyJson = jsonEncode(workoutHistory.map((e) => e.toJson()).toList());
+      await prefs.setString(_keyWorkoutHistory, historyJson);
 
-    final clientsJson = jsonEncode(clients.map((e) => e.toJson()).toList());
-    await prefs.setString(_keyClients, clientsJson);
+      final clientsJson = jsonEncode(clients.map((e) => e.toJson()).toList());
+      await prefs.setString(_keyClients, clientsJson);
 
-    final scheduleJson = jsonEncode(trainerSchedule.map((e) => e.toJson()).toList());
-    await prefs.setString(_keyTrainerSchedule, scheduleJson);
+      final scheduleJson = jsonEncode(
+        trainerSchedule.map((e) => e.toJson()).toList(),
+      );
+      await prefs.setString(_keyTrainerSchedule, scheduleJson);
 
-    await prefs.setString(
-      _keyExerciseMuscleGroups,
-      jsonEncode(ironVibeExerciseMuscleGroupsToJsonMap()),
-    );
-    if (enqueueSync) {
-      unawaited(IronVibeSync.markLocalDirty());
+      await prefs.setString(
+        _keyExerciseMuscleGroups,
+        jsonEncode(ironVibeExerciseMuscleGroupsToJsonMap()),
+      );
+      if (enqueueSync) {
+        unawaited(IronVibeSync.markLocalDirty());
+      }
+    } catch (err, st) {
+      debugPrint('IronVibe saveData failed: $err\n$st');
+      rethrow;
     }
   }
 

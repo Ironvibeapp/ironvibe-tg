@@ -28,6 +28,9 @@ class _JsRawStore implements IronVibeRawStringStore {
 
   @override
   Future<String?> getItem(String key) {
+    if (!ironVibeIsTelegramStorageKey(key)) {
+      return Future<String?>.value(null);
+    }
     final c = Completer<String?>();
     void cb(JSAny? error, JSAny? result) {
       if (c.isCompleted) return;
@@ -43,11 +46,17 @@ class _JsRawStore implements IronVibeRawStringStore {
     }
 
     _storage.callMethod('getItem'.toJS, key.toJS, cb.toJS);
-    return c.future.timeout(const Duration(seconds: 4), onTimeout: () => null);
+    return c.future.timeout(
+      const Duration(seconds: 8),
+      onTimeout: () => throw TimeoutException('Telegram getItem $key'),
+    );
   }
 
   @override
   Future<void> setItem(String key, String value) {
+    if (!ironVibeIsTelegramStorageKey(key)) {
+      return Future.error(ArgumentError.value(key, 'key', 'Telegram storage key'));
+    }
     final c = Completer<void>();
     void cb(JSAny? error, JSAny? result) {
       if (c.isCompleted) return;
@@ -59,11 +68,17 @@ class _JsRawStore implements IronVibeRawStringStore {
     }
 
     _storage.callMethod('setItem'.toJS, key.toJS, value.toJS, cb.toJS);
-    return c.future;
+    return c.future.timeout(
+      const Duration(seconds: 8),
+      onTimeout: () => throw TimeoutException('Telegram setItem $key'),
+    );
   }
 
   @override
   Future<void> removeItem(String key) {
+    if (!ironVibeIsTelegramStorageKey(key)) {
+      return Future.value();
+    }
     final c = Completer<void>();
     void cb(JSAny? error, JSAny? result) {
       if (c.isCompleted) return;
@@ -75,7 +90,10 @@ class _JsRawStore implements IronVibeRawStringStore {
     }
 
     _storage.callMethod('removeItem'.toJS, key.toJS, cb.toJS);
-    return c.future;
+    return c.future.timeout(
+      const Duration(seconds: 8),
+      onTimeout: () => throw TimeoutException('Telegram removeItem $key'),
+    );
   }
 }
 
@@ -187,6 +205,27 @@ class IronVibeTelegram {
       }
     } catch (err, st) {
       debugPrint('IronVibe Telegram boot failed: $err\n$st');
+    }
+  }
+
+  /// Bot API 8.0+. Requires an HTTPS URL; blob/data URLs usually fail.
+  static bool requestFileDownload({
+    required String url,
+    required String fileName,
+  }) {
+    try {
+      if (!_versionAtLeast('8.0')) return false;
+      final uri = Uri.tryParse(url);
+      if (uri == null || uri.scheme != 'https') return false;
+      final wa = _webApp;
+      if (wa == null) return false;
+      final params = JSObject();
+      params.setProperty('url'.toJS, url.toJS);
+      params.setProperty('file_name'.toJS, fileName.toJS);
+      wa.callMethod('downloadFile'.toJS, params);
+      return true;
+    } catch (_) {
+      return false;
     }
   }
 

@@ -94,35 +94,73 @@ class IronVibeMemoryRawStore implements IronVibeRawStringStore {
 /// conservative on DeviceStorage.
 const int kIronVibeKvChunkSize = 3500;
 
+/// Telegram CloudStorage / DeviceStorage keys: 1–128 chars of A–Z a–z 0–9 _ -
+final RegExp kIronVibeTelegramStorageKeyPattern = RegExp(
+  r'^[A-Za-z0-9_-]{1,128}$',
+);
+
+bool ironVibeIsTelegramStorageKey(String key) =>
+    kIronVibeTelegramStorageKeyPattern.hasMatch(key);
+
 class IronVibeChunkedKvStore implements IronVibeKvStore {
   IronVibeChunkedKvStore(this._raw, {this.chunkSize = kIronVibeKvChunkSize});
 
   final IronVibeRawStringStore _raw;
   final int chunkSize;
 
-  static String _nKey(String key) => '$key\u{1e}n';
-  static String _partKey(String key, int i) => '$key\u{1e}$i';
+  /// Telegram CloudStorage/DeviceStorage keys: 1–128 chars of A–Z a–z 0–9 _ -
+  static String _nKey(String key) => '${key}__n';
+  static String _partKey(String key, int i) => '${key}__$i';
+  static String _legacyNKey(String key) => '$key\u{1e}n';
+  static String _legacyPartKey(String key, int i) => '$key\u{1e}$i';
+
+  Future<int> _partCount(String nKey) async {
+    final nRaw = await _raw.getItem(nKey);
+    return int.tryParse(nRaw ?? '') ?? 0;
+  }
+
+  Future<void> _clearScheme(
+    String key, {
+    required String Function(String) nKeyOf,
+    required String Function(String, int) partKeyOf,
+  }) async {
+    final nKey = nKeyOf(key);
+    final n = await _partCount(nKey);
+    for (var i = 0; i < n; i++) {
+      await _raw.removeItem(partKeyOf(key, i));
+    }
+    await _raw.removeItem(nKey);
+  }
 
   Future<void> _clearParts(String key) async {
-    final nRaw = await _raw.getItem(_nKey(key));
-    final n = int.tryParse(nRaw ?? '') ?? 0;
+    await _clearScheme(key, nKeyOf: _nKey, partKeyOf: _partKey);
+    await _clearScheme(key, nKeyOf: _legacyNKey, partKeyOf: _legacyPartKey);
+  }
+
+  Future<String?> _readChunks(
+    String key, {
+    required String Function(String) nKeyOf,
+    required String Function(String, int) partKeyOf,
+  }) async {
+    final n = await _partCount(nKeyOf(key));
+    if (n <= 0) return null;
+    final buf = StringBuffer();
     for (var i = 0; i < n; i++) {
-      await _raw.removeItem(_partKey(key, i));
+      buf.write(await _raw.getItem(partKeyOf(key, i)) ?? '');
     }
-    await _raw.removeItem(_nKey(key));
+    return buf.toString();
   }
 
   @override
   Future<String?> getString(String key) async {
-    final nRaw = await _raw.getItem(_nKey(key));
-    final n = int.tryParse(nRaw ?? '') ?? 0;
-    if (n > 0) {
-      final buf = StringBuffer();
-      for (var i = 0; i < n; i++) {
-        buf.write(await _raw.getItem(_partKey(key, i)) ?? '');
-      }
-      return buf.toString();
-    }
+    final modern = await _readChunks(key, nKeyOf: _nKey, partKeyOf: _partKey);
+    if (modern != null) return modern;
+    final legacy = await _readChunks(
+      key,
+      nKeyOf: _legacyNKey,
+      partKeyOf: _legacyPartKey,
+    );
+    if (legacy != null) return legacy;
     return _raw.getItem(key);
   }
 
