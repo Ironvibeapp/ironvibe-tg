@@ -7,27 +7,15 @@ class AthleteScreen extends StatefulWidget {
   State<AthleteScreen> createState() => _AthleteScreenState();
 }
 
-class _AthleteScreenState extends State<AthleteScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _enter;
+class _AthleteScreenState extends State<AthleteScreen> {
   bool _deloadNudgeChecked = false;
 
   @override
   void initState() {
     super.initState();
-    _enter = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 760),
-    )..forward();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(_maybeShowDeloadNudge());
     });
-  }
-
-  @override
-  void dispose() {
-    _enter.dispose();
-    super.dispose();
   }
 
   Future<void> _maybeShowDeloadNudge() async {
@@ -90,10 +78,8 @@ class _AthleteScreenState extends State<AthleteScreen>
   }
 
   Animation<double> _stagger(double begin, double end) {
-    return CurvedAnimation(
-      parent: _enter,
-      curve: Interval(begin, end, curve: Curves.easeOutCubic),
-    );
+    assert(begin <= end);
+    return kAlwaysCompleteAnimation;
   }
 
   @override
@@ -127,7 +113,7 @@ class _AthleteScreenState extends State<AthleteScreen>
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                         minHeight: constraints.maxHeight,
@@ -161,7 +147,6 @@ class _AthleteScreenState extends State<AthleteScreen>
                                   child: IronVibePrimaryCta(
                                     label: ironVibeSentenceCase(l.startWorkout),
                                     icon: Icons.play_arrow_rounded,
-                                    sheen: _stagger(0.38, 0.92),
                                     onPressed: () {
                                       Navigator.push(
                                         context,

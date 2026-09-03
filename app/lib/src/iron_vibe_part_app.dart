@@ -51,7 +51,7 @@ class IronVibeApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           navigatorKey: ironVibeNavigatorKey,
           navigatorObservers: [IronVibeTelegram.navObserver],
-          themeAnimationDuration: const Duration(milliseconds: 220),
+          themeAnimationDuration: Duration.zero,
           title: 'IronVibe',
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: const [
@@ -117,7 +117,7 @@ class _IronVibeThemeToggle extends StatelessWidget {
                   child: const SizedBox.expand(),
                 ),
                 AnimatedPositioned(
-                  duration: const Duration(milliseconds: 220),
+                  duration: Duration.zero,
                   curve: Curves.easeOutCubic,
                   left: isDark ? _w - _pad - thumbW : _pad,
                   top: _pad,
@@ -176,35 +176,21 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _enter;
+class _HomeScreenState extends State<HomeScreen> {
   bool _backupNudgeChecked = false;
 
   @override
   void initState() {
     super.initState();
-    _enter = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 760),
-    )..forward();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       unawaited(_maybeShowWorkoutRecoveryDialog());
     });
   }
 
-  @override
-  void dispose() {
-    _enter.dispose();
-    super.dispose();
-  }
-
   Animation<double> _stagger(double begin, double end) {
-    return CurvedAnimation(
-      parent: _enter,
-      curve: Interval(begin, end, curve: Curves.easeOutCubic),
-    );
+    assert(begin <= end);
+    return kAlwaysCompleteAnimation;
   }
 
   Future<void> _maybeShowWorkoutRecoveryDialog() async {
@@ -334,7 +320,6 @@ class _HomeScreenState extends State<HomeScreen>
     final theme = Theme.of(context).textTheme;
     final pal = IronVibePalette.of(context);
     final l = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: SafeArea(
         top: true,
@@ -349,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen>
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                         minHeight: constraints.maxHeight,
@@ -366,31 +351,16 @@ class _HomeScreenState extends State<HomeScreen>
                               children: [
                                 IronVibeEnter(
                                   animation: _stagger(0.0, 0.46),
-                                  child: ShaderMask(
-                                    blendMode: BlendMode.srcIn,
-                                    shaderCallback: (bounds) => LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: isDark
-                                          ? const [
-                                              Color(0xFFFFFFFF),
-                                              kIronVibeAccent,
-                                            ]
-                                          : const [
-                                              Color(0xFF1B1F26),
-                                              Color(0xFF8A7048),
-                                            ],
-                                    ).createShader(bounds),
-                                    child: Text(
-                                      l.appName.toUpperCase(),
-                                      textAlign: TextAlign.center,
-                                      style: (theme.displayMedium ??
-                                              const TextStyle(fontSize: 48))
-                                          .copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: 4.0,
-                                        height: 1.1,
-                                      ),
+                                  child: Text(
+                                    l.appName.toUpperCase(),
+                                    textAlign: TextAlign.center,
+                                    style: (theme.displayMedium ??
+                                            const TextStyle(fontSize: 48))
+                                        .copyWith(
+                                      color: pal.textPrimary,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: 4.0,
+                                      height: 1.1,
                                     ),
                                   ),
                                 ),
@@ -416,7 +386,6 @@ class _HomeScreenState extends State<HomeScreen>
                                   child: IronVibePrimaryCta(
                                     label: ironVibeSentenceCase(l.trainSelf),
                                     icon: Icons.person_rounded,
-                                    sheen: _stagger(0.38, 0.92),
                                     onPressed: () {
                                       Navigator.push(
                                         context,

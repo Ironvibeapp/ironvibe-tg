@@ -33,49 +33,42 @@ class IronVibeRhythmCard extends StatelessWidget {
       child: SizedBox(
         height: height,
         width: double.infinity,
-        child: TweenAnimationBuilder<double>(
-          tween: Tween(begin: 1.0, end: snapshot.daysPerWeek.clamp(1.0, 6.0)),
-          duration: const Duration(milliseconds: 900),
-          curve: Curves.easeOutCubic,
-          builder: (context, value, _) {
-            return CustomPaint(
-              painter: _IronVibeRhythmGaugePainter(
-                needleAt: value,
-                trackColor: pal.borderSubtle,
-                tickColor: pal.textMuted,
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        rate,
-                        style: TextStyle(
-                          color: zone,
-                          fontSize: height >= 160 ? 36 : 32,
-                          fontWeight: FontWeight.w800,
-                          height: 1.0,
-                          letterSpacing: 0.4,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        l.rhythmPerWeek,
-                        style: TextStyle(
-                          color: pal.textSecondary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                    ],
+        child: CustomPaint(
+          painter: _IronVibeRhythmGaugePainter(
+            needleAt: snapshot.daysPerWeek.clamp(1.0, 6.0),
+            trackColor: pal.borderSubtle,
+            tickColor: pal.textMuted,
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    rate,
+                    style: TextStyle(
+                      color: zone,
+                      fontSize: height >= 160 ? 36 : 32,
+                      fontWeight: FontWeight.w800,
+                      height: 1.0,
+                      letterSpacing: 0.4,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l.rhythmPerWeek,
+                    style: TextStyle(
+                      color: pal.textSecondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ],
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
@@ -245,7 +238,7 @@ class RhythmInsightScreen extends StatelessWidget {
             ),
             Expanded(
               child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(22, 8, 22, 28),
                 child: Align(
                   alignment: Alignment.topCenter,

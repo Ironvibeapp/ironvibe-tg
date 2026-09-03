@@ -701,7 +701,7 @@ class IronVibePinnedHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class IronVibePressScale extends StatefulWidget {
+class IronVibePressScale extends StatelessWidget {
   final Widget child;
   final VoidCallback onPressed;
   final bool mediumHaptic;
@@ -714,51 +714,11 @@ class IronVibePressScale extends StatefulWidget {
   });
 
   @override
-  State<IronVibePressScale> createState() => _IronVibePressScaleState();
-}
-
-class _IronVibePressScaleState extends State<IronVibePressScale>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _press;
-
-  @override
-  void initState() {
-    super.initState();
-    _press = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 90),
-    );
-  }
-
-  @override
-  void dispose() {
-    _press.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTapDown: (_) => _press.forward(),
-      onTapUp: (_) => _press.reverse(),
-      onTapCancel: () => _press.reverse(),
-      onTap: () {
-        if (widget.mediumHaptic) {
-          HapticFeedback.mediumImpact();
-        } else {
-          HapticFeedback.lightImpact();
-        }
-        widget.onPressed();
-      },
-      child: AnimatedBuilder(
-        animation: _press,
-        builder: (context, child) {
-          final s = 1.0 - (_press.value * 0.035);
-          return Transform.scale(scale: s, child: child);
-        },
-        child: widget.child,
-      ),
+      onTap: onPressed,
+      child: child,
     );
   }
 }
@@ -770,22 +730,7 @@ class IronVibeEnter extends StatelessWidget {
   const IronVibeEnter({super.key, required this.animation, required this.child});
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, child) {
-        final t = animation.value;
-        return Opacity(
-          opacity: t,
-          child: Transform.translate(
-            offset: Offset(0, 16 * (1 - t)),
-            child: child,
-          ),
-        );
-      },
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) => child;
 }
 
 Widget _ironVibeCtaLabelRow({
@@ -816,7 +761,6 @@ class IronVibePrimaryCta extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
   final IconData? icon;
-  final Animation<double>? sheen;
   final double height;
   final double? width;
   final double fontSize;
@@ -826,7 +770,6 @@ class IronVibePrimaryCta extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.icon,
-    this.sheen,
     this.height = kIronVibeCtaHeight,
     this.width,
     this.fontSize = kIronVibeCtaFontSize,
@@ -839,90 +782,33 @@ class IronVibePrimaryCta extends StatelessWidget {
         ? const Color(0xFF1A1E24)
         : const Color(0xFFF4F6FA);
     return IronVibePressScale(
-      mediumHaptic: true,
       onPressed: onPressed,
       child: Container(
         width: width,
         height: height,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.40 : 0.22),
-              offset: const Offset(0, 8),
-              blurRadius: 18,
-            ),
-          ],
-        ),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: ironVibePrimaryCtaGradientColors(isDark: isDark),
-            ),
-            border: Border.all(
-              color: kIronVibeAccent.withValues(alpha: isDark ? 0.42 : 0.55),
-              width: 1.1,
-            ),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: ironVibePrimaryCtaGradientColors(isDark: isDark),
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                if (sheen != null)
-                  AnimatedBuilder(
-                    animation: sheen!,
-                    builder: (context, _) {
-                      return LayoutBuilder(
-                        builder: (context, c) {
-                          final t = sheen!.value;
-                          return Stack(
-                            children: [
-                              Positioned(
-                                left: -80 + (c.maxWidth + 160) * t,
-                                top: 0,
-                                bottom: 0,
-                                width: 72,
-                                child: Transform(
-                                  transform: Matrix4.skewX(-0.45),
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.white.withValues(alpha: 0),
-                                          Colors.white.withValues(
-                                            alpha: isDark ? 0.28 : 0.16,
-                                          ),
-                                          Colors.white.withValues(alpha: 0),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                _ironVibeCtaLabelRow(
-                  label: label,
-                  icon: icon,
-                  iconColor: kIronVibeAccent,
-                  style: TextStyle(
-                    color: labelColor,
-                    fontSize: fontSize,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.3,
-                    height: 1.05,
-                  ),
-                ),
-              ],
-            ),
+          border: Border.all(
+            color: kIronVibeAccent.withValues(alpha: isDark ? 0.42 : 0.55),
+            width: 1.1,
+          ),
+        ),
+        child: _ironVibeCtaLabelRow(
+          label: label,
+          icon: icon,
+          iconColor: kIronVibeAccent,
+          style: TextStyle(
+            color: labelColor,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 0.3,
+            height: 1.05,
           ),
         ),
       ),
@@ -971,21 +857,6 @@ class IronVibeSecondaryCta extends StatelessWidget {
             color: ironVibeMetalBorderColor(isDark: isDark),
             width: 1,
           ),
-          boxShadow: isDark
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.45),
-                    offset: const Offset(0, 4),
-                    blurRadius: 6,
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.10),
-                    offset: const Offset(0, 2),
-                    blurRadius: 5,
-                  ),
-                ],
         ),
         child: _ironVibeCtaLabelRow(
           label: label,
@@ -2819,7 +2690,7 @@ Future<void> ironVibeShowWorkoutComplete(
     barrierDismissible: false,
     barrierLabel: resolved,
     barrierColor: Colors.black.withValues(alpha: 0.45),
-    transitionDuration: const Duration(milliseconds: 280),
+    transitionDuration: Duration.zero,
     pageBuilder: (ctx, animation, secondaryAnimation) {
       return _IronVibeWorkoutCompleteOverlay(title: resolved);
     },
@@ -2856,24 +2727,19 @@ class _IronVibeWorkoutCompleteOverlayState
     super.initState();
     _cardCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 380),
-    );
+      duration: Duration.zero,
+    )..value = 1;
     _checkCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 720),
-    );
+      duration: Duration.zero,
+    )..value = 1;
     _cardScale = CurvedAnimation(parent: _cardCtrl, curve: Curves.easeOutBack);
     _cardOpacity = CurvedAnimation(parent: _cardCtrl, curve: Curves.easeOut);
     unawaited(_play());
   }
 
   Future<void> _play() async {
-    await _cardCtrl.forward();
-    if (!mounted) return;
-    await _checkCtrl.forward();
-    if (!mounted) return;
-    HapticFeedback.mediumImpact();
-    await Future<void>.delayed(const Duration(milliseconds: 950));
+    await Future<void>.delayed(const Duration(milliseconds: 280));
     _close();
   }
 

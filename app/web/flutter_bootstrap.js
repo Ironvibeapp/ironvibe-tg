@@ -20,8 +20,29 @@
     }
   }, 12000);
 
+  function ironVibeForceCpuCanvasKit() {
+    try {
+      var platform = '';
+      if (window.Telegram && Telegram.WebApp && Telegram.WebApp.platform) {
+        platform = String(Telegram.WebApp.platform).toLowerCase();
+      }
+      if (platform === 'android') return true;
+      if (platform === 'ios' ||
+          platform === 'macos' ||
+          platform === 'tdesktop' ||
+          platform === 'unigram' ||
+          platform === 'weba' ||
+          platform === 'webk') {
+        return false;
+      }
+    } catch (e) {}
+    return /Android/i.test(navigator.userAgent || '');
+  }
+
   var kitConfig = {
-    canvasKitForceCpuOnly: true,
+    // Android Telegram WebView often has no usable GPU. iPhone pays ~500ms
+    // tap latency if we force the CPU rasterizer there too.
+    canvasKitForceCpuOnly: ironVibeForceCpuCanvasKit(),
     useLocalCanvasKit: true,
     canvasKitBaseUrl: '/ironvibe-tg/canvaskit/',
   };

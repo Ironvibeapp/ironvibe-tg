@@ -512,32 +512,18 @@ class InstructionScreen extends StatefulWidget {
   State<InstructionScreen> createState() => _InstructionScreenState();
 }
 
-class _InstructionScreenState extends State<InstructionScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _enter;
+class _InstructionScreenState extends State<InstructionScreen> {
   final TextEditingController _search = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    _enter = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 760),
-    )..forward();
-  }
-
-  @override
   void dispose() {
-    _enter.dispose();
     _search.dispose();
     super.dispose();
   }
 
   Animation<double> _stagger(double begin, double end) {
-    return CurvedAnimation(
-      parent: _enter,
-      curve: Interval(begin, end, curve: Curves.easeOutCubic),
-    );
+    assert(begin <= end);
+    return kAlwaysCompleteAnimation;
   }
 
   @override

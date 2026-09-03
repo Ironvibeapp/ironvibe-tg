@@ -66,21 +66,8 @@ ShapeBorder ironVibeDialogShape(IronVibePalette pal) {
 }
 
 List<BoxShadow> ironVibeCardShadow({required bool isDark}) {
-  return isDark
-      ? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.40),
-            offset: const Offset(0, 4),
-            blurRadius: 14,
-          ),
-        ]
-      : [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            offset: const Offset(0, 3),
-            blurRadius: 12,
-          ),
-        ];
+  // Blur shadows are expensive on CanvasKit in Telegram's WebView.
+  return const [];
 }
 
 BoxDecoration ironVibeElevatedCardDecoration(
@@ -446,10 +433,18 @@ ThemeData ironVibeBuildTheme(Brightness brightness) {
       centerTitle: true,
       systemOverlayStyle: ironVibeSystemOverlayFor(isDark ? ThemeMode.dark : ThemeMode.light),
     ),
+    splashFactory: NoSplash.splashFactory,
+    highlightColor: Colors.transparent,
+    hoverColor: Colors.transparent,
+    splashColor: Colors.transparent,
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
-        TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-        TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+        TargetPlatform.android: _IronVibeInstantPageTransitionsBuilder(),
+        TargetPlatform.iOS: _IronVibeInstantPageTransitionsBuilder(),
+        TargetPlatform.macOS: _IronVibeInstantPageTransitionsBuilder(),
+        TargetPlatform.windows: _IronVibeInstantPageTransitionsBuilder(),
+        TargetPlatform.linux: _IronVibeInstantPageTransitionsBuilder(),
+        TargetPlatform.fuchsia: _IronVibeInstantPageTransitionsBuilder(),
       },
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -605,4 +600,19 @@ Widget _ironVibeCalendarDayCell(
       ),
     ),
   );
+}
+
+class _IronVibeInstantPageTransitionsBuilder extends PageTransitionsBuilder {
+  const _IronVibeInstantPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return child;
+  }
 }
