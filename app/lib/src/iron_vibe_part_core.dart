@@ -338,9 +338,9 @@ String _encodeJsonPayload(Map<String, dynamic> payload) {
   return const JsonEncoder.withIndent('  ').convert(payload);
 }
 
-/// Семейное правило версий: … 1.7.4+74, 1.7.5+75 …
-const String kAppVersion = '1.7.5';
-const int kAppBuildNumber = 75;
+/// Семейное правило версий: … 1.7.8+78, 1.7.9+79 …
+const String kAppVersion = '1.7.9';
+const int kAppBuildNumber = 79;
 
 /// График прогресса: вес (красный) и повторы (как цвет фокуса полей).
 const Color kProgressChartWeightColor = Color(0xFFFF1744);
