@@ -469,6 +469,7 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
           c.name,
           c.goal,
           id: c.id,
+          lastName: c.lastName,
           weight: c.weight,
           height: c.height,
           notes: c.notes,
@@ -491,6 +492,7 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
           ],
           id: s.id,
           clientId: s.clientId,
+          clientLastName: s.clientLastName,
           isLiveCurrent: s.isLiveCurrent,
           isScheduledPlan: s.isScheduledPlan,
           isCompleted: s.isCompleted,
@@ -557,7 +559,7 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
         if (map == null) continue;
         final c = Client.fromJson(map);
         if (c.id != null && clients.any((x) => x.id == c.id)) continue;
-        if (ironVibeClientNameTaken(c.name)) continue;
+        if (ironVibeClientNameTaken(c.name, lastName: c.lastName)) continue;
         c.id ??= ironVibeNewEntityId();
         clients.add(c);
       }
