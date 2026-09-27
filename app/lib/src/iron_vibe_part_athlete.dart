@@ -321,6 +321,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
           normalized,
           log.sets,
           isCardio: log.isCardio,
+          note: log.note,
         );
         _exercises.add(
           widget.previousSetsAsHints
@@ -466,7 +467,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
       }
 
       if (setLogs.isNotEmpty) {
-        logs.add(ExerciseLog(name, setLogs, isCardio: _isCardio));
+        logs.add(
+          ExerciseLog(name, setLogs, isCardio: _isCardio, note: ex.note.trim()),
+        );
       }
     }
 
@@ -743,6 +746,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen>
                                 sessionPrHighlight:
                                     _sessionPrHighlightForExercise(index),
                                 onRemove: () => _removeExercise(index),
+                                noteSessionDate: widget.targetDate,
                               ),
                             );
                           },
@@ -1298,6 +1302,28 @@ class _EditableHistoryExerciseBlockState
     widget.onDataChanged();
   }
 
+  Future<void> _editSessionNote() async {
+    if (widget.exerciseIndex >= widget.workout.exercises.length) return;
+    final ex = widget.workout.exercises[widget.exerciseIndex];
+    final next = await showExerciseSessionNoteDialog(
+      context,
+      sessionDate: widget.workout.date,
+      exerciseName: ex.name,
+      currentNote: ex.note,
+      excludeWorkout: widget.workout,
+    );
+    if (next == null || !mounted) return;
+    ironVibeSetExerciseNoteAt(
+      widget.workout.exercises,
+      widget.exerciseIndex,
+      next,
+    );
+    _exercise = widget.workout.exercises[widget.exerciseIndex];
+    DataService.saveData();
+    setState(() {});
+    widget.onDataChanged();
+  }
+
   void _addHistorySet() {
     final exList = widget.workout.exercises;
     if (widget.exerciseIndex >= exList.length) return;
@@ -1465,25 +1491,38 @@ class _EditableHistoryExerciseBlockState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: ex.name.trim().isEmpty ? _pickExerciseName : null,
-            onLongPress: _pickExerciseName,
-            child: Text(
-              ex.name.trim().isEmpty
-                  ? locale.exerciseNumberedTitle(widget.exerciseIndex + 1)
-                  : locale.exerciseNumberedTitleWithName(
-                      widget.exerciseIndex + 1,
-                      ex.name.trim(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: ex.name.trim().isEmpty ? _pickExerciseName : null,
+                  onLongPress: _pickExerciseName,
+                  child: Text(
+                    ex.name.trim().isEmpty
+                        ? locale.exerciseNumberedTitle(
+                            widget.exerciseIndex + 1,
+                          )
+                        : locale.exerciseNumberedTitleWithName(
+                            widget.exerciseIndex + 1,
+                            ex.name.trim(),
+                          ),
+                    style: ironVibeExerciseNameStyle(
+                      ex.name.trim().isEmpty ? pal.textMuted : pal.textPrimary,
                     ),
-              style: TextStyle(
-                color: ex.name.trim().isEmpty ? pal.textMuted : pal.textPrimary,
-                fontSize: 15,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 1.0,
+                    maxLines: kIronVibeExerciseNameMaxLines,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+              ironVibeExerciseNotePencil(
+                tooltip: locale.exerciseSessionNoteTooltip,
+                hasNote: ex.note.trim().isNotEmpty,
+                onTap: () => unawaited(_editSessionNote()),
+                idleColor: pal.textMuted,
+                filledColor: kIronVibeAccent,
+              ),
+            ],
           ),
           if (!isCardio)
             ironVibeMuscleGroupChip(
