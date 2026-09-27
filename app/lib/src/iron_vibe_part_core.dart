@@ -174,7 +174,7 @@ String ironVibeWorkoutVolumeLabel(
 ) {
   final kg = ironVibeWorkoutVolumeKgFromExercises(exercises);
   if (kg <= 0) return '${l.volumeShort}: —';
-  return '${l.volumeShort}: ${ironVibeFormatKgTon(kg)} ${l.kg}';
+  return '${l.volumeShort}: ${ironVibeFormatKgTon(kg)} ${l.weightUnitsChoiceShort}';
 }
 
 /// Заголовок колонки «Вес» в строке вес / повторы / RIR: единицы на выбор пользователя.
