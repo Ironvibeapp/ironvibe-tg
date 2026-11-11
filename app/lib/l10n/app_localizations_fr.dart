@@ -255,6 +255,35 @@ class AppLocalizationsFr extends AppLocalizations {
   String get muscleGroupArmExt => 'Triceps';
 
   @override
+  String get muscleGroupGlutes => 'Fessiers';
+
+  @override
+  String get muscleGroupCalves => 'Mollets';
+
+  @override
+  String get loadInsightTitle => 'Charge';
+
+  @override
+  String get rhythmCardLabel => 'RYTHME';
+
+  @override
+  String get loadCardLabel => 'CHARGE';
+
+  @override
+  String get loadSetsShort => 'séries';
+
+  @override
+  String get loadTonnageShort => 'tonnage';
+
+  @override
+  String get loadWindow =>
+      'Moyenne des 28 derniers jours. Le premier nombre est les séries par semaine, le second le tonnage. Seules les séries avec un RIR comptent ; un RIR vide ou ∞ est un échauffement. Les exercices sans groupe ne comptent pas.';
+
+  @override
+  String get loadTrendHint =>
+      'Chaque repère est une semaine civile : séries de travail et tonnage.';
+
+  @override
   String get muscleGroupUntagged => '—';
 
   @override
@@ -471,6 +500,27 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce client n\'a pas encore de séance à répéter.';
 
   @override
+  String get repeatPickTitle => 'Répéter une séance';
+
+  @override
+  String get repeatPickSearchHint => 'Chercher par note';
+
+  @override
+  String get repeatPickNoNote => 'Sans note';
+
+  @override
+  String get repeatPickNoMatch => 'Aucune séance avec cette note.';
+
+  @override
+  String get reorderExercisesTitle => 'Ordre des exercices';
+
+  @override
+  String get reorderExercisesHint => 'Tirez la poignée pour déplacer la ligne.';
+
+  @override
+  String get reorderExercisesTooltip => 'Changer l\'ordre';
+
+  @override
   String get editPlan => 'Modifier le plan';
 
   @override
@@ -600,6 +650,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get time => 'Temps';
+
+  @override
+  String get editSessionTime => 'Changer l\'heure';
 
   @override
   String get rest => 'Repos';
@@ -798,7 +851,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get instructionChapterSessionBlurb =>
-      'Séries, charge, répétitions, RIR, cardio et fin de séance.';
+      'Séries, charge, répétitions, RIR, une note d\'exercice, cardio et fin de séance.';
 
   @override
   String get instructionChapterTimerTitle => 'Chronomètre';
@@ -826,7 +879,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get instructionChapterRhythmBlurb =>
-      'La jauge de rythme hebdomadaire et la semaine de décharge.';
+      'La jauge de rythme hebdomadaire, la charge musculaire et la semaine de décharge.';
 
   @override
   String get instructionChapterDataTitle => 'Historique et données';
@@ -861,7 +914,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get instructionTrainSelfDesc =>
-      'Votre espace : séances, calendrier, progrès personnel, favoris et jauge de rythme.';
+      'Votre espace : séances, calendrier, progrès personnel, favoris, jauge de rythme et charge musculaire.';
 
   @override
   String get instructionTrainOthersTitle => 'J\'entraîne d\'autres';
@@ -947,11 +1000,25 @@ class AppLocalizationsFr extends AppLocalizations {
       'Charge et répétitions de la dernière fois s\'affichent en gris — un palier à battre, pas une série déjà notée. Seuls les chiffres que vous tapez vont dans l\'historique.';
 
   @override
+  String get instructionExerciseNoteTitle => 'Note d\'exercice';
+
+  @override
+  String get instructionExerciseNoteDesc =>
+      'Le crayon dans l\'en-tête de l\'exercice est une note pour cette séance seulement. Les notes plus anciennes du même mouvement sont listées au-dessus, chacune avec sa date. Un champ vide efface la note. Elle reste dans cette séance, y compris dans un entraînement déjà enregistré.';
+
+  @override
   String get instructionRemoveExerciseTitle => 'Retirer l\'exercice';
 
   @override
   String get instructionRemoveExerciseDesc =>
       'La croix rouge enlève le bloc de la séance en cours. L\'historique enregistré ne change pas.';
+
+  @override
+  String get instructionReorderExercisesTitle => 'Ordre des exercices';
+
+  @override
+  String get instructionReorderExercisesDesc =>
+      'Touchez la poignée dans l\'en-tête de l\'exercice. Une courte liste s\'ouvre : faites glisser une ligne à sa place. Le nouvel ordre est enregistré pour cette séance et dans son historique.';
 
   @override
   String get instructionSectionSetControl => 'Ligne de série';
@@ -1138,7 +1205,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get instructionMuscleGroupsIntro =>
-      'Le groupe est une étiquette facultative sur votre nom. Il ne sert qu\'à la séance rapide, pour composer un full body équilibré. Huit groupes : pectoraux, dos, épaules, gainage, cuisse avant, cuisse arrière, biceps, triceps.';
+      'Le groupe est une étiquette facultative sur votre nom. La séance rapide s\'en sert pour composer un full body équilibré, et l\'écran de charge compte les séries et le tonnage de la semaine. Dix groupes : pectoraux, dos, épaules, gainage, cuisse avant, cuisse arrière, fessiers, mollets, biceps, triceps.';
 
   @override
   String get instructionMuscleGroupTagTitle => 'Comment étiqueter';
@@ -1224,7 +1291,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get instructionRhythmIntro =>
-      'Quand au moins trois jours de force s\'accumulent sur les quatre dernières semaines, une jauge de rythme apparaît en haut de l\'écran d\'entraînement. Ce n\'est ni un objectif ni une note — juste la fréquence à laquelle vous allez actuellement à la salle.';
+      'Quand au moins trois jours de force s\'accumulent sur les quatre dernières semaines, une jauge de rythme apparaît en haut de l\'écran d\'entraînement, à côté de la figure de charge musculaire. Ce n\'est ni un objectif ni une note — juste la fréquence à laquelle vous allez actuellement à la salle. La figure reste même avant l\'apparition de la jauge.';
 
   @override
   String get instructionRhythmGaugeTitle => 'Jours par semaine';
@@ -1255,6 +1322,35 @@ class AppLocalizationsFr extends AppLocalizations {
       'Si vous tenez au moins deux séances et demie par semaine et que vous n\'avez pas déchargé depuis longtemps, l\'app propose de prendre une telle semaine. Plus le rythme est dense, plus l\'indice arrive tôt. Il apparaît au plus une fois par semaine, et seulement en mode personnel — une recommandation, pas un avis médical.';
 
   @override
+  String get instructionSectionMuscleLoad => 'Charge';
+
+  @override
+  String get instructionMuscleLoadIntro =>
+      'La figure à côté de la jauge de rythme ouvre l\'écran de charge. La même image est plus grande, et chacun des dix groupes a sa légende. Le premier nombre est les séries de travail par semaine, le second le tonnage. Les deux sont la moyenne des 28 derniers jours.';
+
+  @override
+  String get instructionMuscleLoadCountsTitle => 'Ce qui compte';
+
+  @override
+  String get instructionMuscleLoadCountsDesc =>
+      'Une série compte seulement si le RIR est indiqué, de 0 à 5. Un RIR vide et ∞ sont de l\'échauffement. Le cardio ne compte pas, ni un exercice sans groupe ou marqué pas pour la séance rapide. Le tonnage est le poids fois les répétitions, dans les unités que vous notez.';
+
+  @override
+  String get instructionMuscleLoadTrendTitle => 'Semaine par semaine';
+
+  @override
+  String get instructionMuscleLoadTrendDesc =>
+      'Touchez une légende pour ouvrir le graphique de ce groupe. Chaque repère est une semaine civile avec au moins une série qui a un RIR. Les semaines sans ces séries n\'apparaissent pas. Mois, année et toute la période changent la fenêtre. Le nombre sur la légende est la moyenne sur 28 jours ; le repère est le total réel de cette semaine.';
+
+  @override
+  String get instructionMuscleLoadLineSetsDesc =>
+      'Cyan — séries de travail de la semaine.';
+
+  @override
+  String get instructionMuscleLoadLineTonnageDesc =>
+      'Jaune — tonnage de la semaine, poids fois répétitions.';
+
+  @override
   String get instructionSectionCalendar => 'Calendrier et historique';
 
   @override
@@ -1283,7 +1379,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get instructionHistoryEditDesc =>
-      'Un entraînement enregistré se déplie et se corrige : ajouter un exercice ou une série, changer les chiffres, supprimer toute la séance. Les changements s\'enregistrent tout de suite.';
+      'Un entraînement enregistré se déplie et se corrige sur place : ajouter un exercice oublié, une série ou une note, changer les chiffres ou l\'ordre, supprimer toute la séance. Les changements s\'enregistrent tout de suite.';
 
   @override
   String get instructionSectionStats => 'Statistiques';
@@ -1328,7 +1424,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'La séance du jour part d\'ici, ainsi que le progrès, les favoris et l\'historique par mois. S\'il y a assez de jours de force, la jauge de rythme est là aussi. Supprimer un client retire les séances futures ; les entraînements passés restent pour le suivi.';
+      'La séance du jour part d\'ici, ainsi que le progrès, les favoris et l\'historique par mois. La figure de charge est toujours là, et la jauge de rythme la rejoint dès qu\'il y a assez de jours de force. Les deux lisent les séances terminées de ce client. Supprimer un client retire les séances futures ; les entraînements passés restent pour le suivi.';
 
   @override
   String get instructionTrainerScheduleTitle => 'Planning';
@@ -1336,6 +1432,13 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get instructionTrainerScheduleDesc =>
       'Le calendrier coach montre les séances de tous les clients : icône lecture = planifiée, coche = terminée, sablier = celle d\'aujourd\'hui en cours. Les plans vides des jours passés se retirent tout seuls.';
+
+  @override
+  String get instructionTrainerTimeTitle => 'Changer l\'heure';
+
+  @override
+  String get instructionTrainerTimeDesc =>
+      'Le crayon d\'une séance planifiée déplace l\'heure le même jour — dans le calendrier, ou à côté de la date dans la séance. On peut aussi maintenir la carte. Les exercices, la note et le rappel restent. Une séance terminée ou importée garde son heure.';
 
   @override
   String get instructionTrainerPlanTitle => 'Plan de séance';
@@ -1349,7 +1452,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get instructionTrainerRepeatDesc =>
-      'Depuis le profil client, ou via l\'interrupteur à l\'ajout d\'une séance au calendrier. On copie la composition d\'exercices ; charge et répétitions viennent en indices gris, pas en séries toutes faites.';
+      'Depuis le profil client, ou via l\'interrupteur à l\'ajout d\'une séance au calendrier. S\'il n\'y a qu\'une séance passée, elle est répétée. S\'il y en a plusieurs, vous choisissez parmi les cinq dernières : triées par la note, que vous pouvez aussi chercher. On copie la composition d\'exercices ; charge et répétitions viennent en indices gris, pas en séries toutes faites.';
 
   @override
   String get instructionPrintSessionTitle => 'Imprimer la séance';
@@ -1496,14 +1599,137 @@ class AppLocalizationsFr extends AppLocalizations {
       'C\'est une recommandation, pas un avis médical. Si vous vous sentez bien, rien n\'est à changer.';
 
   @override
+  String get sheetExportButton => 'GOOGLE SHEETS';
+
+  @override
+  String get sheetImportButton => 'IMPORTER LE TABLEAU';
+
+  @override
+  String get sheetExportTitle => 'Google Sheets';
+
+  @override
+  String get sheetExportBody =>
+      'Un tableau s\'ouvre dans le menu de partage. Ouvre-le dans Google Sheets ou Excel, modifie-le à la maison, télécharge le CSV et importe-le ici. Garde les colonnes id pour que les séances déjà sur le téléphone soient mises à jour et non recopiées. La sauvegarde JSON reste la copie complète.';
+
+  @override
+  String get sheetExportShare => 'Partager le tableau';
+
+  @override
+  String get sheetShareText => 'Tableau IronVibe';
+
+  @override
+  String get sheetImportInvalid => 'Ce fichier n\'est pas un tableau IronVibe.';
+
+  @override
+  String get sheetImportEmpty => 'Ce tableau n\'a aucune ligne à importer.';
+
+  @override
+  String get sheetImportPersonalFile =>
+      'C\'est un journal personnel. Importe-le dans le mode où tu t\'entraînes toi-même.';
+
+  @override
+  String get sheetImportCoachFile =>
+      'C\'est un tableau d\'entraîneur. Importe-le dans le mode où tu entraînes d\'autres personnes.';
+
+  @override
+  String get sheetImportNothing =>
+      'Rien à modifier. Les lignes correspondent déjà, ou certaines ont été ignorées parce qu\'un jour compte plusieurs séances et que la colonne id manque.';
+
+  @override
+  String sheetImportPreview(
+    int updated,
+    int added,
+    int clientsAdded,
+    int clientsUpdated,
+    int skipped,
+  ) {
+    return 'Séances à mettre à jour : $updated. Séances à ajouter : $added. Clients à ajouter : $clientsAdded. Clients à mettre à jour : $clientsUpdated. Lignes ignorées : $skipped. Les séances absentes du fichier restent sur le téléphone. Une séance du fichier remplace ses séries.';
+  }
+
+  @override
+  String get sheetImportConfirm => 'Importer';
+
+  @override
+  String get sheetImportSuccess => 'Tableau importé';
+
+  @override
+  String get instructionSheetTitle => 'Google Sheets';
+
+  @override
+  String get instructionSheetDesc =>
+      'Dans Statistiques, tu peux partager un tableau pour Google Sheets ou Excel. Modifie les séries à la maison, télécharge le CSV et réimporte-le. Garde les colonnes id et laisse ensemble, dans l\'ordre, les lignes de chaque exercice. Une séance du fichier remplace ses séries. Celles qui manquent dans le fichier restent. Le nom, l\'objectif et les notes d\'un client viennent de sa première ligne remplie. La note d\'exercice et la note de séance reviennent avec le fichier. Un fichier sans ces colonnes n\'efface pas les notes déjà sur le téléphone. JSON reste la sauvegarde complète.';
+
+  @override
+  String get remindBeforePrefix => 'Prévenir';
+
+  @override
+  String get remindBeforeSuffix => 'minutes avant';
+
+  @override
+  String get remindPermissionDenied =>
+      'Les notifications sont coupées, donc ce rappel n\'arrivera pas. Vous pouvez les autoriser dans les réglages du téléphone.';
+
+  @override
+  String get remindPermissionTitle => 'Les notifications sont coupées';
+
+  @override
+  String get remindPermissionOpenSettings => 'Ouvrir les réglages';
+
+  @override
+  String get remindPermissionNotNow => 'Pas maintenant';
+
+  @override
+  String get reminderEveningTitle => 'Demain';
+
+  @override
+  String reminderEveningBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Demain, $count séances. La première commence à $time.',
+      one: 'Demain, 1 séance. Elle commence à $time.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderAlarmTitle => 'Séance';
+
+  @override
+  String reminderAlarmBody(String name, String time) {
+    return '$name commence à $time.';
+  }
+
+  @override
+  String get reminderChannelEvening => 'Rappel de la veille';
+
+  @override
+  String get reminderChannelEveningDesc =>
+      'À 21:00 s\'il y a des séances demain.';
+
+  @override
+  String get reminderChannelAlarm => 'Alarme de séance';
+
+  @override
+  String get reminderChannelAlarmDesc =>
+      'Un signal peu avant une séance que vous avez activée.';
+
+  @override
+  String get instructionReminderTitle => 'Rappels';
+
+  @override
+  String get instructionReminderDesc =>
+      'La veille d\'un jour avec des séances, à 21:00, l\'app indique combien il y en a demain et à quelle heure commence la première. Vos séances futures et celles des clients comptent toutes les deux. Une alarme reste éteinte tant que vous ne l\'activez pas en choisissant l\'heure — de 10 minutes à 2 heures avant. Si les notifications sont coupées, l\'app propose d\'ouvrir les réglages du téléphone. Les deux sont programmées sur le téléphone et ne partent nulle part.';
+
+  @override
   String get syncStatusOnDevice => 'Enregistré sur ce téléphone';
 
   @override
-  String get syncStatusWillSync => 'Synchronisation dès que tu es en ligne';
+  String get syncStatusSynced => 'Synchronisé';
 
   @override
   String get syncStatusSyncing => 'Synchronisation…';
 
   @override
-  String get syncStatusSynced => 'Synchronisé';
+  String get syncStatusWillSync => 'Synchronisation dès que tu es en ligne';
 }

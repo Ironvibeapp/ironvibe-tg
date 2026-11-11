@@ -72,7 +72,9 @@ bool ironVibeBackupLooksLikeAthleteOnly(Map<String, dynamic> data) {
   return !hasClients && !hasSchedule;
 }
 
-List<WorkoutLog> ironVibeAthleteWorkoutsFromBackupMap(Map<String, dynamic> data) {
+List<WorkoutLog> ironVibeAthleteWorkoutsFromBackupMap(
+  Map<String, dynamic> data,
+) {
   final list = data['workoutHistory'];
   if (list is! List) return const [];
   final out = <WorkoutLog>[];
@@ -117,7 +119,7 @@ IronVibeAthleteImportOutcome ironVibeImportAthleteHistory({
   String height = '',
   List<String> favoriteExercises = const [],
 }) {
-  final name = clientName.trim();
+  final name = ironVibeCapitalizePersonName(clientName.trim());
   if (name.isEmpty) {
     return const IronVibeAthleteImportOutcome(
       status: IronVibeAthleteImportStatus.nameEmpty,
@@ -129,7 +131,10 @@ IronVibeAthleteImportOutcome ironVibeImportAthleteHistory({
     );
   }
 
-  final existingIds = trainerSchedule.map((s) => s.id).whereType<String>().toSet();
+  final existingIds = trainerSchedule
+      .map((s) => s.id)
+      .whereType<String>()
+      .toSet();
   final sessions = <TrainerSession>[];
   var skipped = 0;
   for (final w in workouts) {
@@ -503,6 +508,7 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
           isScheduledPlan: s.isScheduledPlan,
           isCompleted: s.isCompleted,
           isImportedHistory: s.isImportedHistory,
+          remindMinutesBefore: s.remindMinutesBefore,
         ),
     ];
     final savedBank = List<String>.from(exerciseBank);
@@ -599,11 +605,13 @@ Future<void> _importFromJson(BuildContext context, bool isTrainer) async {
       ironVibeMergeAthleteBackupCatalog(data);
 
       exerciseBank = _dedupeNormalizedExerciseBank(exerciseBank);
-      ironVibeAthleteFavoriteExercises =
-          _dedupeNormalizedExerciseBank(ironVibeAthleteFavoriteExercises);
+      ironVibeAthleteFavoriteExercises = _dedupeNormalizedExerciseBank(
+        ironVibeAthleteFavoriteExercises,
+      );
       for (final client in clients) {
-        client.favoriteExercises =
-            _dedupeNormalizedExerciseBank(client.favoriteExercises);
+        client.favoriteExercises = _dedupeNormalizedExerciseBank(
+          client.favoriteExercises,
+        );
       }
       workoutHistory = workoutHistory
           .map(_normalizeWorkoutLogExerciseNames)
@@ -695,25 +703,21 @@ Future<void> _importAthleteHistoryFromJson(BuildContext context) async {
                   children: [
                     Text(
                       l.importAthleteFound(workouts.length),
-                      style: TextStyle(
-                        color: pal.textSecondary,
-                        height: 1.35,
-                      ),
+                      style: TextStyle(color: pal.textSecondary, height: 1.35),
                     ),
                     const SizedBox(height: 16),
                     SteelButton(
                       text: l.importAthleteBackupOwn,
                       icon: Icons.ios_share_rounded,
-                      onPressed: () => _exportToJson(
-                        ctx,
-                        true,
-                        popHostDialog: false,
-                      ),
+                      onPressed: () =>
+                          _exportToJson(ctx, true, popHostDialog: false),
                       width: double.infinity,
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.words,
+                      inputFormatters: [_PersonNameInputFormatter()],
                       style: TextStyle(color: pal.textPrimary),
                       decoration: fieldDecoration(l.clientName),
                       onChanged: (_) {
@@ -938,6 +942,20 @@ void _showStatistics(BuildContext context, bool isTrainer) {
                 onPressed: () => _importFromJson(ctx, isTrainer),
                 width: double.infinity,
               ),
+              const SizedBox(height: 10),
+              SteelButton(
+                text: l.sheetExportButton,
+                icon: Icons.table_chart_outlined,
+                onPressed: () => ironVibeExportSheet(ctx, isTrainer),
+                width: double.infinity,
+              ),
+              const SizedBox(height: 10),
+              SteelButton(
+                text: l.sheetImportButton,
+                icon: Icons.upload_file_outlined,
+                onPressed: () => ironVibeImportSheet(ctx, isTrainer),
+                width: double.infinity,
+              ),
               if (isTrainer) ...[
                 const SizedBox(height: 10),
                 SteelButton(
@@ -954,10 +972,7 @@ void _showStatistics(BuildContext context, bool isTrainer) {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              l.close,
-              style: TextStyle(color: pal.textPrimary),
-            ),
+            child: Text(l.close, style: TextStyle(color: pal.textPrimary)),
           ),
         ],
       );

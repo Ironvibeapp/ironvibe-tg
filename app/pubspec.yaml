@@ -2,7 +2,7 @@ name: fitness_app
 description: IronVibe Telegram Mini App — offline-first workout tracker. Local writes, Telegram CloudStorage sync when online.
 publish_to: 'none'
 
-version: 1.8.5+85
+version: 1.9.1+91
 
 environment:
   sdk: ^3.11.0
@@ -24,6 +24,10 @@ dependencies:
   flutter_svg: ^2.2.3
   pdf: ^3.11.3
   web: ^1.1.1
+  csv: ^8.0.0
+  flutter_local_notifications: ^22.3.3
+  timezone: ^0.11.2
+  flutter_timezone: ^5.1.1
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +46,7 @@ flutter:
     - assets/sounds/timer_tick.wav
     - assets/sounds/timer_phase.wav
     - assets/rhythm_smirk.png
+    - assets/muscle_load.png
     - assets/fonts/NotoSans-Regular.ttf
     - assets/fonts/NotoSans-Bold.ttf
     - assets/fonts/NotoSansSC-Regular.ttf

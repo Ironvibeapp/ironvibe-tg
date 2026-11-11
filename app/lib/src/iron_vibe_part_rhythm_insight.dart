@@ -8,16 +8,35 @@ void ironVibeOpenRhythmInsight(BuildContext context, {String? clientName}) {
   );
 }
 
+/// Quiet caption shared by the rhythm and load cards so the pair matches.
+Widget ironVibePairCardLabel(String text, IronVibePalette pal) {
+  return Text(
+    text,
+    textAlign: TextAlign.center,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(
+      color: pal.textMuted,
+      fontSize: 11,
+      fontWeight: FontWeight.w800,
+      letterSpacing: 1.15,
+      height: 1,
+    ),
+  );
+}
+
 class IronVibeRhythmCard extends StatelessWidget {
   final IronVibeRhythmSnapshot snapshot;
   final VoidCallback? onTap;
   final double height;
+  final bool showLabel;
 
   const IronVibeRhythmCard({
     super.key,
     required this.snapshot,
     this.onTap,
     this.height = 128,
+    this.showLabel = false,
   });
 
   @override
@@ -28,52 +47,95 @@ class IronVibeRhythmCard extends StatelessWidget {
     final rate = NumberFormat('#0.0', locale).format(snapshot.daysPerWeek);
     final zone = ironVibeRhythmZoneColor(snapshot.daysPerWeek);
     final gauge = Container(
-      padding: const EdgeInsets.fromLTRB(18, 10, 18, 8),
+      padding: showLabel
+          ? const EdgeInsets.fromLTRB(12, 12, 12, 10)
+          : const EdgeInsets.fromLTRB(18, 10, 18, 8),
       decoration: ironVibeElevatedCardDecoration(pal),
       child: SizedBox(
         height: height,
         width: double.infinity,
-        child: TweenAnimationBuilder<double>(
-          tween: Tween(begin: 1.0, end: snapshot.daysPerWeek.clamp(1.0, 6.0)),
-          duration: const Duration(milliseconds: 900),
-          curve: Curves.easeOutCubic,
-          builder: (context, value, _) {
-            return CustomPaint(
-              painter: _IronVibeRhythmGaugePainter(
-                needleAt: value,
-                trackColor: pal.borderSubtle,
-                tickColor: pal.textMuted,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final caption = Text(
+              l.rhythmPerWeek,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: pal.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.3,
               ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        rate,
-                        style: TextStyle(
-                          color: zone,
-                          fontSize: height >= 160 ? 36 : 32,
-                          fontWeight: FontWeight.w800,
-                          height: 1.0,
-                          letterSpacing: 0.4,
+            );
+            if (showLabel || constraints.maxWidth < 220) {
+              return Column(
+                children: [
+                  if (showLabel) ...[
+                    ironVibePairCardLabel(l.rhythmCardLabel, pal),
+                    const SizedBox(height: 8),
+                  ],
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          rate,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: zone,
+                            fontSize: 34,
+                            fontWeight: FontWeight.w800,
+                            height: 1.0,
+                            letterSpacing: 0.4,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        l.rhythmPerWeek,
-                        style: TextStyle(
-                          color: pal.textSecondary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                    ],
+                        const SizedBox(height: 6),
+                        caption,
+                      ],
+                    ),
                   ),
-                ),
+                ],
+              );
+            }
+            return TweenAnimationBuilder<double>(
+              tween: Tween(
+                begin: 1.0,
+                end: snapshot.daysPerWeek.clamp(1.0, 6.0),
               ),
+              duration: const Duration(milliseconds: 900),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, _) {
+                return CustomPaint(
+                  painter: _IronVibeRhythmGaugePainter(
+                    needleAt: value,
+                    trackColor: pal.borderSubtle,
+                    tickColor: pal.textMuted,
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            rate,
+                            style: TextStyle(
+                              color: zone,
+                              fontSize: height >= 160 ? 36 : 32,
+                              fontWeight: FontWeight.w800,
+                              height: 1.0,
+                              letterSpacing: 0.4,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          caption,
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
           },
         ),

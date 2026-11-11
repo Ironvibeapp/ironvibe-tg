@@ -253,6 +253,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get muscleGroupArmExt => 'Трицепс';
 
   @override
+  String get muscleGroupGlutes => 'Ягодицы';
+
+  @override
+  String get muscleGroupCalves => 'Икры';
+
+  @override
+  String get loadInsightTitle => 'Нагрузка';
+
+  @override
+  String get rhythmCardLabel => 'РИТМ';
+
+  @override
+  String get loadCardLabel => 'НАГРУЗКА';
+
+  @override
+  String get loadSetsShort => 'сеты';
+
+  @override
+  String get loadTonnageShort => 'тоннаж';
+
+  @override
+  String get loadWindow =>
+      'Среднее за последние 28 дней. Первое число — сеты в неделю, второе — тоннаж. В счёт идут только сеты с RIR; пустой RIR и ∞ — разминка. Упражнения без группы не считаются.';
+
+  @override
+  String get loadTrendHint =>
+      'Каждая метка — одна календарная неделя: рабочие сеты и тоннаж.';
+
+  @override
   String get muscleGroupUntagged => '—';
 
   @override
@@ -467,6 +496,28 @@ class AppLocalizationsRu extends AppLocalizations {
       'У этого клиента ещё нет тренировки, которую можно повторить.';
 
   @override
+  String get repeatPickTitle => 'Повторить тренировку';
+
+  @override
+  String get repeatPickSearchHint => 'Поиск по заметке';
+
+  @override
+  String get repeatPickNoNote => 'Без заметки';
+
+  @override
+  String get repeatPickNoMatch => 'Нет тренировки с такой заметкой.';
+
+  @override
+  String get reorderExercisesTitle => 'Порядок упражнений';
+
+  @override
+  String get reorderExercisesHint =>
+      'Потяните за значок, чтобы переставить строку.';
+
+  @override
+  String get reorderExercisesTooltip => 'Изменить порядок';
+
+  @override
   String get editPlan => 'Изменить план';
 
   @override
@@ -596,6 +647,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get time => 'Время';
+
+  @override
+  String get editSessionTime => 'Изменить время';
 
   @override
   String get rest => 'Отдых';
@@ -793,7 +847,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionChapterSessionBlurb =>
-      'Подходы, вес, повторы, RIR, кардио и завершение сессии.';
+      'Подходы, вес, повторы, RIR, заметка к упражнению, кардио и завершение сессии.';
 
   @override
   String get instructionChapterTimerTitle => 'Секундомер';
@@ -821,7 +875,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionChapterRhythmBlurb =>
-      'Шкала недельного ритма и неделя разгрузки.';
+      'Шкала недельного ритма, нагрузка по мышцам и неделя разгрузки.';
 
   @override
   String get instructionChapterDataTitle => 'История и данные';
@@ -856,7 +910,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionTrainSelfDesc =>
-      'Ваш контур: тренировки, календарь, личный прогресс, избранное и шкала ритма.';
+      'Ваш контур: тренировки, календарь, личный прогресс, избранное, шкала ритма и нагрузка по мышцам.';
 
   @override
   String get instructionTrainOthersTitle => 'Тренирую других';
@@ -942,11 +996,25 @@ class AppLocalizationsRu extends AppLocalizations {
       'Вес и повторы прошлого раза показаны серым — это ориентир, который нужно побить, а не записанный подход. В историю попадёт только то, что вы введёте сами.';
 
   @override
+  String get instructionExerciseNoteTitle => 'Заметка к упражнению';
+
+  @override
+  String get instructionExerciseNoteDesc =>
+      'Карандаш в шапке упражнения — заметка только к этой тренировке. Выше перечислены прошлые заметки к тому же движению, каждая со своей датой. Пустое поле стирает заметку. Она остаётся в этой сессии, в том числе у уже сохранённой тренировки.';
+
+  @override
   String get instructionRemoveExerciseTitle => 'Убрать упражнение';
 
   @override
   String get instructionRemoveExerciseDesc =>
       'Красный крестик удаляет блок из текущей сессии. Сохранённая история при этом не меняется.';
+
+  @override
+  String get instructionReorderExercisesTitle => 'Порядок упражнений';
+
+  @override
+  String get instructionReorderExercisesDesc =>
+      'Нажмите значок перетаскивания в шапке упражнения. Откроется короткий список: перетащите строку на новое место. Новый порядок сохранится в этой тренировке и в её истории.';
 
   @override
   String get instructionSectionSetControl => 'Строка подхода';
@@ -1132,7 +1200,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionMuscleGroupsIntro =>
-      'Группа — необязательная метка к вашему названию. Она нужна только быстрой тренировке, чтобы собрать сбалансированный фулбади. Восемь групп: грудь, спина, плечи, корпус, переднее бедро, заднее бедро, бицепс, трицепс.';
+      'Группа — необязательная метка к вашему названию. Быстрая тренировка собирает по ней сбалансированный фулбади, а экран нагрузки считает недельные сеты и тоннаж. Десять групп: грудь, спина, плечи, корпус, переднее бедро, заднее бедро, ягодицы, икры, бицепс, трицепс.';
 
   @override
   String get instructionMuscleGroupTagTitle => 'Как поставить метку';
@@ -1218,7 +1286,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionRhythmIntro =>
-      'Когда за последние четыре недели набирается хотя бы три силовых дня, вверху экрана тренировок появляется шкала ритма. Это не цель и не оценка — просто то, как вы сейчас ходите в зал.';
+      'Когда за последние четыре недели набирается хотя бы три силовых дня, вверху экрана тренировок появляется шкала ритма — рядом с фигурой нагрузки. Это не цель и не оценка, а то, как часто вы сейчас ходите в зал. Фигура остаётся на месте и до появления шкалы.';
 
   @override
   String get instructionRhythmGaugeTitle => 'Дней в неделю';
@@ -1249,6 +1317,35 @@ class AppLocalizationsRu extends AppLocalizations {
       'Если вы держите от двух с половиной тренировок в неделю и давно не разгружались, приложение предложит взять такую неделю. Чем плотнее ритм, тем раньше появится подсказка. Она всплывает не чаще раза в неделю и только в личном режиме — и остаётся рекомендацией, а не медицинским советом.';
 
   @override
+  String get instructionSectionMuscleLoad => 'Нагрузка';
+
+  @override
+  String get instructionMuscleLoadIntro =>
+      'Фигура рядом со шкалой ритма открывает экран нагрузки. Та же картинка крупнее, и у каждой из десяти групп своя сноска. Первое число — рабочие сеты в неделю, второе — тоннаж. Оба считаются как среднее за последние 28 дней.';
+
+  @override
+  String get instructionMuscleLoadCountsTitle => 'Что идёт в счёт';
+
+  @override
+  String get instructionMuscleLoadCountsDesc =>
+      'Сет считается, только если указан RIR от 0 до 5. Пустой RIR и ∞ — разминка. Кардио не считается, как и упражнение без группы или с пометкой «не для быстрой тренировки». Тоннаж — вес × повторы, в тех единицах, в которых вы записываете вес.';
+
+  @override
+  String get instructionMuscleLoadTrendTitle => 'По неделям';
+
+  @override
+  String get instructionMuscleLoadTrendDesc =>
+      'Нажмите на сноску — откроется график этой группы. Каждая метка — календарная неделя, в которой был хотя бы один сет с RIR. Недели без таких сетов на график не попадают. Месяц, год и всё время меняют окно. Число на сноске — среднее за 28 дней, метка — фактический итог этой недели.';
+
+  @override
+  String get instructionMuscleLoadLineSetsDesc =>
+      'Голубая — рабочие сеты за неделю.';
+
+  @override
+  String get instructionMuscleLoadLineTonnageDesc =>
+      'Жёлтая — тоннаж за неделю, вес × повторы.';
+
+  @override
   String get instructionSectionCalendar => 'Календарь и история';
 
   @override
@@ -1277,7 +1374,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionHistoryEditDesc =>
-      'Сохранённую тренировку можно раскрыть и поправить: добавить упражнение или подход, изменить цифры, удалить сессию целиком. Изменения сохраняются сразу.';
+      'Сохранённую тренировку можно раскрыть и поправить на месте: добавить пропущенное упражнение, подход или заметку, изменить цифры или порядок, удалить сессию целиком. Изменения сохраняются сразу.';
 
   @override
   String get instructionSectionStats => 'Статистика';
@@ -1322,7 +1419,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'Отсюда начинается сегодняшняя сессия и открываются прогресс, избранное и история по месяцам. Если силовых дней достаточно, здесь же шкала ритма. Удаление клиента снимает будущие сессии, но прошлые тренировки остаются для отчётности.';
+      'Отсюда начинается сегодняшняя сессия и открываются прогресс, избранное и история по месяцам. Фигура нагрузки здесь всегда, а шкала ритма появляется рядом, когда силовых дней достаточно. Обе смотрят завершённые сессии этого клиента. Удаление клиента снимает будущие сессии, но прошлые тренировки остаются для отчётности.';
 
   @override
   String get instructionTrainerScheduleTitle => 'Расписание';
@@ -1330,6 +1427,13 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get instructionTrainerScheduleDesc =>
       'Календарь тренера показывает сессии всех клиентов: значок «плей» — запланированная, галочка — завершённая, песочные часы — сегодняшняя в работе. Пустые планы прошедших дней убираются сами.';
+
+  @override
+  String get instructionTrainerTimeTitle => 'Изменить время';
+
+  @override
+  String get instructionTrainerTimeDesc =>
+      'Карандаш у запланированной сессии переносит время в тот же день — в календаре или рядом с датой внутри сессии. Карточку можно и удержать. Упражнения, заметка и напоминание остаются. Завершённая или импортированная сессия время не меняет.';
 
   @override
   String get instructionTrainerPlanTitle => 'План сессии';
@@ -1343,7 +1447,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionTrainerRepeatDesc =>
-      'Из профиля клиента или переключателем при добавлении сессии в календаре. Копируется состав упражнений; вес и повторы приходят серыми подсказками, а не готовыми подходами.';
+      'Из профиля клиента или переключателем при добавлении сессии в календаре. Если прошлая тренировка одна, повторяется она. Если их больше, можно выбрать из последних пяти: список отсортирован по заметке, и по ней же можно искать. Копируется состав упражнений; вес и повторы приходят серыми подсказками, а не готовыми подходами.';
 
   @override
   String get instructionPrintSessionTitle => 'Печать сессии';
@@ -1491,14 +1595,139 @@ class AppLocalizationsRu extends AppLocalizations {
       'Это рекомендация, а не медицинский совет. Если чувствуете себя хорошо — менять ничего не нужно.';
 
   @override
+  String get sheetExportButton => 'GOOGLE ТАБЛИЦЫ';
+
+  @override
+  String get sheetImportButton => 'ИМПОРТ ТАБЛИЦЫ';
+
+  @override
+  String get sheetExportTitle => 'Google Таблицы';
+
+  @override
+  String get sheetExportBody =>
+      'В меню «Поделиться» откроется таблица. Откройте её в Google Таблицах или Excel, поправьте дома, скачайте CSV и импортируйте сюда. Не удаляйте столбцы id: по ним тренировки на телефоне обновляются, а не копируются заново. Полная копия по-прежнему в JSON.';
+
+  @override
+  String get sheetExportShare => 'Поделиться таблицей';
+
+  @override
+  String get sheetShareText => 'Таблица IronVibe';
+
+  @override
+  String get sheetImportInvalid => 'Этот файл не похож на таблицу IronVibe.';
+
+  @override
+  String get sheetImportEmpty => 'В таблице нет строк для импорта.';
+
+  @override
+  String get sheetImportPersonalFile =>
+      'Это личный дневник. Импортируйте его в режиме «Тренируюсь сам».';
+
+  @override
+  String get sheetImportCoachFile =>
+      'Это таблица тренера. Импортируйте её в режиме «Тренирую других».';
+
+  @override
+  String get sheetImportNothing =>
+      'Менять нечего. Строки уже совпадают, либо часть пропущена: в один день несколько тренировок, а столбца id нет.';
+
+  @override
+  String sheetImportPreview(
+    int updated,
+    int added,
+    int clientsAdded,
+    int clientsUpdated,
+    int skipped,
+  ) {
+    return 'Обновить тренировок: $updated. Добавить тренировок: $added. Новых клиентов: $clientsAdded. Обновить клиентов: $clientsUpdated. Пропущено строк: $skipped. Тренировок, которых нет в файле, на телефоне не трогаем. Тренировка из файла заменяет свои подходы.';
+  }
+
+  @override
+  String get sheetImportConfirm => 'Импортировать';
+
+  @override
+  String get sheetImportSuccess => 'Таблица импортирована';
+
+  @override
+  String get instructionSheetTitle => 'Google Таблицы';
+
+  @override
+  String get instructionSheetDesc =>
+      'В статистике можно отправить таблицу в Google Таблицы или Excel. Поправьте подходы дома, скачайте CSV и импортируйте обратно. Столбцы id не удаляйте, а строки одного упражнения держите вместе по порядку. Тренировка из файла заменяет свои подходы. Тренировки, которых в файле нет, остаются. Имя, цель и заметки клиента берутся из первой заполненной строки. Заметка к упражнению и заметка к тренировке возвращаются вместе с файлом. Файл без этих столбцов не стирает заметки, которые уже есть на телефоне. Полная копия по-прежнему в JSON.';
+
+  @override
+  String get remindBeforePrefix => 'Добавить уведомление за';
+
+  @override
+  String get remindBeforeSuffix => 'минут';
+
+  @override
+  String get remindPermissionDenied =>
+      'Уведомления выключены, поэтому напоминание не придёт. Их можно разрешить в настройках телефона.';
+
+  @override
+  String get remindPermissionTitle => 'Уведомления выключены';
+
+  @override
+  String get remindPermissionOpenSettings => 'Открыть настройки';
+
+  @override
+  String get remindPermissionNotNow => 'Не сейчас';
+
+  @override
+  String get reminderEveningTitle => 'Завтра';
+
+  @override
+  String reminderEveningBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Завтра у вас $count тренировок, первая начнётся в $time.',
+      many: 'Завтра у вас $count тренировок, первая начнётся в $time.',
+      few: 'Завтра у вас $count тренировки, первая начнётся в $time.',
+      one: 'Завтра у вас одна тренировка, она начнётся в $time.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderAlarmTitle => 'Тренировка';
+
+  @override
+  String reminderAlarmBody(String name, String time) {
+    return '$name: начало в $time.';
+  }
+
+  @override
+  String get reminderChannelEvening => 'Напоминание накануне';
+
+  @override
+  String get reminderChannelEveningDesc =>
+      'В 21:00, если завтра есть тренировки.';
+
+  @override
+  String get reminderChannelAlarm => 'Будильник тренировки';
+
+  @override
+  String get reminderChannelAlarmDesc =>
+      'Сигнал незадолго до тренировки, если вы его включили.';
+
+  @override
+  String get instructionReminderTitle => 'Напоминания';
+
+  @override
+  String get instructionReminderDesc =>
+      'Вечером накануне дня с тренировками, в 21:00, приложение пишет, сколько занятий завтра и во сколько начнётся первое. Считаются и ваши будущие тренировки, и сессии клиентов. Отдельный сигнал выключен, пока вы сами не включите его при выборе времени — от 10 минут до 2 часов. Если уведомления выключены, приложение предложит открыть настройки телефона. Оба напоминания ставятся на телефоне и никуда не отправляются.';
+
+  @override
   String get syncStatusOnDevice => 'Сохранено на этом телефоне';
 
   @override
-  String get syncStatusWillSync => 'Синхронизируется, когда появится сеть';
+  String get syncStatusSynced => 'Синхронизировано';
 
   @override
   String get syncStatusSyncing => 'Синхронизация…';
 
   @override
-  String get syncStatusSynced => 'Синхронизировано';
+  String get syncStatusWillSync => 'Синхронизируется, когда появится сеть';
 }

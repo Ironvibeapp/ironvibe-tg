@@ -251,6 +251,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get muscleGroupArmExt => 'Triceps';
 
   @override
+  String get muscleGroupGlutes => 'Glutes';
+
+  @override
+  String get muscleGroupCalves => 'Calves';
+
+  @override
+  String get loadInsightTitle => 'Muscle load';
+
+  @override
+  String get rhythmCardLabel => 'RHYTHM';
+
+  @override
+  String get loadCardLabel => 'LOAD';
+
+  @override
+  String get loadSetsShort => 'sets';
+
+  @override
+  String get loadTonnageShort => 'tonnage';
+
+  @override
+  String get loadWindow =>
+      'Weekly average over the last 28 days. First number is sets per week, second is tonnage. Only sets with RIR count; an empty RIR or ∞ is a warm-up. Exercises with no group are left out.';
+
+  @override
+  String get loadTrendHint =>
+      'Each mark is one calendar week: working sets and tonnage.';
+
+  @override
   String get muscleGroupUntagged => '—';
 
   @override
@@ -466,6 +495,27 @@ class AppLocalizationsEn extends AppLocalizations {
       'This client has no previous workout to repeat.';
 
   @override
+  String get repeatPickTitle => 'Repeat a workout';
+
+  @override
+  String get repeatPickSearchHint => 'Search by note';
+
+  @override
+  String get repeatPickNoNote => 'No note';
+
+  @override
+  String get repeatPickNoMatch => 'No workout with that note.';
+
+  @override
+  String get reorderExercisesTitle => 'Exercise order';
+
+  @override
+  String get reorderExercisesHint => 'Drag the handle to move a row.';
+
+  @override
+  String get reorderExercisesTooltip => 'Change order';
+
+  @override
   String get editPlan => 'Edit plan';
 
   @override
@@ -595,6 +645,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get time => 'Time';
+
+  @override
+  String get editSessionTime => 'Change time';
 
   @override
   String get rest => 'Rest';
@@ -792,7 +845,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get instructionChapterSessionBlurb =>
-      'Sets, weight, reps, RIR, cardio, and finishing a session.';
+      'Sets, weight, reps, RIR, an exercise note, cardio, and finishing a session.';
 
   @override
   String get instructionChapterTimerTitle => 'Stopwatch';
@@ -820,7 +873,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get instructionChapterRhythmBlurb =>
-      'The weekly rhythm gauge and the deload week.';
+      'The weekly rhythm gauge, muscle load, and the deload week.';
 
   @override
   String get instructionChapterDataTitle => 'History and data';
@@ -855,7 +908,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get instructionTrainSelfDesc =>
-      'Your space: workouts, calendar, personal progress, favorites, and the rhythm gauge.';
+      'Your space: workouts, calendar, personal progress, favorites, the rhythm gauge, and muscle load.';
 
   @override
   String get instructionTrainOthersTitle => 'I train others';
@@ -941,11 +994,25 @@ class AppLocalizationsEn extends AppLocalizations {
       'Last time\'s weight and reps show in grey — a target to beat, not a logged set. Only numbers you type yourself go into history.';
 
   @override
+  String get instructionExerciseNoteTitle => 'Exercise note';
+
+  @override
+  String get instructionExerciseNoteDesc =>
+      'The pencil on the exercise header is a note for this workout only. Older notes for the same movement are listed above, each with its date. Clear the field to remove the note. It stays with that session, including in a saved workout.';
+
+  @override
   String get instructionRemoveExerciseTitle => 'Remove exercise';
 
   @override
   String get instructionRemoveExerciseDesc =>
       'The red X removes the block from the current session. Saved history is not changed.';
+
+  @override
+  String get instructionReorderExercisesTitle => 'Change exercise order';
+
+  @override
+  String get instructionReorderExercisesDesc =>
+      'Tap the drag handle on the exercise header. A short list opens: drag a row into place. The new order is saved for this workout and stays that way in its history.';
 
   @override
   String get instructionSectionSetControl => 'Set row';
@@ -1130,7 +1197,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get instructionMuscleGroupsIntro =>
-      'A group is an optional tag on your name. It is used only by the quick workout, to build a balanced full-body session. Eight groups: chest, back, shoulders, core, front thigh, rear thigh, biceps, triceps.';
+      'A group is an optional tag on your name. The quick workout uses it to build a balanced full-body session, and muscle load counts weekly sets and tonnage from it. Ten groups: chest, back, shoulders, core, front thigh, rear thigh, glutes, calves, biceps, triceps.';
 
   @override
   String get instructionMuscleGroupTagTitle => 'How to tag';
@@ -1216,7 +1283,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get instructionRhythmIntro =>
-      'Once you have at least three strength days in the last four weeks, a rhythm gauge appears at the top of the training screen. It is not a goal and not a grade — just how often you currently get to the gym.';
+      'Once you have at least three strength days in the last four weeks, a rhythm gauge appears at the top of the training screen, beside the muscle-load figure. It is not a goal and not a grade — just how often you currently get to the gym. The figure stays even before the gauge appears.';
 
   @override
   String get instructionRhythmGaugeTitle => 'Days per week';
@@ -1247,6 +1314,35 @@ class AppLocalizationsEn extends AppLocalizations {
       'If you hold two and a half sessions a week or more and have not deloaded in a while, the app suggests taking such a week. The denser the rhythm, the sooner the hint appears. It shows at most once a week, in personal mode only — and it stays a recommendation, not medical advice.';
 
   @override
+  String get instructionSectionMuscleLoad => 'Muscle load';
+
+  @override
+  String get instructionMuscleLoadIntro =>
+      'The figure beside the rhythm gauge opens the load screen. The same picture is larger, with a callout for each of the ten muscle groups. The first number is working sets per week, the second is tonnage. Both are the average of the last 28 days.';
+
+  @override
+  String get instructionMuscleLoadCountsTitle => 'What counts';
+
+  @override
+  String get instructionMuscleLoadCountsDesc =>
+      'A set counts only when RIR is set, from 0 to 5. An empty RIR and ∞ are warm-ups. Cardio does not count, nor does an exercise with no group or one marked not for the quick workout. Tonnage is weight times reps, in the units you log.';
+
+  @override
+  String get instructionMuscleLoadTrendTitle => 'Week by week';
+
+  @override
+  String get instructionMuscleLoadTrendDesc =>
+      'Tap a callout to open that group\'s chart. Each mark is a calendar week with at least one set that has RIR. Weeks without those sets stay off the chart. Month, year, and all time change the window. The number on the callout is the 28-day average; a mark is that week\'s actual total.';
+
+  @override
+  String get instructionMuscleLoadLineSetsDesc =>
+      'Cyan — working sets that week.';
+
+  @override
+  String get instructionMuscleLoadLineTonnageDesc =>
+      'Yellow — tonnage that week, weight times reps.';
+
+  @override
   String get instructionSectionCalendar => 'Calendar and history';
 
   @override
@@ -1275,7 +1371,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get instructionHistoryEditDesc =>
-      'A saved workout can be expanded and edited: add an exercise or a set, change the numbers, or delete the session. Changes save immediately.';
+      'Open a saved workout and edit it in place: add an exercise you skipped, a set, or a note, change the numbers or the order, or delete the session. Changes save immediately.';
 
   @override
   String get instructionSectionStats => 'Statistics';
@@ -1320,7 +1416,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'Today\'s session starts here, along with progress, favorites, and history by month. If there are enough strength days, the rhythm gauge is here too. Deleting a client removes future sessions; past workouts stay for reporting.';
+      'Today\'s session starts here, along with progress, favorites, and history by month. The muscle-load figure is here, and the rhythm gauge joins it once there are enough strength days. Both read this client\'s finished sessions. Deleting a client removes future sessions; past workouts stay for reporting.';
 
   @override
   String get instructionTrainerScheduleTitle => 'Schedule';
@@ -1328,6 +1424,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get instructionTrainerScheduleDesc =>
       'The coach calendar shows sessions for every client: a play icon means planned, a check means finished, an hourglass means today is in progress. Empty plans from past days are cleared on their own.';
+
+  @override
+  String get instructionTrainerTimeTitle => 'Change time';
+
+  @override
+  String get instructionTrainerTimeDesc =>
+      'The pencil on a planned session moves the clock on the same day — on the calendar, or next to the date inside the session. You can also hold the session card. Exercises, the session note, and the reminder stay. A finished or imported session keeps its time.';
 
   @override
   String get instructionTrainerPlanTitle => 'Session plan';
@@ -1341,7 +1444,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get instructionTrainerRepeatDesc =>
-      'From the client profile, or as a switch when adding a session on the calendar. The exercise list is copied; weights and reps come as grey hints, not as finished sets.';
+      'From the client profile, or as a switch when adding a session on the calendar. One past workout is repeated as-is. If there are more, pick from the last five: they are sorted by the note, and you can search that note. The exercise list is copied; weights and reps come as grey hints, not as finished sets.';
 
   @override
   String get instructionPrintSessionTitle => 'Print a session';
@@ -1486,14 +1589,137 @@ class AppLocalizationsEn extends AppLocalizations {
       'This is a recommendation, not medical advice. If you feel fine, nothing has to change.';
 
   @override
+  String get sheetExportButton => 'GOOGLE SHEETS';
+
+  @override
+  String get sheetImportButton => 'IMPORT SHEET';
+
+  @override
+  String get sheetExportTitle => 'Google Sheets';
+
+  @override
+  String get sheetExportBody =>
+      'A spreadsheet opens in the share menu. Open it in Google Sheets or Excel, edit it at home, then download CSV and import it here. Keep the id columns so workouts already on the phone update instead of being copied again. The JSON backup is still the full copy.';
+
+  @override
+  String get sheetExportShare => 'Share spreadsheet';
+
+  @override
+  String get sheetShareText => 'IronVibe spreadsheet';
+
+  @override
+  String get sheetImportInvalid => 'This file is not an IronVibe spreadsheet.';
+
+  @override
+  String get sheetImportEmpty => 'This spreadsheet has no rows to import.';
+
+  @override
+  String get sheetImportPersonalFile =>
+      'This is a personal log. Import it in the mode where you train yourself.';
+
+  @override
+  String get sheetImportCoachFile =>
+      'This is a coach spreadsheet. Import it in the mode where you train others.';
+
+  @override
+  String get sheetImportNothing =>
+      'Nothing to change. The rows already match, or some were skipped because one day has several workouts and the id column is missing.';
+
+  @override
+  String sheetImportPreview(
+    int updated,
+    int added,
+    int clientsAdded,
+    int clientsUpdated,
+    int skipped,
+  ) {
+    return 'Workouts to update: $updated. Workouts to add: $added. Clients to add: $clientsAdded. Clients to update: $clientsUpdated. Skipped rows: $skipped. Workouts left out of the file stay on the phone. A workout in the file replaces its sets.';
+  }
+
+  @override
+  String get sheetImportConfirm => 'Import';
+
+  @override
+  String get sheetImportSuccess => 'Spreadsheet imported';
+
+  @override
+  String get instructionSheetTitle => 'Google Sheets';
+
+  @override
+  String get instructionSheetDesc =>
+      'Statistics can share a spreadsheet for Google Sheets or Excel. Edit the sets at home, download CSV, and import it back. Keep the id columns, and keep each exercise\'s rows together in order. A workout in the file replaces its sets. Workouts missing from the file stay. A client\'s name, goal, and notes come from the first filled row. The exercise note and the session note come back with the file. A file without those columns does not erase notes already on the phone. JSON is still the full backup.';
+
+  @override
+  String get remindBeforePrefix => 'Add a notification';
+
+  @override
+  String get remindBeforeSuffix => 'minutes before';
+
+  @override
+  String get remindPermissionDenied =>
+      'Notifications are off, so this reminder will not arrive. You can allow them in the phone settings.';
+
+  @override
+  String get remindPermissionTitle => 'Notifications are off';
+
+  @override
+  String get remindPermissionOpenSettings => 'Open settings';
+
+  @override
+  String get remindPermissionNotNow => 'Not now';
+
+  @override
+  String get reminderEveningTitle => 'Tomorrow';
+
+  @override
+  String reminderEveningBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tomorrow you have $count workouts. The first starts at $time.',
+      one: 'Tomorrow you have 1 workout. It starts at $time.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderAlarmTitle => 'Workout';
+
+  @override
+  String reminderAlarmBody(String name, String time) {
+    return '$name starts at $time.';
+  }
+
+  @override
+  String get reminderChannelEvening => 'Day-before reminder';
+
+  @override
+  String get reminderChannelEveningDesc =>
+      'At 21:00 on the evening before a day with workouts.';
+
+  @override
+  String get reminderChannelAlarm => 'Workout alarm';
+
+  @override
+  String get reminderChannelAlarmDesc =>
+      'A signal shortly before a workout you turned on.';
+
+  @override
+  String get instructionReminderTitle => 'Reminders';
+
+  @override
+  String get instructionReminderDesc =>
+      'The evening before a day with workouts, at 21:00, the app says how many sessions are tomorrow and when the first one starts. Your own future workouts and client sessions both count. A separate alarm stays off until you turn it on while choosing the time — from 10 minutes to 2 hours before. If notifications are off, the app offers to open the phone settings. Both reminders stay on the phone and are not sent anywhere.';
+
+  @override
   String get syncStatusOnDevice => 'Saved on this phone';
 
   @override
-  String get syncStatusWillSync => 'Will sync when you\'re online';
+  String get syncStatusSynced => 'Synced';
 
   @override
   String get syncStatusSyncing => 'Syncing…';
 
   @override
-  String get syncStatusSynced => 'Synced';
+  String get syncStatusWillSync => 'Will sync when you\'re online';
 }

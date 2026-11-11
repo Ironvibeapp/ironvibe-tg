@@ -249,6 +249,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get muscleGroupArmExt => 'العضلة ثلاثية الرؤوس';
 
   @override
+  String get muscleGroupGlutes => 'الأرداف';
+
+  @override
+  String get muscleGroupCalves => 'السمانة';
+
+  @override
+  String get loadInsightTitle => 'الحمل';
+
+  @override
+  String get rhythmCardLabel => 'الإيقاع';
+
+  @override
+  String get loadCardLabel => 'الحمل';
+
+  @override
+  String get loadSetsShort => 'مجموعات';
+
+  @override
+  String get loadTonnageShort => 'حجم';
+
+  @override
+  String get loadWindow =>
+      'متوسط آخر 28 يومًا. الرقم الأول مجموعات في الأسبوع، والثاني الحجم. تُحسب فقط المجموعات التي فيها RIR؛ فراغ RIR أو ∞ إحماء. التمارين بلا مجموعة لا تُحسب.';
+
+  @override
+  String get loadTrendHint => 'كل علامة أسبوع تقويمي: مجموعات العمل والحجم.';
+
+  @override
   String get muscleGroupUntagged => '—';
 
   @override
@@ -461,6 +489,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get repeatLastUnavailable => 'لا يوجد لهذا العميل تدريب سابق لتكراره.';
 
   @override
+  String get repeatPickTitle => 'تكرار تدريب';
+
+  @override
+  String get repeatPickSearchHint => 'بحث بالملاحظة';
+
+  @override
+  String get repeatPickNoNote => 'بلا ملاحظة';
+
+  @override
+  String get repeatPickNoMatch => 'لا يوجد تدريب بهذه الملاحظة.';
+
+  @override
+  String get reorderExercisesTitle => 'ترتيب التمارين';
+
+  @override
+  String get reorderExercisesHint => 'اسحب المقبض لتحريك الصف.';
+
+  @override
+  String get reorderExercisesTooltip => 'تغيير الترتيب';
+
+  @override
   String get editPlan => 'تعديل الخطة';
 
   @override
@@ -589,6 +638,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get time => 'الوقت';
+
+  @override
+  String get editSessionTime => 'تغيير الوقت';
 
   @override
   String get rest => 'راحة';
@@ -786,7 +838,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionChapterSessionBlurb =>
-      'المجموعات والوزن والتكرارات وRIR والكارديو وإنهاء الحصة.';
+      'المجموعات والوزن والتكرارات وRIR وملاحظة التمرين والكارديو وإنهاء الحصة.';
 
   @override
   String get instructionChapterTimerTitle => 'المؤقت';
@@ -814,7 +866,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionChapterRhythmBlurb =>
-      'مؤشر الإيقاع الأسبوعي وأسبوع التخفيف.';
+      'مؤشر الإيقاع الأسبوعي وحمل العضلات وأسبوع التخفيف.';
 
   @override
   String get instructionChapterDataTitle => 'السجل والبيانات';
@@ -849,7 +901,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionTrainSelfDesc =>
-      'مساحتك: التدريبات والتقويم والتقدم الشخصي والمفضلة ومؤشر الإيقاع.';
+      'مساحتك: التدريبات والتقويم والتقدم الشخصي والمفضلة ومؤشر الإيقاع وحمل العضلات.';
 
   @override
   String get instructionTrainOthersTitle => 'أدرّب آخرين';
@@ -935,11 +987,25 @@ class AppLocalizationsAr extends AppLocalizations {
       'وزن المرة السابقة وتكراراتها تظهر بالرمادي — هدف تتجاوزه، لا مجموعة مسجّلة. لا يدخل السجل إلا الأرقام التي تكتبها بنفسك.';
 
   @override
+  String get instructionExerciseNoteTitle => 'ملاحظة التمرين';
+
+  @override
+  String get instructionExerciseNoteDesc =>
+      'قلم الرصاص في رأس التمرين ملاحظة لهذه الحصة فقط. أعلاه ملاحظات أقدم للحركة نفسها، كل واحدة بتاريخها. الحقل الفارغ يمسح الملاحظة. تبقى مع هذه الحصة، بما في ذلك تدريب محفوظ.';
+
+  @override
   String get instructionRemoveExerciseTitle => 'إزالة التمرين';
 
   @override
   String get instructionRemoveExerciseDesc =>
       'علامة X الحمراء تزيل الكتلة من الحصة الحالية. السجل المحفوظ لا يتغيّر.';
+
+  @override
+  String get instructionReorderExercisesTitle => 'ترتيب التمارين';
+
+  @override
+  String get instructionReorderExercisesDesc =>
+      'المس مقبض السحب في رأس التمرين. تفتح قائمة قصيرة: اسحب الصف إلى مكانه. يبقى الترتيب الجديد في هذا التدريب وفي سجله.';
 
   @override
   String get instructionSectionSetControl => 'صف المجموعة';
@@ -1124,7 +1190,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionMuscleGroupsIntro =>
-      'المجموعة وسم اختياري على اسمك. يستخدمها التدريب السريع فقط لبناء حصة متوازنة لكامل الجسم. ثماني مجموعات: الصدر والظهر والكتفان والجذع وأمام الفخذ وخلف الفخذ والعضلة ذات الرأسين وثلاثية الرؤوس.';
+      'المجموعة وسم اختياري على اسمك. يستخدمها التدريب السريع لبناء حصة متوازنة لكامل الجسم، وشاشة الحمل تحسب منها المجموعات الأسبوعية والحجم. عشر مجموعات: الصدر والظهر والكتفان والجذع وأمام الفخذ وخلف الفخذ والأرداف والسمانة والعضلة ذات الرأسين وثلاثية الرؤوس.';
 
   @override
   String get instructionMuscleGroupTagTitle => 'كيف توسِم';
@@ -1210,7 +1276,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionRhythmIntro =>
-      'عندما تجتمع ثلاثة أيام قوة على الأقل في الأسابيع الأربعة الأخيرة، يظهر مؤشر الإيقاع أعلى شاشة التدريب. ليس هدفًا ولا درجة — فقط كم مرة تصل إلى النادي الآن.';
+      'عندما تجتمع ثلاثة أيام قوة على الأقل في الأسابيع الأربعة الأخيرة، يظهر مؤشر الإيقاع أعلى شاشة التدريب بجانب شكل حمل العضلات. ليس هدفًا ولا درجة — فقط كم مرة تصل إلى النادي الآن. الشكل يبقى حتى قبل ظهور المؤشر.';
 
   @override
   String get instructionRhythmGaugeTitle => 'أيام في الأسبوع';
@@ -1241,6 +1307,35 @@ class AppLocalizationsAr extends AppLocalizations {
       'إذا حافظت على حصتين ونصف أسبوعيًا أو أكثر ولم تخفّف منذ مدة، يقترح التطبيق أخذ مثل هذا الأسبوع. كلما زاد الإيقاع ظهر التلميح أبكر. يظهر مرة في الأسبوع على الأكثر، وفي الوضع الشخصي فقط — ويبقى توصية لا نصيحة طبية.';
 
   @override
+  String get instructionSectionMuscleLoad => 'الحمل';
+
+  @override
+  String get instructionMuscleLoadIntro =>
+      'الشكل بجانب مؤشر الإيقاع يفتح شاشة الحمل. الصورة نفسها أكبر، ولكل مجموعة من العشر تعليقها. الرقم الأول مجموعات العمل في الأسبوع، والثاني الحجم. كلاهما متوسط آخر 28 يومًا.';
+
+  @override
+  String get instructionMuscleLoadCountsTitle => 'ما يُحسب';
+
+  @override
+  String get instructionMuscleLoadCountsDesc =>
+      'تُحسب المجموعة فقط إذا كان RIR من 0 إلى 5. RIR الفارغ و∞ إحماء. الكارديو لا يُحسب، ولا تمرين بلا مجموعة أو الموسوم بأنه ليس للتدريب السريع. الحجم هو الوزن في التكرارات، بالوحدات التي تدوّنها.';
+
+  @override
+  String get instructionMuscleLoadTrendTitle => 'أسبوعًا بأسبوع';
+
+  @override
+  String get instructionMuscleLoadTrendDesc =>
+      'المس تعليقًا لفتح مخطط تلك المجموعة. كل علامة أسبوع تقويمي فيه مجموعة واحدة على الأقل بـ RIR. الأسابيع بلا هذه المجموعات لا تظهر. الشهر والسنة وكل الوقت تبدّل النافذة. الرقم على التعليق متوسط 28 يومًا، والعلامة مجموع ذلك الأسبوع الفعلي.';
+
+  @override
+  String get instructionMuscleLoadLineSetsDesc =>
+      'سماوي — مجموعات العمل في ذلك الأسبوع.';
+
+  @override
+  String get instructionMuscleLoadLineTonnageDesc =>
+      'أصفر — حجم ذلك الأسبوع، الوزن في التكرارات.';
+
+  @override
   String get instructionSectionCalendar => 'التقويم والسجل';
 
   @override
@@ -1269,7 +1364,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionHistoryEditDesc =>
-      'يمكن توسيع تدريب محفوظ وتعديله: إضافة تمرين أو مجموعة أو تغيير الأرقام أو حذف الحصة. تُحفظ التغييرات فورًا.';
+      'يمكن توسيع تدريب محفوظ وتعديله في مكانه: إضافة تمرين فات، أو مجموعة، أو ملاحظة، أو تغيير الأرقام أو الترتيب، أو حذف الحصة. تُحفظ التغييرات فورًا.';
 
   @override
   String get instructionSectionStats => 'الإحصاءات';
@@ -1314,7 +1409,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'حصة اليوم تبدأ من هنا، ومعها التقدم والمفضلة والسجل حسب الشهر. إذا كفت أيام القوة يظهر مؤشر الإيقاع أيضًا. حذف العميل يزيل الحصص القادمة؛ التدريبات الماضية تبقى للتقارير.';
+      'حصة اليوم تبدأ من هنا، ومعها التقدم والمفضلة والسجل حسب الشهر. شكل الحمل موجود دائمًا، وينضم إليه مؤشر الإيقاع عندما تكفي أيام القوة. كلاهما يقرأ حصص هذا العميل المكتملة. حذف العميل يزيل الحصص القادمة؛ التدريبات الماضية تبقى للتقارير.';
 
   @override
   String get instructionTrainerScheduleTitle => 'الجدول';
@@ -1322,6 +1417,13 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get instructionTrainerScheduleDesc =>
       'تقويم المدرب يعرض حصص كل العملاء: أيقونة التشغيل تعني مخططًا، والعلامة تعني منتهيًا، والساعة الرملية تعني أن اليوم قيد التنفيذ. الخطط الفارغة من الأيام الماضية تُمسح وحدها.';
+
+  @override
+  String get instructionTrainerTimeTitle => 'تغيير الوقت';
+
+  @override
+  String get instructionTrainerTimeDesc =>
+      'قلم الرصاص على حصة مخطط لها ينقل الساعة في اليوم نفسه — في التقويم، أو بجانب التاريخ داخل الحصة. يمكن أيضًا الضغط مطولاً على البطاقة. التمارين والملاحظة والتذكير تبقى. الحصة المنتهية أو المستوردة تحتفظ بوقتها.';
 
   @override
   String get instructionTrainerPlanTitle => 'خطة الحصة';
@@ -1335,7 +1437,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionTrainerRepeatDesc =>
-      'من ملف العميل، أو كمفتاح عند إضافة حصة في التقويم. تُنسخ قائمة التمارين؛ الأوزان والتكرارات تأتي تلميحات رمادية لا مجموعات منتهية.';
+      'من ملف العميل، أو كمفتاح عند إضافة حصة في التقويم. إن كان هناك تدريب سابق واحد يُكرَّر هو. وإن كان أكثر، تختار من آخر خمسة: مرتبة حسب الملاحظة، ويمكن البحث بها. تُنسخ قائمة التمارين؛ الأوزان والتكرارات تأتي تلميحات رمادية لا مجموعات منتهية.';
 
   @override
   String get instructionPrintSessionTitle => 'طباعة حصة';
@@ -1484,14 +1586,140 @@ class AppLocalizationsAr extends AppLocalizations {
       'هذه توصية لا نصيحة طبية. إذا كنت بخير، لا شيء يجب أن يتغيّر.';
 
   @override
+  String get sheetExportButton => 'GOOGLE SHEETS';
+
+  @override
+  String get sheetImportButton => 'استيراد الجدول';
+
+  @override
+  String get sheetExportTitle => 'Google Sheets';
+
+  @override
+  String get sheetExportBody =>
+      'تفتح قائمة المشاركة جدولاً. افتحه في Google Sheets أو Excel، وعدّله في البيت، ثم نزّل CSV واستورده هنا. أبقِ أعمدة id حتى تتحدّث التمارين الموجودة على الهاتف بدل أن تُنسخ من جديد. تبقى نسخة JSON النسخة الكاملة.';
+
+  @override
+  String get sheetExportShare => 'مشاركة الجدول';
+
+  @override
+  String get sheetShareText => 'جدول IronVibe';
+
+  @override
+  String get sheetImportInvalid => 'هذا الملف ليس جدول IronVibe.';
+
+  @override
+  String get sheetImportEmpty => 'لا صفوف للاستيراد في هذا الجدول.';
+
+  @override
+  String get sheetImportPersonalFile =>
+      'هذا سجل شخصي. استورده في وضع التدريب لنفسك.';
+
+  @override
+  String get sheetImportCoachFile =>
+      'هذا جدول مدرّب. استورده في وضع تدريب الآخرين.';
+
+  @override
+  String get sheetImportNothing =>
+      'لا شيء للتغيير. الصفوف متطابقة أصلًا، أو تم تخطي بعضها لأن اليوم فيه عدة تمارين وعمود id غير موجود.';
+
+  @override
+  String sheetImportPreview(
+    int updated,
+    int added,
+    int clientsAdded,
+    int clientsUpdated,
+    int skipped,
+  ) {
+    return 'تمارين للتحديث: $updated. تمارين للإضافة: $added. عملاء للإضافة: $clientsAdded. عملاء للتحديث: $clientsUpdated. صفوف متخطاة: $skipped. التمارين غير الموجودة في الملف تبقى على الهاتف. التمرين الوارد في الملف يستبدل مجموعاته.';
+  }
+
+  @override
+  String get sheetImportConfirm => 'استيراد';
+
+  @override
+  String get sheetImportSuccess => 'تم استيراد الجدول';
+
+  @override
+  String get instructionSheetTitle => 'Google Sheets';
+
+  @override
+  String get instructionSheetDesc =>
+      'من الإحصاءات يمكن مشاركة جدول لفتحه في Google Sheets أو Excel. عدّل المجموعات في البيت، نزّل CSV، ثم استوردها. أبقِ أعمدة id واجعل صفوف كل تمرين معًا بالترتيب. التمرين الوارد في الملف يستبدل مجموعاته، والتمارين الغائبة عن الملف تبقى. اسم العميل وهدفه وملاحظاته تُؤخذ من أول صف ممتلئ. ملاحظة التمرين وملاحظة الحصة تعودان مع الملف. الملف الذي بلا هذه الأعمدة لا يمسح الملاحظات الموجودة على الهاتف. يبقى JSON النسخة الكاملة.';
+
+  @override
+  String get remindBeforePrefix => 'أضف تنبيهًا قبل';
+
+  @override
+  String get remindBeforeSuffix => 'دقيقة';
+
+  @override
+  String get remindPermissionDenied =>
+      'الإشعارات متوقفة، لذا لن يصل هذا التنبيه. يمكن السماح بها من إعدادات الهاتف.';
+
+  @override
+  String get remindPermissionTitle => 'الإشعارات متوقفة';
+
+  @override
+  String get remindPermissionOpenSettings => 'فتح الإعدادات';
+
+  @override
+  String get remindPermissionNotNow => 'ليس الآن';
+
+  @override
+  String get reminderEveningTitle => 'غدًا';
+
+  @override
+  String reminderEveningBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'غدًا $count تمرين، الأول يبدأ في $time.',
+      many: 'غدًا $count تمرينًا، الأول يبدأ في $time.',
+      few: 'غدًا $count تمارين، الأول يبدأ في $time.',
+      two: 'غدًا تمرينان، الأول يبدأ في $time.',
+      one: 'غدًا تمرين واحد، يبدأ في $time.',
+      zero: 'غدًا لا توجد تمارين.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderAlarmTitle => 'تمرين';
+
+  @override
+  String reminderAlarmBody(String name, String time) {
+    return '$name يبدأ في $time.';
+  }
+
+  @override
+  String get reminderChannelEvening => 'تذكير مساء اليوم السابق';
+
+  @override
+  String get reminderChannelEveningDesc => 'في 21:00 إذا كان الغد فيه تمارين.';
+
+  @override
+  String get reminderChannelAlarm => 'منبه التمرين';
+
+  @override
+  String get reminderChannelAlarmDesc =>
+      'إشارة قبل التمرين بقليل، إذا فعّلتها.';
+
+  @override
+  String get instructionReminderTitle => 'التذكيرات';
+
+  @override
+  String get instructionReminderDesc =>
+      'مساء اليوم السابق ليوم فيه تمارين، عند 21:00، يخبرك التطبيق كم تمرينًا غدًا ومتى يبدأ الأول. تُحتسب تمارينك القادمة وحصص العملاء معًا. منبّه منفصل يبقى مطفأً إلى أن تشغّله أنت عند اختيار الوقت — من 10 دقائق إلى ساعتين. إذا كانت الإشعارات مطفأة، يعرض التطبيق فتح إعدادات الهاتف. الاثنان يُجدولان على الهاتف ولا يُرسلان إلى أي مكان.';
+
+  @override
   String get syncStatusOnDevice => 'محفوظ على هذا الهاتف';
 
   @override
-  String get syncStatusWillSync => 'ستتم المزامنة عند الاتصال';
+  String get syncStatusSynced => 'تمت المزامنة';
 
   @override
   String get syncStatusSyncing => 'جارٍ المزامنة…';
 
   @override
-  String get syncStatusSynced => 'تمت المزامنة';
+  String get syncStatusWillSync => 'ستتم المزامنة عند الاتصال';
 }

@@ -25,12 +25,7 @@ ExerciseData ironVibeExerciseDataFromPreviousAsHints(ExerciseLog log) {
     if (s.isCardio || log.isCardio) {
       sets.add(SetData(d: s.duration, i: s.intensity));
     } else {
-      sets.add(
-        SetData(
-          hintWeight: s.weight.trim(),
-          hintReps: s.reps.trim(),
-        ),
-      );
+      sets.add(SetData(hintWeight: s.weight.trim(), hintReps: s.reps.trim()));
     }
   }
   return ExerciseData(
@@ -124,13 +119,7 @@ bool ironVibeApplyClientPreviousSetHints({
       changed = true;
     }
     next.add(
-      SetData(
-        w: typedW,
-        r: typedR,
-        ri: ri,
-        hintWeight: hintW,
-        hintReps: hintR,
-      ),
+      SetData(w: typedW, r: typedR, ri: ri, hintWeight: hintW, hintReps: hintR),
     );
   }
   if (!changed) return false;
@@ -157,10 +146,7 @@ SetData ironVibeClientHintedSetAt({
   if (index < 0 || index >= last.sets.length) return SetData();
   final s = last.sets[index];
   if (s.isCardio || !ironVibeSetLogHasLoggedData(s)) return SetData();
-  return SetData(
-    hintWeight: s.weight.trim(),
-    hintReps: s.reps.trim(),
-  );
+  return SetData(hintWeight: s.weight.trim(), hintReps: s.reps.trim());
 }
 
 class ExerciseData {
@@ -253,10 +239,7 @@ Future<bool> ironVibeConfirmSwitchWorkoutType(BuildContext context) async {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text(
-              l.cancel,
-              style: TextStyle(color: dpal.textMuted),
-            ),
+            child: Text(l.cancel, style: TextStyle(color: dpal.textMuted)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -604,7 +587,10 @@ Widget _ironVibeHeaderIconButton(
           end: Alignment.bottomCenter,
           colors: ironVibeMetalGradientColors(isDark: isDark),
         ),
-        border: Border.all(color: ironVibeMetalBorderColor(isDark: isDark), width: 1),
+        border: Border.all(
+          color: ironVibeMetalBorderColor(isDark: isDark),
+          width: 1,
+        ),
       ),
       child: Icon(icon, color: pal.iconPrimary, size: 18),
     ),
@@ -720,12 +706,14 @@ class IronVibePinnedHeaderDelegate extends SliverPersistentHeaderDelegate {
 class IronVibePressScale extends StatelessWidget {
   final Widget child;
   final VoidCallback onPressed;
+  final VoidCallback? onLongPress;
   final bool mediumHaptic;
 
   const IronVibePressScale({
     super.key,
     required this.child,
     required this.onPressed,
+    this.onLongPress,
     this.mediumHaptic = false,
   });
 
@@ -734,6 +722,7 @@ class IronVibePressScale extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onPressed,
+      onLongPress: onLongPress,
       child: child,
     );
   }
@@ -960,11 +949,7 @@ class IronVibeNavTile extends StatelessWidget {
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  badge,
-                  const SizedBox(height: 10),
-                  text,
-                ],
+                children: [badge, const SizedBox(height: 10), text],
               ),
       ),
     );
@@ -1506,7 +1491,9 @@ class _SetRowState extends State<SetRow> {
           ),
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: kIronVibeAccent, width: 1.6),
-            borderRadius: BorderRadius.all(Radius.circular(kIronVibeRadiusField)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(kIronVibeRadiusField),
+            ),
           ),
         ),
       ),
@@ -1598,6 +1585,10 @@ class _SetRowState extends State<SetRow> {
     String? hint,
   }) {
     final hintText = hint?.trim();
+    // Last time's weight and reps. Paler than typed numbers, and not bold.
+    final ghost = pal.brightness == Brightness.dark
+        ? const Color(0xFF5E6672)
+        : const Color(0xFF9AA3B2);
     return SizedBox(
       height: 40,
       child: TextField(
@@ -1609,11 +1600,7 @@ class _SetRowState extends State<SetRow> {
         decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
           hintText: (hintText == null || hintText.isEmpty) ? null : hintText,
-          hintStyle: TextStyle(
-            color: pal.textHint,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
+          hintStyle: TextStyle(color: ghost, fontSize: 14),
         ),
       ),
     );
@@ -1684,10 +1671,12 @@ class _ExerciseSessionNoteDialog extends StatefulWidget {
   });
 
   @override
-  State<_ExerciseSessionNoteDialog> createState() => _ExerciseSessionNoteDialogState();
+  State<_ExerciseSessionNoteDialog> createState() =>
+      _ExerciseSessionNoteDialogState();
 }
 
-class _ExerciseSessionNoteDialogState extends State<_ExerciseSessionNoteDialog> {
+class _ExerciseSessionNoteDialogState
+    extends State<_ExerciseSessionNoteDialog> {
   late final TextEditingController _controller;
 
   @override
@@ -1707,18 +1696,28 @@ class _ExerciseSessionNoteDialogState extends State<_ExerciseSessionNoteDialog> 
     final pal = IronVibePalette.of(context);
     final l = AppLocalizations.of(context)!;
     final dateLabel = ironVibeFormatExerciseNoteDate(widget.sessionDate);
-    final lineStyle = TextStyle(color: pal.textSecondary, fontSize: 14, height: 1.35);
+    final lineStyle = TextStyle(
+      color: pal.textSecondary,
+      fontSize: 14,
+      height: 1.35,
+    );
     return AlertDialog(
       backgroundColor: pal.dialog,
       shape: ironVibeDialogShape(pal),
       title: Text(
         l.exerciseSessionNoteTitle,
-        style: TextStyle(color: pal.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: pal.textPrimary,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       content: SizedBox(
         width: double.maxFinite,
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.55),
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height * 0.55,
+          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -1772,11 +1771,144 @@ class _ExerciseSessionNoteDialogState extends State<_ExerciseSessionNoteDialog> 
           onPressed: () => Navigator.pop(context, _controller.text.trim()),
           child: Text(
             l.save,
-            style: TextStyle(color: pal.textPrimary, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: pal.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
     );
+  }
+}
+
+class _IronVibeReorderRow {
+  _IronVibeReorderRow(this.label);
+  final String label;
+}
+
+bool _ironVibeReorderSheetOpen = false;
+
+/// Compact list so a long workout can be reordered without dragging a tall card.
+Future<bool> ironVibeShowExerciseReorderSheet({
+  required BuildContext context,
+  required List<String> labels,
+  required void Function(int oldIndex, int newIndex) onReorder,
+}) async {
+  if (_ironVibeReorderSheetOpen || labels.length < 2) return false;
+  _ironVibeReorderSheetOpen = true;
+  try {
+    final rows = [for (final label in labels) _IronVibeReorderRow(label)];
+    var moved = false;
+    final pal = IronVibePalette.of(context);
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: pal.sheetModal,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+        side: BorderSide(color: pal.borderSubtle, width: 0.5),
+      ),
+      builder: (sheetContext) {
+        final sheetPal = IronVibePalette.of(sheetContext);
+        final l = AppLocalizations.of(sheetContext)!;
+        final height = MediaQuery.sizeOf(sheetContext).height * 0.62;
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return SizedBox(
+              height: height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                    child: Column(
+                      children: [
+                        Text(
+                          l.reorderExercisesTitle,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: sheetPal.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l.reorderExercisesHint,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: sheetPal.textMuted,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ReorderableListView.builder(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+                      itemCount: rows.length,
+                      proxyDecorator: (child, index, animation) {
+                        return AnimatedBuilder(
+                          animation: animation,
+                          builder: (context, child) {
+                            final t = Curves.easeInOut.transform(
+                              animation.value,
+                            );
+                            return Material(
+                              elevation: 6 * t,
+                              color: sheetPal.exerciseCardBg,
+                              borderRadius: BorderRadius.circular(8),
+                              child: child,
+                            );
+                          },
+                          child: child,
+                        );
+                      },
+                      onReorder: (oldIndex, newIndex) {
+                        setSheetState(() {
+                          ironVibeMoveListItem(rows, oldIndex, newIndex);
+                        });
+                        moved = true;
+                        onReorder(oldIndex, newIndex);
+                      },
+                      itemBuilder: (context, index) {
+                        final row = rows[index];
+                        return Material(
+                          key: ObjectKey(row),
+                          color: Colors.transparent,
+                          child: ListTile(
+                            title: Text(
+                              row.label,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: sheetPal.textPrimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+    return moved;
+  } finally {
+    _ironVibeReorderSheetOpen = false;
   }
 }
 
@@ -1799,8 +1931,17 @@ class ExerciseCard extends StatefulWidget {
   /// Когда задано, долгое нажатие на поле имени — смена упражнения только для этой сессии (тренер), без глобального переименования.
   final Future<void> Function()? onLongPressReassignExercise;
 
+  /// Поставить курсор в название, когда карточка только что добавлена.
+  final bool autofocusName;
+
+  /// Поле названия потеряло фокус. Имя в этот момент уже в [ExerciseData.nameController].
+  final VoidCallback? onExerciseNameCommitted;
+
   /// Удаление карточки из текущей тренировки (тренер и клиент).
   final VoidCallback? onRemove;
+
+  /// Долгое нажатие или нажатие на ручку в шапке: порядок упражнений этой сессии.
+  final VoidCallback? onRequestReorder;
 
   /// Client live/plan: last logged weight/reps as grey hints. Off in personal mode and history.
   final bool previousSetsAsHints;
@@ -1826,7 +1967,10 @@ class ExerciseCard extends StatefulWidget {
     this.onDraftChanged,
     this.sessionPrHighlight = IronVibeSessionPrHighlight.none,
     this.onLongPressReassignExercise,
+    this.autofocusName = false,
+    this.onExerciseNameCommitted,
     this.onRemove,
+    this.onRequestReorder,
     this.previousSetsAsHints = false,
     this.excludeTrainerSession,
     this.noteSessionDate,
@@ -1890,6 +2034,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
     final node = _exerciseNameFieldFocus;
     if (node == null || node.hasFocus) return;
     _refreshClientPreviousHints();
+    widget.onExerciseNameCommitted?.call();
     unawaited(_maybePromptMuscleGroup());
   }
 
@@ -2128,8 +2273,25 @@ class _ExerciseCardState extends State<ExerciseCard> {
         children: [
           if (widget.exerciseIndex != null) ...[
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                if (widget.onRequestReorder != null)
+                  Tooltip(
+                    message: l.reorderExercisesTooltip,
+                    child: GestureDetector(
+                      onTap: widget.onRequestReorder,
+                      onLongPress: widget.onRequestReorder,
+                      behavior: HitTestBehavior.opaque,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 2, 8, 2),
+                        child: Icon(
+                          Icons.drag_indicator,
+                          size: 20,
+                          color: pal.textMuted,
+                        ),
+                      ),
+                    ),
+                  ),
+                const Spacer(),
                 ironVibeExerciseNotePencil(
                   tooltip: l.exerciseSessionNoteTooltip,
                   hasNote: widget.data.note.trim().isNotEmpty,
@@ -2144,9 +2306,9 @@ class _ExerciseCardState extends State<ExerciseCard> {
                     padding: const EdgeInsets.only(right: 4),
                     child: Icon(
                       ironVibeIsFavoriteExercise(
-                        widget.data.nameController.text,
-                        clientName: widget.clientNameForProgress,
-                      )
+                            widget.data.nameController.text,
+                            clientName: widget.clientNameForProgress,
+                          )
                           ? Icons.star
                           : Icons.star_border,
                       size: 16,
@@ -2154,21 +2316,30 @@ class _ExerciseCardState extends State<ExerciseCard> {
                     ),
                   ),
                 ),
-                Text(
-                  l.exerciseHeader,
-                  style: TextStyle(
-                    color: pal.textMuted,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  l.exerciseNumberLabel(widget.exerciseIndex! + 1),
-                  style: TextStyle(
-                    color: pal.textMuted,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                GestureDetector(
+                  onLongPress: widget.onRequestReorder,
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l.exerciseHeader,
+                        style: TextStyle(
+                          color: pal.textMuted,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        l.exerciseNumberLabel(widget.exerciseIndex! + 1),
+                        style: TextStyle(
+                          color: pal.textMuted,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 if (widget.onRemove != null)
@@ -2179,11 +2350,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                       behavior: HitTestBehavior.opaque,
                       child: const Padding(
                         padding: EdgeInsets.only(left: 6, top: 2, bottom: 2),
-                        child: Icon(
-                          Icons.close,
-                          size: 16,
-                          color: Colors.red,
-                        ),
+                        child: Icon(Icons.close, size: 16, color: Colors.red),
                       ),
                     ),
                   ),
@@ -2256,6 +2423,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                     child: TextField(
                       controller: controller,
                       focusNode: focusNode,
+                      autofocus: widget.autofocusName,
                       onEditingComplete: () {
                         onEditingComplete();
                         _refreshClientPreviousHints();
@@ -2271,8 +2439,9 @@ class _ExerciseCardState extends State<ExerciseCard> {
                       maxLines: kIronVibeExerciseNameMaxLines,
                       decoration: InputDecoration(
                         hintText: AppLocalizations.of(context)!.exerciseHint,
-                        hintStyle: ironVibeExerciseNameStyle(pal.textHint)
-                            .copyWith(fontWeight: FontWeight.w500),
+                        hintStyle: ironVibeExerciseNameStyle(
+                          pal.textHint,
+                        ).copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
                   );
@@ -2402,10 +2571,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: segStrength.backgroundColor,
-                        border: Border.all(
-                          color: pal.borderSubtle,
-                          width: 0.5,
-                        ),
+                        border: Border.all(color: pal.borderSubtle, width: 0.5),
                         borderRadius: BorderRadius.circular(
                           kIronVibeRadiusSegment,
                         ),
@@ -2426,10 +2592,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: segCardioType.backgroundColor,
-                        border: Border.all(
-                          color: pal.borderSubtle,
-                          width: 0.5,
-                        ),
+                        border: Border.all(color: pal.borderSubtle, width: 0.5),
                         borderRadius: BorderRadius.circular(
                           kIronVibeRadiusSegment,
                         ),
@@ -2603,7 +2766,8 @@ class _ExerciseCardState extends State<ExerciseCard> {
 const double _kExerciseActionButtonHeight = 48;
 const double _kExerciseActionLabelGap = 4;
 const double _kExerciseActionLabelHeight = 14;
-const double _kExerciseActionRowHeight = _kExerciseActionButtonHeight +
+const double _kExerciseActionRowHeight =
+    _kExerciseActionButtonHeight +
     _kExerciseActionLabelGap +
     _kExerciseActionLabelHeight;
 const double _kExerciseVolumeColumnWidth = 80;
@@ -2763,10 +2927,7 @@ class _ExerciseVolumeSummaryState extends State<_ExerciseVolumeSummary> {
             height: _kExerciseActionButtonHeight,
             width: double.infinity,
             child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: volumeWidget,
-              ),
+              child: FittedBox(fit: BoxFit.scaleDown, child: volumeWidget),
             ),
           ),
           const SizedBox(height: _kExerciseActionLabelGap),
@@ -2873,10 +3034,7 @@ Future<bool> ironVibeConfirmFinishWorkout(BuildContext context) async {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text(
-              l.cancel,
-              style: TextStyle(color: dpal.textMuted),
-            ),
+            child: Text(l.cancel, style: TextStyle(color: dpal.textMuted)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -2988,7 +3146,9 @@ class _IronVibeWorkoutCompleteOverlayState
                 padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
                 decoration: BoxDecoration(
                   color: _cardWhite,
-                  borderRadius: BorderRadius.circular(kIronVibeRadiusDialog + 6),
+                  borderRadius: BorderRadius.circular(
+                    kIronVibeRadiusDialog + 6,
+                  ),
                   boxShadow: ironVibeCardShadow(isDark: false),
                 ),
                 child: Column(

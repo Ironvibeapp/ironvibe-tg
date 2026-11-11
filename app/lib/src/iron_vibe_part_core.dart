@@ -308,6 +308,83 @@ class _UpperCaseExerciseNameInputFormatter extends TextInputFormatter {
   }
 }
 
+/// First letter of each name part becomes uppercase. The rest stays as typed.
+///
+/// Parts split on whitespace, hyphens, and apostrophes: "анна-мария" →
+/// "Анна-Мария", "o'brien" → "O'Brien", "McDonald" stays "McDonald".
+String ironVibeCapitalizePersonName(String raw) {
+  if (raw.isEmpty) return raw;
+  final buffer = StringBuffer();
+  var capNext = true;
+  for (final rune in raw.runes) {
+    if (capNext && _ironVibeIsNameLetter(rune)) {
+      buffer.write(String.fromCharCodes([rune]).toUpperCase());
+      capNext = false;
+      continue;
+    }
+    buffer.write(String.fromCharCodes([rune]));
+    if (_ironVibePersonNameBreak(rune)) capNext = true;
+  }
+  return buffer.toString();
+}
+
+bool _ironVibeIsNameLetter(int rune) {
+  final ch = String.fromCharCodes([rune]);
+  return ch.toUpperCase() != ch.toLowerCase();
+}
+
+bool _ironVibePersonNameBreak(int rune) {
+  if (String.fromCharCodes([rune]).trim().isEmpty) return true;
+  switch (rune) {
+    case 0x2D: // -
+    case 0x2010: // ‐
+    case 0x2011: // ‑
+    case 0x2013: // –
+    case 0x2014: // —
+    case 0x27: // '
+    case 0x2019: // ’
+    case 0x2018: // ‘
+    case 0x2BC: // ʼ
+    case 0x60: // `
+      return true;
+    default:
+      return false;
+  }
+}
+
+/// Capitalizes a person name without dropping the space between parts.
+///
+/// Clearing [TextEditingValue.composing] makes the keyboard throw away that space.
+TextEditingValue ironVibeFormatPersonNameEdit(
+  TextEditingValue oldValue,
+  TextEditingValue newValue,
+) {
+  final next = ironVibeCapitalizePersonName(newValue.text);
+  if (next == newValue.text) return newValue;
+  if (next.length == newValue.text.length) {
+    return TextEditingValue(
+      text: next,
+      selection: newValue.selection,
+      composing: newValue.composing,
+    );
+  }
+  return TextEditingValue(
+    text: next,
+    selection: TextSelection.collapsed(offset: next.length),
+    composing: TextRange.empty,
+  );
+}
+
+class _PersonNameInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    return ironVibeFormatPersonNameEdit(oldValue, newValue);
+  }
+}
+
 List<String> _dedupeNormalizedExerciseBank(Iterable<String> raw) {
   final out = <String>[];
   final seen = <String>{};
@@ -330,7 +407,12 @@ WorkoutLog _normalizeWorkoutLogExerciseNames(WorkoutLog w) {
         ),
       )
       .toList();
-  return WorkoutLog(w.date, exs, id: w.id);
+  return WorkoutLog(
+    w.date,
+    exs,
+    id: w.id,
+    remindMinutesBefore: w.remindMinutesBefore,
+  );
 }
 
 TrainerSession _normalizeTrainerSessionExerciseNames(TrainerSession s) {
@@ -356,6 +438,7 @@ TrainerSession _normalizeTrainerSessionExerciseNames(TrainerSession s) {
     isScheduledPlan: s.isScheduledPlan,
     isCompleted: s.isCompleted,
     isImportedHistory: s.isImportedHistory,
+    remindMinutesBefore: s.remindMinutesBefore,
   );
 }
 
@@ -364,9 +447,10 @@ String _encodeJsonPayload(Map<String, dynamic> payload) {
   return const JsonEncoder.withIndent('  ').convert(payload);
 }
 
-/// Семейное правило версий: … 1.8.4+84, 1.8.5+85 …
-const String kAppVersion = '1.8.5';
-const int kAppBuildNumber = 85;
+/// Семейное правило версий: … 1.9.0+90, 1.9.1+91 …
+const String kAppVersion = '1.9.1';
+const int kAppBuildNumber = 91;
+
 
 /// График прогресса: вес (красный) и повторы (как цвет фокуса полей).
 const Color kProgressChartWeightColor = Color(0xFFFF1744);
@@ -426,7 +510,8 @@ Future<void> ironVibeSetKeepScreenOn(bool on) async {
 }
 
 /// Периодическое автосохранение черновика активной тренировки (раз в минуту + при сворачивании).
-mixin IronVibeWorkoutAutoSave<T extends StatefulWidget> on State<T>, WidgetsBindingObserver {
+mixin IronVibeWorkoutAutoSave<T extends StatefulWidget>
+    on State<T>, WidgetsBindingObserver {
   Timer? _ironVibeAutoSaveTimer;
   VoidCallback? _ironVibeAutoSaveFlush;
   bool _ironVibeAutoSaveActive = false;

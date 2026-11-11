@@ -32,10 +32,7 @@ class _InstructionChartLine {
   final Color color;
   final String description;
 
-  const _InstructionChartLine({
-    required this.color,
-    required this.description,
-  });
+  const _InstructionChartLine({required this.color, required this.description});
 
   bool matches(String query) => description.toLowerCase().contains(query);
 }
@@ -247,9 +244,19 @@ List<_InstructionChapter> _ironVibeInstructionChapters(AppLocalizations l) {
             description: l.instructionPreviousHintsDesc,
           ),
           _InstructionTopic(
+            icon: Icons.edit_outlined,
+            label: l.instructionExerciseNoteTitle,
+            description: l.instructionExerciseNoteDesc,
+          ),
+          _InstructionTopic(
             icon: Icons.delete_outline_rounded,
             label: l.instructionRemoveExerciseTitle,
             description: l.instructionRemoveExerciseDesc,
+          ),
+          _InstructionTopic(
+            icon: Icons.drag_indicator,
+            label: l.instructionReorderExercisesTitle,
+            description: l.instructionReorderExercisesDesc,
           ),
         ]),
         _InstructionBlock.heading(l.instructionSectionSetControl),
@@ -508,6 +515,30 @@ List<_InstructionChapter> _ironVibeInstructionChapters(AppLocalizations l) {
             description: l.instructionRhythmNudgeDesc,
           ),
         ]),
+        _InstructionBlock.heading(l.instructionSectionMuscleLoad),
+        _InstructionBlock.body(l.instructionMuscleLoadIntro),
+        _InstructionBlock.topics([
+          _InstructionTopic(
+            icon: Icons.accessibility_new_rounded,
+            label: l.instructionMuscleLoadCountsTitle,
+            description: l.instructionMuscleLoadCountsDesc,
+          ),
+          _InstructionTopic(
+            icon: Icons.show_chart_rounded,
+            label: l.instructionMuscleLoadTrendTitle,
+            description: l.instructionMuscleLoadTrendDesc,
+          ),
+        ]),
+        _InstructionBlock.chartLegend([
+          _InstructionChartLine(
+            color: kProgressChartRepsColor,
+            description: l.instructionMuscleLoadLineSetsDesc,
+          ),
+          _InstructionChartLine(
+            color: kProgressChartVolumeColor,
+            description: l.instructionMuscleLoadLineTonnageDesc,
+          ),
+        ]),
       ],
     ),
     _InstructionChapter(
@@ -527,6 +558,11 @@ List<_InstructionChapter> _ironVibeInstructionChapters(AppLocalizations l) {
             icon: Icons.event_rounded,
             label: l.instructionCalendarAddTitle,
             description: l.instructionCalendarAddDesc,
+          ),
+          _InstructionTopic(
+            icon: Icons.alarm_rounded,
+            label: l.instructionReminderTitle,
+            description: l.instructionReminderDesc,
           ),
           _InstructionTopic(
             icon: Icons.bar_chart_rounded,
@@ -553,6 +589,11 @@ List<_InstructionChapter> _ironVibeInstructionChapters(AppLocalizations l) {
             icon: Icons.import_export_rounded,
             label: l.instructionNavImportExportTitle,
             description: l.instructionNavImportExportDesc,
+          ),
+          _InstructionTopic(
+            icon: Icons.table_chart_outlined,
+            label: l.instructionSheetTitle,
+            description: l.instructionSheetDesc,
           ),
           _InstructionTopic(
             icon: Icons.backup_outlined,
@@ -584,6 +625,11 @@ List<_InstructionChapter> _ironVibeInstructionChapters(AppLocalizations l) {
             icon: Icons.event_note_rounded,
             label: l.instructionTrainerScheduleTitle,
             description: l.instructionTrainerScheduleDesc,
+          ),
+          _InstructionTopic(
+            icon: Icons.schedule_rounded,
+            label: l.instructionTrainerTimeTitle,
+            description: l.instructionTrainerTimeDesc,
           ),
           _InstructionTopic(
             icon: Icons.edit_calendar_outlined,
@@ -727,7 +773,9 @@ class _InstructionHubBody extends StatelessWidget {
           IronVibeEnter(
             animation: stagger(0.10 + i * 0.08, 0.56 + i * 0.08),
             child: Padding(
-              padding: EdgeInsets.only(bottom: i == chapters.length - 1 ? 0 : 10),
+              padding: EdgeInsets.only(
+                bottom: i == chapters.length - 1 ? 0 : 10,
+              ),
               child: _InstructionHubCard(chapter: chapters[i]),
             ),
           ),
@@ -751,7 +799,8 @@ class _InstructionSearchResults extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pal = IronVibePalette.of(context);
-    final groups = <({_InstructionChapter chapter, List<_InstructionBlock> blocks})>[];
+    final groups =
+        <({_InstructionChapter chapter, List<_InstructionBlock> blocks})>[];
     for (final chapter in chapters) {
       final blocks = chapter.blocksForQuery(query);
       if (blocks.isNotEmpty) {
@@ -857,23 +906,24 @@ class _InstructionBlocksColumn extends StatelessWidget {
       children: [
         for (final block in blocks) ...[
           switch (block.kind) {
-            _InstructionBlockKind.heading =>
-              _InstructionBlockHeading(block.text!),
+            _InstructionBlockKind.heading => _InstructionBlockHeading(
+              block.text!,
+            ),
             _InstructionBlockKind.body => _InstructionBodyText(block.text!),
             _InstructionBlockKind.topics => _InstructionTopicList(
-                topics: block.topics!,
-              ),
+              topics: block.topics!,
+            ),
             _InstructionBlockKind.philosophy => Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 6),
-                child: _InstructionCallout(text: block.text!),
-              ),
+              padding: const EdgeInsets.only(top: 10, bottom: 6),
+              child: _InstructionCallout(text: block.text!),
+            ),
             _InstructionBlockKind.chartLegend => _InstructionChartLegend(
-                lines: block.chartLines!,
-              ),
+              lines: block.chartLines!,
+            ),
             _InstructionBlockKind.callout => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: _InstructionCallout(text: block.text!),
-              ),
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _InstructionCallout(text: block.text!),
+            ),
           },
         ],
       ],
@@ -904,7 +954,12 @@ class _InstructionHubCard extends StatelessWidget {
         decoration: ironVibeElevatedCardDecoration(pal),
         child: Row(
           children: [
-            _instructionMetalBadge(context, chapter.icon, size: 44, iconSize: 22),
+            _instructionMetalBadge(
+              context,
+              chapter.icon,
+              size: 44,
+              iconSize: 22,
+            ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -970,7 +1025,10 @@ class _InstructionSearchField extends StatelessWidget {
         filled: true,
         fillColor: pal.inputFill,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: pal.borderSubtle, width: 0.5),
           borderRadius: BorderRadius.circular(kIronVibeRadiusField),
@@ -1246,11 +1304,7 @@ class _InstructionBodyText extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 14),
       child: Text(
         text,
-        style: TextStyle(
-          color: pal.textSecondary,
-          fontSize: 13,
-          height: 1.42,
-        ),
+        style: TextStyle(color: pal.textSecondary, fontSize: 13, height: 1.42),
       ),
     );
   }

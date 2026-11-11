@@ -252,6 +252,35 @@ class AppLocalizationsHi extends AppLocalizations {
   String get muscleGroupArmExt => 'ट्राइसेप्स';
 
   @override
+  String get muscleGroupGlutes => 'ग्लूट्स';
+
+  @override
+  String get muscleGroupCalves => 'पिंडली';
+
+  @override
+  String get loadInsightTitle => 'लोड';
+
+  @override
+  String get rhythmCardLabel => 'रिदम';
+
+  @override
+  String get loadCardLabel => 'लोड';
+
+  @override
+  String get loadSetsShort => 'सेट';
+
+  @override
+  String get loadTonnageShort => 'टनेज';
+
+  @override
+  String get loadWindow =>
+      'पिछले 28 दिनों का साप्ताहिक औसत। पहला अंक सेट प्रति सप्ताह है, दूसरा टनेज। सिर्फ़ वे सेट गिने जाते हैं जिनमें RIR है; खाली RIR और ∞ वार्म-अप हैं। बिना ग्रुप की एक्सरसाइज़ नहीं गिनती।';
+
+  @override
+  String get loadTrendHint =>
+      'हर निशान एक कैलेंडर सप्ताह है: वर्किंग सेट और टनेज।';
+
+  @override
   String get muscleGroupUntagged => '—';
 
   @override
@@ -466,6 +495,27 @@ class AppLocalizationsHi extends AppLocalizations {
       'इस क्लाइंट का दोहराने लायक पिछला वर्कआउट नहीं है।';
 
   @override
+  String get repeatPickTitle => 'वर्कआउट दोहराएँ';
+
+  @override
+  String get repeatPickSearchHint => 'नोट से खोजें';
+
+  @override
+  String get repeatPickNoNote => 'बिना नोट';
+
+  @override
+  String get repeatPickNoMatch => 'इस नोट वाला कोई वर्कआउट नहीं।';
+
+  @override
+  String get reorderExercisesTitle => 'एक्सरसाइज़ का क्रम';
+
+  @override
+  String get reorderExercisesHint => 'पंक्ति खिसकाने के लिए हैंडल खींचें।';
+
+  @override
+  String get reorderExercisesTooltip => 'क्रम बदलें';
+
+  @override
   String get editPlan => 'योजना संपादित करें';
 
   @override
@@ -595,6 +645,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get time => 'समय';
+
+  @override
+  String get editSessionTime => 'समय बदलें';
 
   @override
   String get rest => 'आराम';
@@ -792,7 +845,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionChapterSessionBlurb =>
-      'सेट, वज़न, रेप्स, RIR, कार्डियो, और सेशन खत्म करना।';
+      'सेट, वज़न, रेप्स, RIR, एक्सरसाइज़ नोट, कार्डियो, और सेशन खत्म करना।';
 
   @override
   String get instructionChapterTimerTitle => 'स्टॉपवॉच';
@@ -820,7 +873,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionChapterRhythmBlurb =>
-      'साप्ताहिक रिदम गेज और डीलोड हफ़्ता।';
+      'साप्ताहिक रिदम गेज, मसल लोड और डीलोड हफ़्ता।';
 
   @override
   String get instructionChapterDataTitle => 'इतिहास और डेटा';
@@ -855,7 +908,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionTrainSelfDesc =>
-      'आपकी जगह: वर्कआउट, कैलेंडर, व्यक्तिगत प्रगति, पसंदीदा, और रिदम गेज।';
+      'आपकी जगह: वर्कआउट, कैलेंडर, व्यक्तिगत प्रगति, पसंदीदा, रिदम गेज और मसल लोड।';
 
   @override
   String get instructionTrainOthersTitle => 'दूसरों की ट्रेनिंग';
@@ -941,11 +994,25 @@ class AppLocalizationsHi extends AppLocalizations {
       'पिछली बार का वज़न और रेप्स धूसर दिखते हैं — हराने का लक्ष्य, भरा सेट नहीं। इतिहास में सिर्फ़ वही अंक जाते हैं जो आप खुद लिखते हैं।';
 
   @override
+  String get instructionExerciseNoteTitle => 'एक्सरसाइज़ नोट';
+
+  @override
+  String get instructionExerciseNoteDesc =>
+      'एक्सरसाइज़ हेडर की पेंसिल सिर्फ़ इस वर्कआउट का नोट है। ऊपर उसी मूवमेंट के पुराने नोट तारीख के साथ दिखते हैं। खाली फ़ील्ड नोट हटा देती है। यह इसी सेशन के साथ रहता है, सेव वर्कआउट में भी।';
+
+  @override
   String get instructionRemoveExerciseTitle => 'एक्सरसाइज़ हटाएँ';
 
   @override
   String get instructionRemoveExerciseDesc =>
       'लाल X मौजूदा सेशन से ब्लॉक हटाता है। सेव इतिहास नहीं बदलता।';
+
+  @override
+  String get instructionReorderExercisesTitle => 'एक्सरसाइज़ का क्रम';
+
+  @override
+  String get instructionReorderExercisesDesc =>
+      'एक्सरसाइज़ हेडर का ड्रैग हैंडल छुएँ। एक छोटी सूची खुलती है: पंक्ति को उसकी जगह खींचें। नया क्रम इस वर्कआउट में और उसके इतिहास में बना रहता है।';
 
   @override
   String get instructionSectionSetControl => 'सेट की पंक्ति';
@@ -1130,7 +1197,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionMuscleGroupsIntro =>
-      'ग्रुप आपके नाम पर वैकल्पिक टैग है। सिर्फ़ क्विक वर्कआउट इसका इस्तेमाल संतुलित फुल-बॉडी सेशन के लिए करता है। आठ ग्रुप: चेस्ट, बैक, शोल्डर, कोर, आगे की जाँघ, पीछे की जाँघ, बाइसेप्स, ट्राइसेप्स।';
+      'ग्रुप आपके नाम पर वैकल्पिक टैग है। क्विक वर्कआउट इससे संतुलित फुल-बॉडी सेशन बनाता है, और लोड स्क्रीन साप्ताहिक सेट और टनेज गिनती है। दस ग्रुप: चेस्ट, बैक, शोल्डर, कोर, आगे की जाँघ, पीछे की जाँघ, ग्लूट्स, पिंडली, बाइसेप्स, ट्राइसेप्स।';
 
   @override
   String get instructionMuscleGroupTagTitle => 'टैग कैसे करें';
@@ -1216,7 +1283,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionRhythmIntro =>
-      'पिछले चार हफ़्तों में कम से कम तीन स्ट्रेंथ दिन हो जाएँ, तो ट्रेनिंग स्क्रीन के ऊपर रिदम गेज आता है। यह लक्ष्य नहीं और अंक नहीं — बस आप अभी जिम कितनी बार पहुँचते हैं।';
+      'पिछले चार हफ़्तों में कम से कम तीन स्ट्रेंथ दिन हो जाएँ, तो ट्रेनिंग स्क्रीन के ऊपर रिदम गेज आता है, मसल-लोड आकृति के पास। यह लक्ष्य नहीं और अंक नहीं — बस आप अभी जिम कितनी बार पहुँचते हैं। गेज से पहले भी आकृति वहीं रहती है।';
 
   @override
   String get instructionRhythmGaugeTitle => 'हफ़्ते में दिन';
@@ -1247,6 +1314,35 @@ class AppLocalizationsHi extends AppLocalizations {
       'अगर आप हफ़्ते में ढाई सेशन या उससे ज़्यादा रखते हैं और काफ़ी समय से डीलोड नहीं किया, ऐप ऐसा हफ़्ता लेने का सुझाव देती है। रिदम जितना घना, संकेत उतना जल्दी। यह हफ़्ते में ज़्यादा से ज़्यादा एक बार, सिर्फ़ व्यक्तिगत मोड में दिखता है — और सलाह रहता है, चिकित्सा सलाह नहीं।';
 
   @override
+  String get instructionSectionMuscleLoad => 'लोड';
+
+  @override
+  String get instructionMuscleLoadIntro =>
+      'रिदम गेज के पास की आकृति लोड स्क्रीन खोलती है। वही चित्र बड़ा होता है, और दस ग्रुप में हर एक की अपनी टिप्पणी होती है। पहला अंक हफ़्ते के वर्किंग सेट है, दूसरा टनेज। दोनों पिछले 28 दिनों का औसत हैं।';
+
+  @override
+  String get instructionMuscleLoadCountsTitle => 'क्या गिना जाता है';
+
+  @override
+  String get instructionMuscleLoadCountsDesc =>
+      'सेट तभी गिना जाता है जब RIR 0 से 5 हो। खाली RIR और ∞ वार्म-अप हैं। कार्डियो नहीं गिना जाता, न ही बिना ग्रुप का या क्विक वर्कआउट के लिए नहीं चिह्नित एक्सरसाइज़। टनेज वजन गुणा रेप है, उन्हीं इकाइयों में जो आप लिखते हैं।';
+
+  @override
+  String get instructionMuscleLoadTrendTitle => 'हफ़्ते दर हफ़्ते';
+
+  @override
+  String get instructionMuscleLoadTrendDesc =>
+      'किसी टिप्पणी पर टैप करने से उस ग्रुप का ग्राफ़ खुलता है। हर निशान वह कैलेंडर सप्ताह है जिसमें कम से कम एक सेट RIR के साथ हो। ऐसे सेट के बिना हफ़्ते ग्राफ़ पर नहीं आते। महीना, साल और पूरा समय विंडो बदलते हैं। टिप्पणी की संख्या 28 दिनों का औसत है; निशान उस हफ़्ते का असल जोड़ है।';
+
+  @override
+  String get instructionMuscleLoadLineSetsDesc =>
+      'सियान — उस हफ़्ते के वर्किंग सेट।';
+
+  @override
+  String get instructionMuscleLoadLineTonnageDesc =>
+      'पीला — उस हफ़्ते का टनेज, वजन गुणा रेप।';
+
+  @override
   String get instructionSectionCalendar => 'कैलेंडर और इतिहास';
 
   @override
@@ -1275,7 +1371,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionHistoryEditDesc =>
-      'सेव वर्कआउट खोला और बदला जा सकता है: एक्सरसाइज़ या सेट जोड़ें, अंक बदलें, या सेशन हटाएँ। बदलाव तुरंत सेव होते हैं।';
+      'सेव वर्कआउट खोला और वहीं बदला जा सकता है: छूटा एक्सरसाइज़, सेट या नोट जोड़ें, अंक या क्रम बदलें, या सेशन हटाएँ। बदलाव तुरंत सेव होते हैं।';
 
   @override
   String get instructionSectionStats => 'आँकड़े';
@@ -1320,7 +1416,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'आज का सेशन यहीं से शुरू होता है, साथ में प्रगति, पसंदीदा और महीने के हिसाब से इतिहास। स्ट्रेंथ के दिन काफ़ी हों तो रिदम गेज भी यहाँ है। क्लाइंट हटाने से आने वाले सेशन मिटते हैं; पुराने वर्कआउट रिपोर्ट के लिए रहते हैं।';
+      'आज का सेशन यहीं से शुरू होता है, साथ में प्रगति, पसंदीदा और महीने के हिसाब से इतिहास। मसल-लोड आकृति हमेशा यहाँ है, और स्ट्रेंथ के दिन काफ़ी हों तो रिदम गेज उसके पास आ जाता है। दोनों इस क्लाइंट के पूरे हो चुके सेशन पढ़ते हैं। क्लाइंट हटाने से आने वाले सेशन मिटते हैं; पुराने वर्कआउट रिपोर्ट के लिए रहते हैं।';
 
   @override
   String get instructionTrainerScheduleTitle => 'शेड्यूल';
@@ -1328,6 +1424,13 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get instructionTrainerScheduleDesc =>
       'ट्रेनर कैलेंडर हर क्लाइंट के सेशन दिखाता है: प्ले आइकन का मतलब योजना, चेक का मतलब पूरा, घंटाघर का मतलब आज चल रहा है। बीते दिनों की खाली योजनाएँ अपने आप हट जाती हैं।';
+
+  @override
+  String get instructionTrainerTimeTitle => 'समय बदलें';
+
+  @override
+  String get instructionTrainerTimeDesc =>
+      'प्लान किए सेशन की पेंसिल उसी दिन की घड़ी बदलती है — कैलेंडर पर, या सेशन के अंदर तारीख के पास। सेशन कार्ड को दबाकर भी रखा जा सकता है। एक्सरसाइज़, नोट और रिमाइंडर रह जाते हैं। पूरा या इंपोर्ट किया सेशन अपना समय रखता है।';
 
   @override
   String get instructionTrainerPlanTitle => 'सेशन प्लान';
@@ -1341,7 +1444,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionTrainerRepeatDesc =>
-      'क्लाइंट प्रोफ़ाइल से, या कैलेंडर पर सेशन जोड़ते समय स्विच के रूप में। एक्सरसाइज़ सूची कॉपी होती है; वज़न और रेप धूसर संकेत बनते हैं, पूरे सेट नहीं।';
+      'क्लाइंट प्रोफ़ाइल से, या कैलेंडर पर सेशन जोड़ते समय स्विच के रूप में। पिछला वर्कआउट एक ही हो तो वही दोहराया जाता है। अधिक हों तो आखिरी पाँच में से चुनें: सूची नोट के अनुसार क्रम में है, और उसी नोट से खोजा जा सकता है। एक्सरसाइज़ सूची कॉपी होती है; वज़न और रेप धूसर संकेत बनते हैं, पूरे सेट नहीं।';
 
   @override
   String get instructionPrintSessionTitle => 'सेशन प्रिंट करें';
@@ -1487,14 +1590,137 @@ class AppLocalizationsHi extends AppLocalizations {
       'यह सलाह है, चिकित्सा सलाह नहीं। अगर आप ठीक महसूस करते हैं, कुछ बदलना ज़रूरी नहीं।';
 
   @override
+  String get sheetExportButton => 'GOOGLE SHEETS';
+
+  @override
+  String get sheetImportButton => 'शीट आयात करें';
+
+  @override
+  String get sheetExportTitle => 'Google Sheets';
+
+  @override
+  String get sheetExportBody =>
+      'शेयर मेनू में एक शीट खुलेगी। इसे Google Sheets या Excel में खोलें, घर पर बदलें, CSV डाउनलोड करें और यहाँ आयात करें। id कॉलम रखें, ताकि फ़ोन पर मौजूद वर्कआउट दोबारा कॉपी न हों, बल्कि अपडेट हों। JSON बैकअप अब भी पूरी कॉपी है।';
+
+  @override
+  String get sheetExportShare => 'शीट शेयर करें';
+
+  @override
+  String get sheetShareText => 'IronVibe शीट';
+
+  @override
+  String get sheetImportInvalid => 'यह फ़ाइल IronVibe शीट नहीं है।';
+
+  @override
+  String get sheetImportEmpty =>
+      'इस शीट में आयात करने के लिए कोई पंक्ति नहीं है।';
+
+  @override
+  String get sheetImportPersonalFile =>
+      'यह निजी डायरी है। इसे खुद ट्रेनिंग वाले मोड में आयात करें।';
+
+  @override
+  String get sheetImportCoachFile =>
+      'यह कोच की शीट है। इसे दूसरों को ट्रेन करने वाले मोड में आयात करें।';
+
+  @override
+  String get sheetImportNothing =>
+      'बदलने को कुछ नहीं। पंक्तियाँ पहले से मेल खाती हैं, या कुछ छोड़ दी गईं क्योंकि एक दिन में कई वर्कआउट हैं और id कॉलम नहीं है।';
+
+  @override
+  String sheetImportPreview(
+    int updated,
+    int added,
+    int clientsAdded,
+    int clientsUpdated,
+    int skipped,
+  ) {
+    return 'अपडेट करने के वर्कआउट: $updated। जोड़ने के वर्कआउट: $added। जोड़ने के क्लाइंट: $clientsAdded। अपडेट करने के क्लाइंट: $clientsUpdated। छोड़ी गई पंक्तियाँ: $skipped। फ़ाइल में न होने वाले वर्कआउट फ़ोन पर रहेंगे। फ़ाइल का वर्कआउट अपने सेट बदल देता है।';
+  }
+
+  @override
+  String get sheetImportConfirm => 'आयात करें';
+
+  @override
+  String get sheetImportSuccess => 'शीट आयात हुई';
+
+  @override
+  String get instructionSheetTitle => 'Google Sheets';
+
+  @override
+  String get instructionSheetDesc =>
+      'आँकड़ों से एक शीट शेयर करके Google Sheets या Excel में खोली जा सकती है। सेट घर पर बदलें, CSV डाउनलोड करें और वापस आयात करें। id कॉलम रखें और हर एक्सरसाइज़ की पंक्तियाँ क्रम में साथ रखें। फ़ाइल का वर्कआउट अपने सेट बदल देता है। फ़ाइल में न होने वाले वर्कआउट रह जाते हैं। क्लाइंट का नाम, लक्ष्य और नोट उसकी पहली भरी पंक्ति से आते हैं। एक्सरसाइज़ नोट और सेशन नोट फ़ाइल के साथ वापस आते हैं। जिस फ़ाइल में ये कॉलम नहीं, वह फ़ोन पर मौजूद नोट नहीं मिटाती। JSON अब भी पूरा बैकअप है।';
+
+  @override
+  String get remindBeforePrefix => 'सूचना';
+
+  @override
+  String get remindBeforeSuffix => 'मिनट पहले';
+
+  @override
+  String get remindPermissionDenied =>
+      'सूचनाएँ बंद हैं, इसलिए यह रिमाइंडर नहीं आएगा। इन्हें फ़ोन की सेटिंग में चालू किया जा सकता है.';
+
+  @override
+  String get remindPermissionTitle => 'सूचनाएँ बंद हैं';
+
+  @override
+  String get remindPermissionOpenSettings => 'सेटिंग खोलें';
+
+  @override
+  String get remindPermissionNotNow => 'अभी नहीं';
+
+  @override
+  String get reminderEveningTitle => 'कल';
+
+  @override
+  String reminderEveningBody(int count, String time) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'कल $count वर्कआउट हैं। पहला $time पर शुरू होगा।',
+      one: 'कल $count वर्कआउट है। यह $time पर शुरू होगा।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderAlarmTitle => 'वर्कआउट';
+
+  @override
+  String reminderAlarmBody(String name, String time) {
+    return '$name $time पर शुरू होगा।';
+  }
+
+  @override
+  String get reminderChannelEvening => 'एक दिन पहले की सूचना';
+
+  @override
+  String get reminderChannelEveningDesc => 'अगर कल वर्कआउट हैं, तो 21:00 पर।';
+
+  @override
+  String get reminderChannelAlarm => 'वर्कआउट अलार्म';
+
+  @override
+  String get reminderChannelAlarmDesc =>
+      'जो अलार्म आपने चालू किया, वह वर्कआउट से थोड़ा पहले।';
+
+  @override
+  String get instructionReminderTitle => 'रिमाइंडर';
+
+  @override
+  String get instructionReminderDesc =>
+      'जिस दिन वर्कआउट हों, उससे पिछली शाम 21:00 पर ऐप बताता है कि कल कितने सेशन हैं और पहला कब शुरू होगा। आपके आगे के वर्कआउट और क्लाइंट के सेशन दोनों गिने जाते हैं। अलग अलार्म तब तक बंद रहता है, जब तक आप समय चुनते हुए उसे खुद न चालू करें — 10 मिनट से 2 घंटे पहले तक। अगर नोटिफ़िकेशन बंद हैं, तो ऐप फ़ोन की सेटिंग खोलने का विकल्प देता है। दोनों रिमाइंडर फ़ोन पर लगते हैं और कहीं भेजे नहीं जाते।';
+
+  @override
   String get syncStatusOnDevice => 'इस फ़ोन पर सेव है';
 
   @override
-  String get syncStatusWillSync => 'ऑनलाइन होने पर सिंक होगा';
+  String get syncStatusSynced => 'सिंक हो गया';
 
   @override
   String get syncStatusSyncing => 'सिंक हो रहा है…';
 
   @override
-  String get syncStatusSynced => 'सिंक हो गया';
+  String get syncStatusWillSync => 'ऑनलाइन होने पर सिंक होगा';
 }

@@ -163,9 +163,28 @@ void main() {
     );
     trainerSchedule.add(todayPlan);
     expect(
-      ironVibeTodaysIncompleteTrainerSessionForClient('Ivan', clientId: 'c1')?.id,
+      ironVibeTodaysIncompleteTrainerSessionForClient(
+        'Ivan',
+        clientId: 'c1',
+      )?.id,
       todayPlan.id,
     );
+  });
+
+  test('a created client workout stays when it is left untouched', () {
+    final created = ironVibeNewTrainerSession(
+      dateTime: DateTime.now(),
+      clientName: 'Ivan',
+      isScheduledPlan: true,
+    );
+    expect(ironVibeTrainerSessionIsAbandonedStub(created), isTrue);
+    expect(ironVibeCreatedTrainerSessionShouldStay(created), isTrue);
+
+    final scratch = ironVibeNewTrainerSession(
+      dateTime: DateTime.now(),
+      clientName: 'Ivan',
+    );
+    expect(ironVibeCreatedTrainerSessionShouldStay(scratch), isFalse);
   });
 
   test('ui mode returns live for today live-current', () {
@@ -312,5 +331,31 @@ void main() {
     );
     expect(upper.text, 'ЖИМ ');
     expect(upper.composing, const TextRange(start: 0, end: 4));
+  });
+
+  test('person names capitalize each part and keep the space', () {
+    expect(ironVibeCapitalizePersonName('иван'), 'Иван');
+    expect(ironVibeCapitalizePersonName('анна-мария'), 'Анна-Мария');
+    expect(ironVibeCapitalizePersonName('анна  мария'), 'Анна  Мария');
+    expect(ironVibeCapitalizePersonName("o'brien"), "O'Brien");
+    expect(ironVibeCapitalizePersonName('McDonald'), 'McDonald');
+    expect(ironVibeCapitalizePersonName('ІВАН'), 'ІВАН');
+    expect(ironVibeCapitalizePersonName('  петров'), '  Петров');
+
+    const typed = TextEditingValue(
+      text: 'анна ',
+      selection: TextSelection.collapsed(offset: 5),
+      composing: TextRange(start: 0, end: 5),
+    );
+    final kept = ironVibeFormatPersonNameEdit(
+      const TextEditingValue(
+        text: 'анна',
+        selection: TextSelection.collapsed(offset: 4),
+      ),
+      typed,
+    );
+    expect(kept.text, 'Анна ');
+    expect(kept.selection, const TextSelection.collapsed(offset: 5));
+    expect(kept.composing, const TextRange(start: 0, end: 5));
   });
 }

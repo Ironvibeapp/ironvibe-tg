@@ -16,6 +16,8 @@ void main() async {
   unawaited(IronVibeTimerSounds.initialize());
   await DataService.loadData();
   await ironVibeLoadThemePreference();
+  await ironVibeRemindersStart();
+  await ironVibeRefreshReminders();
   IronVibeTelegram.applyChrome(ironVibeThemeMode.value);
   unawaited(IronVibeSync.start());
   SystemChrome.setSystemUIOverlayStyle(ironVibeSystemOverlayFor(ironVibeThemeMode.value));
@@ -251,6 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
 
     if (action == true) {
+      await ironVibeArmUpcomingReminders(context);
+      if (!mounted) return;
       _resumeWorkoutFromDraft(draft);
       return;
     } else if (action == false) {
@@ -263,6 +267,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_backupNudgeChecked || !mounted) return;
     _backupNudgeChecked = true;
     await ironVibeMaybeShowBackupNudge(context);
+    if (!mounted) return;
+    await ironVibeArmUpcomingReminders(context);
   }
 
   void _resumeWorkoutFromDraft(ActiveWorkoutDraft draft) {
