@@ -69,30 +69,49 @@
       } catch (e) {}
 
       if (typeof WebAssembly !== 'undefined') {
-        WebAssembly.compileStreaming = function (source) {
+        var nativeInstantiate = WebAssembly.instantiate.bind(WebAssembly);
+        var wasmBytes = null;
+
+        function wasmBytesOf(source) {
           return Promise.resolve(source).then(function (src) {
-            if (src instanceof Response) return src.arrayBuffer();
+            if (src instanceof Response) {
+              if (!src.ok) throw new Error('wasm ' + src.status);
+              return src.arrayBuffer();
+            }
             if (src && typeof src.arrayBuffer === 'function') return src.arrayBuffer();
             return src;
-          }).then(function (bytes) {
-            return WebAssembly.compile(bytes);
+          });
+        }
+
+        // Telegram's WebView hangs on compileStreaming and on
+        // instantiate(Module). Buffer the file and instantiate the bytes.
+        WebAssembly.compileStreaming = function (source) {
+          return wasmBytesOf(source).then(function (bytes) {
+            wasmBytes = bytes;
+            return { ironVibeWasm: true };
           });
         };
         WebAssembly.instantiateStreaming = function (source, imports) {
-          return Promise.resolve(source).then(function (src) {
-            if (src instanceof Response) return src.arrayBuffer();
-            if (src && typeof src.arrayBuffer === 'function') return src.arrayBuffer();
-            return src;
-          }).then(function (bytes) {
-            return WebAssembly.instantiate(bytes, imports);
+          return wasmBytesOf(source).then(function (bytes) {
+            return nativeInstantiate(bytes, imports);
           });
+        };
+        WebAssembly.instantiate = function (source, imports) {
+          if (source && source.ironVibeWasm && wasmBytes) {
+            var bytes = wasmBytes;
+            wasmBytes = null;
+            return nativeInstantiate(bytes, imports).then(function (out) {
+              return out.instance;
+            });
+          }
+          return nativeInstantiate(source, imports);
         };
       }
     })();
   </script>
 </head>
 <body>
-  <div id="iv-boot">IRONVIBE 74d</div>
+  <div id="iv-boot">IRONVIBE 75e</div>
   <script>
     (function () {
       var boot = document.getElementById('iv-boot');
@@ -116,6 +135,6 @@
       });
     })();
   </script>
-  <script src="flutter_bootstrap.js?v=74d"></script>
+  <script src="flutter_bootstrap.js?v=75e"></script>
 </body>
 </html>
