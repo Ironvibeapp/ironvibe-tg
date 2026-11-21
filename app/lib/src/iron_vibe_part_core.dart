@@ -447,10 +447,9 @@ String _encodeJsonPayload(Map<String, dynamic> payload) {
   return const JsonEncoder.withIndent('  ').convert(payload);
 }
 
-/// Семейное правило версий: … 1.9.0+90, 1.9.1+91 …
-const String kAppVersion = '1.9.1';
-const int kAppBuildNumber = 91;
-
+/// Семейное правило версий: … 1.9.1+91, 1.9.2+92 …
+const String kAppVersion = '1.9.2';
+const int kAppBuildNumber = 92;
 
 /// График прогресса: вес (красный) и повторы (как цвет фокуса полей).
 const Color kProgressChartWeightColor = Color(0xFFFF1744);
@@ -469,8 +468,9 @@ Future<void> ironVibeLoadThemePreference() async {
     ironVibeThemeMode.value = stored ? ThemeMode.light : ThemeMode.dark;
     return;
   }
-  ironVibeThemeMode.value =
-      IronVibeTelegram.suggestsDark ? ThemeMode.dark : ThemeMode.light;
+  ironVibeThemeMode.value = IronVibeTelegram.suggestsDark
+      ? ThemeMode.dark
+      : ThemeMode.light;
 }
 
 Future<void> ironVibeSetThemeMode(ThemeMode mode) async {

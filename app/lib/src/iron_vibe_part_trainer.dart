@@ -2659,6 +2659,7 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
   late TextEditingController _notesController;
   late TextEditingController _lastNameController;
   String? _lastNameError;
+  bool _printHistoryBusy = false;
 
   @override
   void initState() {
@@ -2936,6 +2937,34 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
     if (mounted) setState(() {});
   }
 
+  Future<void> _printClientHistory() async {
+    if (_printHistoryBusy) return;
+    _printHistoryBusy = true;
+    try {
+      final l = AppLocalizations.of(context)!;
+      final history = ironVibeSessionsForClientHistoryPrint(widget.client);
+      if (ironVibeClientHistoryPrintBlocks(history).isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l.printClientHistoryEmpty),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        return;
+      }
+      await ironVibeShareClientHistoryPdf(
+        context,
+        clientLabel: ironVibeClientDisplayName(
+          widget.client.name,
+          lastName: _lastNameController.text,
+        ),
+        sessions: history,
+      );
+    } finally {
+      _printHistoryBusy = false;
+    }
+  }
+
   String _trainerHistoryMonthKey(BuildContext context, DateTime dt) {
     final l = AppLocalizations.of(context)!;
     final months = [
@@ -3027,6 +3056,12 @@ class _ClientProfileScreenState extends State<ClientProfileScreen> {
                   context,
                   icon: Icons.arrow_back,
                   onPressed: () => Navigator.maybePop(context),
+                ),
+                trailing: _ironVibeHeaderIconButton(
+                  context,
+                  icon: Icons.print_outlined,
+                  tooltip: l.printClientHistory,
+                  onPressed: _printClientHistory,
                 ),
               ),
               Expanded(

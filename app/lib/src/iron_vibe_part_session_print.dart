@@ -40,24 +40,87 @@ List<IronVibeSessionPrintRow> ironVibeSessionPrintRows(TrainerSession session) {
   return rows;
 }
 
-String ironVibeSessionPrintWhen(DateTime date) {
-  final dateStr =
-      '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
-  final timeStr =
-      '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-  return '$dateStr · $timeStr';
+String ironVibeSessionPrintDate(DateTime date) {
+  return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
 }
 
-String ironVibeSessionPrintFileStem(String clientName, DateTime date) {
+String ironVibeSessionPrintWhen(DateTime date) {
+  final timeStr =
+      '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  return '${ironVibeSessionPrintDate(date)} · $timeStr';
+}
+
+String _printSafeClientToken(String clientName) {
   var cleaned = clientName
       .replaceAll(RegExp(r'[\\/:*?"<>|]'), '')
       .trim()
       .replaceAll(RegExp(r'\s+'), '_');
   if (cleaned.isEmpty) cleaned = 'Client';
   if (cleaned.length > 40) cleaned = cleaned.substring(0, 40);
+  return cleaned;
+}
+
+String ironVibeSessionPrintFileStem(String clientName, DateTime date) {
   final datePart =
       '${date.year}_${date.month.toString().padLeft(2, '0')}_${date.day.toString().padLeft(2, '0')}';
-  return 'IronVibe_${cleaned}_$datePart';
+  return 'IronVibe_${_printSafeClientToken(clientName)}_$datePart';
+}
+
+String ironVibeClientHistoryPrintFileStem(String clientName) {
+  return 'IronVibe_${_printSafeClientToken(clientName)}_sessions';
+}
+
+class IronVibeClientHistoryPrintBlock {
+  final DateTime dateTime;
+  final String note;
+  final List<IronVibeSessionPrintRow> rows;
+
+  const IronVibeClientHistoryPrintBlock({
+    required this.dateTime,
+    required this.note,
+    required this.rows,
+  });
+}
+
+/// Finished sessions for [client] that have something to put on paper.
+List<TrainerSession> ironVibeSessionsForClientHistoryPrint(Client client) {
+  return [
+    for (final session in trainerSchedule)
+      if (ironVibeSessionBelongsToClientRecord(session, client) &&
+          ironVibeTrainerSessionInClientHistory(session))
+        session,
+  ];
+}
+
+/// Newest session first, matching the history on the client profile.
+/// Sessions with no filled sets are left out.
+List<IronVibeClientHistoryPrintBlock> ironVibeClientHistoryPrintBlocks(
+  Iterable<TrainerSession> sessions,
+) {
+  final blocks = <IronVibeClientHistoryPrintBlock>[];
+  for (final session in sessions) {
+    final rows = ironVibeSessionPrintRows(session);
+    if (rows.isEmpty) continue;
+    blocks.add(
+      IronVibeClientHistoryPrintBlock(
+        dateTime: session.dateTime,
+        note: session.note.trim(),
+        rows: rows,
+      ),
+    );
+  }
+  blocks.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+  return blocks;
+}
+
+String ironVibeClientHistoryPrintRange(
+  List<IronVibeClientHistoryPrintBlock> blocks,
+) {
+  if (blocks.isEmpty) return '';
+  final newest = ironVibeSessionPrintDate(blocks.first.dateTime);
+  final oldest = ironVibeSessionPrintDate(blocks.last.dateTime);
+  if (newest == oldest) return newest;
+  return '$oldest — $newest';
 }
 
 String _printStrengthDetail(ExerciseLog ex) {
@@ -168,11 +231,7 @@ pw.Widget _printBrandHeader(
       pw.Row(
         crossAxisAlignment: pw.CrossAxisAlignment.center,
         children: [
-          pw.Image(
-            logo,
-            height: 22 * PdfPageFormat.mm,
-            fit: pw.BoxFit.contain,
-          ),
+          pw.Image(logo, height: 22 * PdfPageFormat.mm, fit: pw.BoxFit.contain),
           pw.SizedBox(width: 14),
           pw.Expanded(
             child: pw.Column(
@@ -199,10 +258,7 @@ pw.Widget _printBrandHeader(
                 pw.SizedBox(height: 2),
                 pw.Text(
                   ironVibeSessionPrintWhen(session.dateTime),
-                  style: const pw.TextStyle(
-                    color: _kPrintSteel,
-                    fontSize: 10,
-                  ),
+                  style: const pw.TextStyle(color: _kPrintSteel, fontSize: 10),
                 ),
               ],
             ),
@@ -288,20 +344,331 @@ pw.Widget _printExerciseTable(
       ),
       ...rows.map(
         (row) => pw.TableRow(
-          children: [
-            cell(row.name, bold: true),
-            cell(row.detail),
-          ],
+          children: [cell(row.name, bold: true), cell(row.detail)],
         ),
       ),
     ],
   );
 }
 
+const PdfColor _kPrintHairline = PdfColor.fromInt(0x592A3140);
+const int _kPrintNoteChunk = 480;
+
+Future<Uint8List> ironVibeBuildClientHistoryPdfBytes({
+  required String clientLabel,
+  required List<TrainerSession> sessions,
+  required AppLocalizations l,
+}) async {
+  await _ensurePrintAssets();
+  final blocks = ironVibeClientHistoryPrintBlocks(sessions);
+  final logo = pw.MemoryImage(_printLogoPng!);
+  final theme = pw.ThemeData.withFont(
+    base: _printFontRegular!,
+    bold: _printFontBold!,
+    fontFallback: [_printFontSc!, _printFontAr!, _printFontHi!],
+  );
+  final body = <pw.Widget>[
+    _printHistoryBrandHeader(
+      clientLabel: clientLabel,
+      blocks: blocks,
+      l: l,
+      logo: logo,
+    ),
+    _printHistoryColumnLabels(l),
+    for (var i = 0; i < blocks.length; i++)
+      ..._printHistorySessionWidgets(blocks[i], leadingRule: i > 0),
+  ];
+
+  final doc = pw.Document();
+  doc.addPage(
+    pw.MultiPage(
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.fromLTRB(40, 28, 40, 32),
+      theme: theme,
+      header: (context) => context.pageNumber == 1
+          ? pw.SizedBox()
+          : _printHistoryContinuationHeader(clientLabel, l),
+      footer: (context) => _printFooter(context),
+      build: (context) => body,
+    ),
+  );
+  return doc.save();
+}
+
+pw.Widget _printHistoryBrandHeader({
+  required String clientLabel,
+  required List<IronVibeClientHistoryPrintBlock> blocks,
+  required AppLocalizations l,
+  required pw.ImageProvider logo,
+}) {
+  final range = ironVibeClientHistoryPrintRange(blocks);
+  final name = clientLabel.trim().isEmpty
+      ? l.printClientHistoryHeading
+      : clientLabel.trim();
+  return pw.Column(
+    crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+    children: [
+      pw.Row(
+        crossAxisAlignment: pw.CrossAxisAlignment.center,
+        children: [
+          pw.Image(logo, height: 16 * PdfPageFormat.mm, fit: pw.BoxFit.contain),
+          pw.SizedBox(width: 12),
+          pw.Expanded(
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  l.appName,
+                  style: pw.TextStyle(
+                    color: _kPrintSteel,
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+                pw.SizedBox(height: 3),
+                pw.Text(
+                  name,
+                  style: pw.TextStyle(
+                    color: _kPrintSteel,
+                    fontSize: 12,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 2),
+                pw.Text(
+                  l.printClientHistoryHeading,
+                  style: const pw.TextStyle(color: _kPrintSteel, fontSize: 10),
+                ),
+                if (range.isNotEmpty) ...[
+                  pw.SizedBox(height: 1),
+                  pw.Text(
+                    l.printClientHistorySpan(blocks.length, range),
+                    style: const pw.TextStyle(color: _kPrintSteel, fontSize: 9),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+      pw.SizedBox(height: 8),
+      pw.Container(height: 0.6, color: _kPrintGold),
+    ],
+  );
+}
+
+pw.Widget _printHistoryContinuationHeader(
+  String clientLabel,
+  AppLocalizations l,
+) {
+  final name = clientLabel.trim().isEmpty
+      ? l.printClientHistoryHeading
+      : clientLabel.trim();
+  return pw.Padding(
+    padding: const pw.EdgeInsets.only(bottom: 6),
+    child: pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+      children: [
+        pw.Text(
+          '$name  ·  ${l.printClientHistoryHeading}',
+          style: const pw.TextStyle(color: _kPrintSteel, fontSize: 9),
+        ),
+        pw.SizedBox(height: 3),
+        pw.Container(height: 0.4, color: _kPrintGold),
+      ],
+    ),
+  );
+}
+
+pw.Widget _printHistoryColumnLabels(AppLocalizations l) {
+  pw.Widget label(String text) {
+    return pw.Text(
+      text,
+      style: pw.TextStyle(
+        color: _kPrintSteel,
+        fontSize: 8,
+        fontWeight: pw.FontWeight.bold,
+        letterSpacing: 0.4,
+      ),
+    );
+  }
+
+  return pw.Padding(
+    padding: const pw.EdgeInsets.only(top: 6, bottom: 1),
+    child: pw.Row(
+      children: [
+        pw.Expanded(flex: 5, child: label(l.exerciseHeader)),
+        pw.SizedBox(width: 12),
+        pw.Expanded(flex: 8, child: label(l.sets)),
+      ],
+    ),
+  );
+}
+
+/// Date, note, and the first exercise stay together. Later rows are separate
+/// widgets so the sheet keeps filling until it is actually full.
+List<pw.Widget> _printHistorySessionWidgets(
+  IronVibeClientHistoryPrintBlock block, {
+  required bool leadingRule,
+}) {
+  final notes = _printNoteChunks(block.note);
+  return [
+    pw.Inseparable(
+      child: pw.Column(
+        mainAxisSize: pw.MainAxisSize.min,
+        crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+        children: [
+          if (leadingRule) ...[
+            pw.SizedBox(height: 7),
+            pw.Container(height: 0.55, color: _kPrintGold),
+            pw.SizedBox(height: 6),
+          ] else
+            pw.SizedBox(height: 3),
+          pw.Text(
+            ironVibeSessionPrintWhen(block.dateTime),
+            style: pw.TextStyle(
+              color: _kPrintSteel,
+              fontSize: 11,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+          if (notes.isNotEmpty) ...[
+            pw.SizedBox(height: 3),
+            _printHistoryNote(notes.first),
+          ],
+          pw.SizedBox(height: 2),
+          _printHistoryExerciseRow(block.rows.first),
+        ],
+      ),
+    ),
+    for (final extra in notes.skip(1)) ...[
+      pw.SizedBox(height: 2),
+      _printHistoryNote(extra),
+    ],
+    for (final row in block.rows.skip(1)) _printHistoryExerciseRow(row),
+  ];
+}
+
+pw.Widget _printHistoryNote(String note) {
+  return pw.Container(
+    padding: const pw.EdgeInsets.only(left: 7, top: 1, bottom: 1),
+    decoration: const pw.BoxDecoration(
+      border: pw.Border(left: pw.BorderSide(color: _kPrintGold, width: 1.1)),
+    ),
+    child: pw.Text(
+      note,
+      style: const pw.TextStyle(color: _kPrintSteel, fontSize: 9),
+    ),
+  );
+}
+
+pw.Widget _printHistoryExerciseRow(IronVibeSessionPrintRow row) {
+  return pw.Container(
+    padding: const pw.EdgeInsets.only(top: 2.5, bottom: 3),
+    decoration: const pw.BoxDecoration(
+      border: pw.Border(
+        bottom: pw.BorderSide(color: _kPrintHairline, width: 0.4),
+      ),
+    ),
+    child: pw.Row(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Expanded(
+          flex: 5,
+          child: pw.Text(
+            row.name,
+            style: pw.TextStyle(
+              color: _kPrintSteel,
+              fontSize: 9.5,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+        ),
+        pw.SizedBox(width: 12),
+        pw.Expanded(
+          flex: 8,
+          child: pw.Text(
+            row.detail,
+            style: const pw.TextStyle(color: _kPrintSteel, fontSize: 9.5),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+List<String> _printNoteChunks(String note) {
+  final text = note.trim();
+  if (text.isEmpty) return const [];
+  if (text.length <= _kPrintNoteChunk) return [text];
+  final chunks = <String>[];
+  var start = 0;
+  while (start < text.length) {
+    var end = start + _kPrintNoteChunk;
+    if (end >= text.length) {
+      final tail = text.substring(start).trim();
+      if (tail.isNotEmpty) chunks.add(tail);
+      break;
+    }
+    var breakAt = text.lastIndexOf('\n', end);
+    if (breakAt <= start + 80) breakAt = text.lastIndexOf(' ', end);
+    if (breakAt <= start + 80) breakAt = end;
+    final piece = text.substring(start, breakAt).trim();
+    if (piece.isNotEmpty) chunks.add(piece);
+    start = breakAt;
+    while (start < text.length && (text[start] == ' ' || text[start] == '\n')) {
+      start++;
+    }
+  }
+  return chunks;
+}
+
 Future<void> ironVibeShareSessionPdf(
   BuildContext context,
   TrainerSession session,
 ) async {
+  final l = AppLocalizations.of(context)!;
+  final stem = ironVibeSessionPrintFileStem(
+    ironVibeSessionClientLabel(session),
+    session.dateTime,
+  );
+  await _shareBuiltPdf(
+    context,
+    buildBytes: (loc) => ironVibeBuildSessionPdfBytes(session: session, l: loc),
+    fileName: '$stem.pdf',
+    shareText: l.printSessionShareText,
+    dialogTitle: l.printSession,
+  );
+}
+
+Future<void> ironVibeShareClientHistoryPdf(
+  BuildContext context, {
+  required String clientLabel,
+  required List<TrainerSession> sessions,
+}) async {
+  final l = AppLocalizations.of(context)!;
+  final stem = ironVibeClientHistoryPrintFileStem(clientLabel);
+  await _shareBuiltPdf(
+    context,
+    buildBytes: (loc) => ironVibeBuildClientHistoryPdfBytes(
+      clientLabel: clientLabel,
+      sessions: sessions,
+      l: loc,
+    ),
+    fileName: '$stem.pdf',
+    shareText: l.printClientHistoryShareText,
+    dialogTitle: l.printClientHistory,
+  );
+}
+
+Future<void> _shareBuiltPdf(
+  BuildContext context, {
+  required Future<Uint8List> Function(AppLocalizations l) buildBytes,
+  required String fileName,
+  required String shareText,
+  required String dialogTitle,
+}) async {
   final l = AppLocalizations.of(context)!;
   final pal = IronVibePalette.of(context);
   var loadingOpen = false;
@@ -321,12 +688,7 @@ Future<void> ironVibeShareSessionPdf(
     );
     loadingOpen = true;
 
-    final bytes = await ironVibeBuildSessionPdfBytes(session: session, l: l);
-    final stem = ironVibeSessionPrintFileStem(
-      ironVibeSessionClientLabel(session),
-      session.dateTime,
-    );
-    final safeFileName = '$stem.pdf';
+    final bytes = await buildBytes(l);
 
     if (!context.mounted) return;
     Navigator.of(context).pop();
@@ -342,7 +704,7 @@ Future<void> ironVibeShareSessionPdf(
             backgroundColor: dpal.dialog,
             shape: ironVibeDialogShape(dpal),
             title: Text(
-              l.printSession,
+              dialogTitle,
               style: TextStyle(
                 color: dpal.textPrimary,
                 fontWeight: FontWeight.w700,
@@ -355,15 +717,11 @@ Future<void> ironVibeShareSessionPdf(
               ),
               TextButton(
                 onPressed: () {
-                  ironVibeTriggerDownload(
-                    bytes,
-                    safeFileName,
-                    'application/pdf',
-                  );
+                  ironVibeTriggerDownload(bytes, fileName, 'application/pdf');
                   Navigator.pop(ctx);
                   ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                     SnackBar(
-                      content: Text(safeFileName),
+                      content: Text(fileName),
                       duration: const Duration(seconds: 3),
                     ),
                   );
@@ -386,9 +744,9 @@ Future<void> ironVibeShareSessionPdf(
     try {
       await ironVibeShareFile(
         bytes: bytes,
-        filename: safeFileName,
+        filename: fileName,
         mimeType: 'application/pdf',
-        text: l.printSessionShareText,
+        text: shareText,
       );
     } catch (shareError) {
       debugPrint('Share session PDF error: $shareError');

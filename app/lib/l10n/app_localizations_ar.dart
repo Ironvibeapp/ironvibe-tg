@@ -1409,7 +1409,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'حصة اليوم تبدأ من هنا، ومعها التقدم والمفضلة والسجل حسب الشهر. شكل الحمل موجود دائمًا، وينضم إليه مؤشر الإيقاع عندما تكفي أيام القوة. كلاهما يقرأ حصص هذا العميل المكتملة. حذف العميل يزيل الحصص القادمة؛ التدريبات الماضية تبقى للتقارير.';
+      'حصة اليوم تبدأ من هنا، ومعها التقدم والمفضلة والسجل حسب الشهر. شكل الحمل موجود دائمًا، وينضم إليه مؤشر الإيقاع عندما تكفي أيام القوة. كلاهما يقرأ حصص هذا العميل المكتملة. أيقونة الطباعة في الزاوية العلوية تجمع كل الحصص المكتملة على أقل عدد من الأوراق: التاريخ والوقت والملاحظة إن وُجدت تفصل بينها. حذف العميل يزيل الحصص القادمة؛ التدريبات الماضية تبقى للتقارير.';
 
   @override
   String get instructionTrainerScheduleTitle => 'الجدول';
@@ -1444,7 +1444,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get instructionPrintSessionDesc =>
-      'في تدريب منتهٍ، أيقونة الطباعة في الرأس تبني ورقة A4 بتشكيلة ذلك اليوم والأرقام. ثم ورقة النظام: طابعة أو PDF أو إرسال إلى العميل.';
+      'في تدريب منتهٍ، أيقونة الطباعة في الرأس تبني ورقة A4 بتشكيلة ذلك اليوم والأرقام. في بطاقة العميل تطبع الأيقونة نفسها كل الحصص المكتملة متتالية، وتملأ الورقة قبل التالية، وتفصلها بالتاريخ والوقت والملاحظة. ثم ورقة النظام: طابعة أو PDF أو إرسال إلى العميل.';
 
   @override
   String get instructionImportAthleteTitle => 'استيراد سجل رياضي';
@@ -1462,6 +1462,24 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get printSessionShareText => 'حصة IronVibe';
+
+  @override
+  String get printClientHistory => 'طباعة كل الحصص';
+
+  @override
+  String get printClientHistoryEmpty =>
+      'لا شيء للطباعة بعد. أكمل حصة واحدة على الأقل.';
+
+  @override
+  String get printClientHistoryShareText => 'حصص IronVibe';
+
+  @override
+  String get printClientHistoryHeading => 'كل الحصص';
+
+  @override
+  String printClientHistorySpan(int count, String range) {
+    return '$count · $range';
+  }
 
   @override
   String get rhythmPerWeek => 'في الأسبوع';

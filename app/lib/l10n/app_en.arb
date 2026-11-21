@@ -494,7 +494,7 @@
   "instructionClientsTitle": "Clients",
   "instructionClientsDesc": "A list with the goal, last session, and next session. The card holds goal, weight, height, and private coach notes. The name is set at creation and cannot be changed later.",
   "instructionClientProfileTitle": "Client profile",
-  "instructionClientProfileDesc": "Today's session starts here, along with progress, favorites, and history by month. The muscle-load figure is here, and the rhythm gauge joins it once there are enough strength days. Both read this client's finished sessions. Deleting a client removes future sessions; past workouts stay for reporting.",
+  "instructionClientProfileDesc": "Today's session starts here, along with progress, favorites, and history by month. The muscle-load figure is here, and the rhythm gauge joins it once there are enough strength days. Both read this client's finished sessions. The print icon in the top corner lays every finished session onto as few sheets as they fit, each marked with the date, time, and note. Deleting a client removes future sessions; past workouts stay for reporting.",
   "instructionTrainerScheduleTitle": "Schedule",
   "instructionTrainerScheduleDesc": "The coach calendar shows sessions for every client: a play icon means planned, a check means finished, an hourglass means today is in progress. Empty plans from past days are cleared on their own.",
   "instructionTrainerTimeTitle": "Change time",
@@ -504,12 +504,27 @@
   "instructionTrainerRepeatTitle": "Repeat last",
   "instructionTrainerRepeatDesc": "From the client profile, or as a switch when adding a session on the calendar. One past workout is repeated as-is. If there are more, pick from the last five: they are sorted by the note, and you can search that note. The exercise list is copied; weights and reps come as grey hints, not as finished sets.",
   "instructionPrintSessionTitle": "Print a session",
-  "instructionPrintSessionDesc": "On a finished workout, the print icon in the header builds an A4 sheet with that day's line-up and numbers. Then the system sheet: printer, PDF, or send to the client.",
+  "instructionPrintSessionDesc": "On a finished workout, the print icon in the header builds an A4 sheet with that day's line-up and numbers. On the client profile, the same icon prints every finished session one after another, filling each sheet before the next, and marks each one with the date, time, and note. Then the system sheet: printer, PDF, or send to the client.",
   "instructionImportAthleteTitle": "Import an athlete's history",
   "instructionImportAthleteDesc": "A dedicated button in coach statistics: a file from personal mode becomes a new client, including favorites and group tags. Transferred workouts are marked as imported, and exercise names stay separate from yours.",
   "printSession": "Print",
   "printSessionEmpty": "Nothing to print yet. Log at least one set.",
   "printSessionShareText": "IronVibe session",
+  "printClientHistory": "Print all sessions",
+  "printClientHistoryEmpty": "Nothing to print yet. Finish at least one session.",
+  "printClientHistoryShareText": "IronVibe sessions",
+  "printClientHistoryHeading": "All sessions",
+  "printClientHistorySpan": "{count} · {range}",
+  "@printClientHistorySpan": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
   "rhythmPerWeek": "per week",
   "deloadNudgeTitle": "An active recovery week?",
   "deloadNudgeBody": "You've been training about {rate} days a week for roughly {weeks} weeks. A good moment for an active recovery week: working weights and sets down 30–50%, or cardio only. This is a recommendation, not medical advice.",

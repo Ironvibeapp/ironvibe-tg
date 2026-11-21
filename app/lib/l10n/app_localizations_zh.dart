@@ -1362,7 +1362,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      '今天的训练从这里开始，进步、收藏和按月历史也在这里。肌肉负荷图一直在，力量日够多时节奏量表会排到它旁边。两者都看这位客户已完成的课。删除客户会拿掉未来的课，过去的训练仍留着做记录。';
+      '今天的训练从这里开始，进步、收藏和按月历史也在这里。肌肉负荷图一直在，力量日够多时节奏量表会排到它旁边。两者都看这位客户已完成的课。右上角的打印图标把全部已完成的课排到尽量少的纸上：用日期、时间和备注（如果有）隔开。删除客户会拿掉未来的课，过去的训练仍留着做记录。';
 
   @override
   String get instructionTrainerScheduleTitle => '日程';
@@ -1397,7 +1397,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get instructionPrintSessionDesc =>
-      '已完成的训练里，顶栏打印图标会做成一张当天动作和数字的 A4。然后是系统窗口：打印机、PDF 或发给客户。';
+      '已完成的训练里，顶栏打印图标会做成一张当天动作和数字的 A4。在客户页，同一个图标把全部已完成的课接连排上，一张纸排满再换下一张，并用日期、时间和备注隔开。然后是系统窗口：打印机、PDF 或发给客户。';
 
   @override
   String get instructionImportAthleteTitle => '导入运动员历史';
@@ -1414,6 +1414,23 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get printSessionShareText => 'IronVibe 课次';
+
+  @override
+  String get printClientHistory => '打印全部课次';
+
+  @override
+  String get printClientHistoryEmpty => '还没有可打印的内容。先完成至少一次训练。';
+
+  @override
+  String get printClientHistoryShareText => 'IronVibe 全部课次';
+
+  @override
+  String get printClientHistoryHeading => '全部课次';
+
+  @override
+  String printClientHistorySpan(int count, String range) {
+    return '$count · $range';
+  }
 
   @override
   String get rhythmPerWeek => '每周';

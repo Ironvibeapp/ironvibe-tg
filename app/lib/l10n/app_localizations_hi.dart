@@ -1416,7 +1416,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'आज का सेशन यहीं से शुरू होता है, साथ में प्रगति, पसंदीदा और महीने के हिसाब से इतिहास। मसल-लोड आकृति हमेशा यहाँ है, और स्ट्रेंथ के दिन काफ़ी हों तो रिदम गेज उसके पास आ जाता है। दोनों इस क्लाइंट के पूरे हो चुके सेशन पढ़ते हैं। क्लाइंट हटाने से आने वाले सेशन मिटते हैं; पुराने वर्कआउट रिपोर्ट के लिए रहते हैं।';
+      'आज का सेशन यहीं से शुरू होता है, साथ में प्रगति, पसंदीदा और महीने के हिसाब से इतिहास। मसल-लोड आकृति हमेशा यहाँ है, और स्ट्रेंथ के दिन काफ़ी हों तो रिदम गेज उसके पास आ जाता है। दोनों इस क्लाइंट के पूरे हो चुके सेशन पढ़ते हैं। ऊपर दाएँ कोने का प्रिंट आइकन सभी पूरे सेशन को उतनी ही शीट पर रखता है जितनी भरें: तारीख, समय और नोट, अगर हो, उन्हें अलग करते हैं। क्लाइंट हटाने से आने वाले सेशन मिटते हैं; पुराने वर्कआउट रिपोर्ट के लिए रहते हैं।';
 
   @override
   String get instructionTrainerScheduleTitle => 'शेड्यूल';
@@ -1451,7 +1451,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get instructionPrintSessionDesc =>
-      'पूरे वर्कआउट पर हेडर का प्रिंट आइकन उस दिन की लाइन और अंकों की A4 शीट बनाता है। फिर सिस्टम शीट: प्रिंटर, PDF, या क्लाइंट को भेजना।';
+      'पूरे वर्कआउट पर हेडर का प्रिंट आइकन उस दिन की लाइन और अंकों की A4 शीट बनाता है। क्लाइंट प्रोफ़ाइल पर वही आइकन सभी पूरे सेशन एक के बाद एक छापता है, शीट भरने के बाद ही अगली शुरू होती है, और तारीख, समय और नोट से उन्हें अलग करता है। फिर सिस्टम शीट: प्रिंटर, PDF, या क्लाइंट को भेजना।';
 
   @override
   String get instructionImportAthleteTitle => 'एथलीट का इतिहास इंपोर्ट करें';
@@ -1469,6 +1469,24 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get printSessionShareText => 'IronVibe सेशन';
+
+  @override
+  String get printClientHistory => 'सभी सेशन प्रिंट करें';
+
+  @override
+  String get printClientHistoryEmpty =>
+      'अभी प्रिंट करने को कुछ नहीं। कम से कम एक सेशन पूरा करें।';
+
+  @override
+  String get printClientHistoryShareText => 'IronVibe सेशन';
+
+  @override
+  String get printClientHistoryHeading => 'सभी सेशन';
+
+  @override
+  String printClientHistorySpan(int count, String range) {
+    return '$count · $range';
+  }
 
   @override
   String get rhythmPerWeek => 'प्रति हफ़्ता';

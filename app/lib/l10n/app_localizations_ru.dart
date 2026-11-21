@@ -1419,7 +1419,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'Отсюда начинается сегодняшняя сессия и открываются прогресс, избранное и история по месяцам. Фигура нагрузки здесь всегда, а шкала ритма появляется рядом, когда силовых дней достаточно. Обе смотрят завершённые сессии этого клиента. Удаление клиента снимает будущие сессии, но прошлые тренировки остаются для отчётности.';
+      'Отсюда начинается сегодняшняя сессия и открываются прогресс, избранное и история по месяцам. Фигура нагрузки здесь всегда, а шкала ритма появляется рядом, когда силовых дней достаточно. Обе смотрят завершённые сессии этого клиента. Иконка печати в правом верхнем углу собирает все завершённые тренировки на листы без пустых разрывов: каждую отделяют дата, время и заметка, если она была. Удаление клиента снимает будущие сессии, но прошлые тренировки остаются для отчётности.';
 
   @override
   String get instructionTrainerScheduleTitle => 'Расписание';
@@ -1454,7 +1454,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get instructionPrintSessionDesc =>
-      'В завершённой тренировке иконка печати в шапке собирает лист A4 с составом и цифрами дня. Дальше системное окно: принтер, PDF или отправка клиенту.';
+      'В завершённой тренировке иконка печати в шапке собирает лист A4 с составом и цифрами дня. На карточке клиента та же иконка печатает все завершённые тренировки подряд, заполняя лист до конца, и отделяет каждую датой, временем и заметкой. Дальше системное окно: принтер, PDF или отправка клиенту.';
 
   @override
   String get instructionImportAthleteTitle => 'Импорт истории атлета';
@@ -1472,6 +1472,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get printSessionShareText => 'Тренировка IronVibe';
+
+  @override
+  String get printClientHistory => 'Печать всех тренировок';
+
+  @override
+  String get printClientHistoryEmpty =>
+      'Печатать пока нечего. Завершите хотя бы одну тренировку.';
+
+  @override
+  String get printClientHistoryShareText => 'Тренировки IronVibe';
+
+  @override
+  String get printClientHistoryHeading => 'Все тренировки';
+
+  @override
+  String printClientHistorySpan(int count, String range) {
+    return '$count · $range';
+  }
 
   @override
   String get rhythmPerWeek => 'в неделю';

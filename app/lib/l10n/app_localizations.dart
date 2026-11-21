@@ -2689,7 +2689,7 @@ abstract class AppLocalizations {
   /// No description provided for @instructionClientProfileDesc.
   ///
   /// In en, this message translates to:
-  /// **'Today\'s session starts here, along with progress, favorites, and history by month. The muscle-load figure is here, and the rhythm gauge joins it once there are enough strength days. Both read this client\'s finished sessions. Deleting a client removes future sessions; past workouts stay for reporting.'**
+  /// **'Today\'s session starts here, along with progress, favorites, and history by month. The muscle-load figure is here, and the rhythm gauge joins it once there are enough strength days. Both read this client\'s finished sessions. The print icon in the top corner lays every finished session onto as few sheets as they fit, each marked with the date, time, and note. Deleting a client removes future sessions; past workouts stay for reporting.'**
   String get instructionClientProfileDesc;
 
   /// No description provided for @instructionTrainerScheduleTitle.
@@ -2749,7 +2749,7 @@ abstract class AppLocalizations {
   /// No description provided for @instructionPrintSessionDesc.
   ///
   /// In en, this message translates to:
-  /// **'On a finished workout, the print icon in the header builds an A4 sheet with that day\'s line-up and numbers. Then the system sheet: printer, PDF, or send to the client.'**
+  /// **'On a finished workout, the print icon in the header builds an A4 sheet with that day\'s line-up and numbers. On the client profile, the same icon prints every finished session one after another, filling each sheet before the next, and marks each one with the date, time, and note. Then the system sheet: printer, PDF, or send to the client.'**
   String get instructionPrintSessionDesc;
 
   /// No description provided for @instructionImportAthleteTitle.
@@ -2781,6 +2781,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'IronVibe session'**
   String get printSessionShareText;
+
+  /// No description provided for @printClientHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Print all sessions'**
+  String get printClientHistory;
+
+  /// No description provided for @printClientHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to print yet. Finish at least one session.'**
+  String get printClientHistoryEmpty;
+
+  /// No description provided for @printClientHistoryShareText.
+  ///
+  /// In en, this message translates to:
+  /// **'IronVibe sessions'**
+  String get printClientHistoryShareText;
+
+  /// No description provided for @printClientHistoryHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'All sessions'**
+  String get printClientHistoryHeading;
+
+  /// No description provided for @printClientHistorySpan.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} · {range}'**
+  String printClientHistorySpan(int count, String range);
 
   /// No description provided for @rhythmPerWeek.
   ///

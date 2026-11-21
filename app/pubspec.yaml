@@ -2,7 +2,7 @@ name: fitness_app
 description: IronVibe Telegram Mini App — offline-first workout tracker. Local writes, Telegram CloudStorage sync when online.
 publish_to: 'none'
 
-version: 1.9.1+91
+version: 1.9.2+92
 
 environment:
   sdk: ^3.11.0

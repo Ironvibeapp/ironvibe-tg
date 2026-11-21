@@ -1424,7 +1424,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'Von hier startet die heutige Einheit, und hier liegen Fortschritt, Favoriten und Verlauf nach Monat. Die Figur der Belastung ist immer da, die Rhythmusanzeige kommt dazu, sobald genug Krafttage da sind. Beide lesen die abgeschlossenen Einheiten dieses Kunden. Wird ein Kunde gelöscht, entfallen künftige Einheiten; vergangene Trainings bleiben für die Auswertung.';
+      'Von hier startet die heutige Einheit, und hier liegen Fortschritt, Favoriten und Verlauf nach Monat. Die Figur der Belastung ist immer da, die Rhythmusanzeige kommt dazu, sobald genug Krafttage da sind. Beide lesen die abgeschlossenen Einheiten dieses Kunden. Das Drucksymbol oben rechts setzt alle abgeschlossenen Einheiten auf so wenige Blätter, wie sie fassen: Datum, Uhrzeit und Notiz, falls vorhanden, trennen sie. Wird ein Kunde gelöscht, entfallen künftige Einheiten; vergangene Trainings bleiben für die Auswertung.';
 
   @override
   String get instructionTrainerScheduleTitle => 'Plan';
@@ -1459,7 +1459,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get instructionPrintSessionDesc =>
-      'Im abgeschlossenen Training baut das Druck-Symbol in der Kopfzeile ein A4-Blatt mit Ablauf und Zahlen des Tages. Danach das Systemfenster: Drucker, PDF oder Versand an den Kunden.';
+      'Im abgeschlossenen Training baut das Druck-Symbol in der Kopfzeile ein A4-Blatt mit Ablauf und Zahlen des Tages. Auf der Kundenkarte druckt dasselbe Symbol alle abgeschlossenen Einheiten nacheinander und füllt jedes Blatt, bevor das nächste beginnt; Datum, Uhrzeit und Notiz trennen sie. Danach das Systemfenster: Drucker, PDF oder Versand an den Kunden.';
 
   @override
   String get instructionImportAthleteTitle => 'Athletenverlauf importieren';
@@ -1477,6 +1477,24 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get printSessionShareText => 'IronVibe-Einheit';
+
+  @override
+  String get printClientHistory => 'Alle Einheiten drucken';
+
+  @override
+  String get printClientHistoryEmpty =>
+      'Noch nichts zu drucken. Schließe mindestens eine Einheit ab.';
+
+  @override
+  String get printClientHistoryShareText => 'IronVibe-Einheiten';
+
+  @override
+  String get printClientHistoryHeading => 'Alle Einheiten';
+
+  @override
+  String printClientHistorySpan(int count, String range) {
+    return '$count · $range';
+  }
 
   @override
   String get rhythmPerWeek => 'pro Woche';

@@ -1421,7 +1421,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get instructionClientProfileDesc =>
-      'Daqui parte a sessão de hoje e abrem-se o progresso, os favoritos e o histórico por mês. A figura da carga está sempre, e o indicador de ritmo junta-se quando há dias de força suficientes. Os dois leem as sessões concluídas deste cliente. Apagar um cliente tira as sessões futuras; os treinos passados ficam para o relatório.';
+      'Daqui parte a sessão de hoje e abrem-se o progresso, os favoritos e o histórico por mês. A figura da carga está sempre, e o indicador de ritmo junta-se quando há dias de força suficientes. Os dois leem as sessões concluídas deste cliente. O ícone de impressão no canto superior direito junta todas as sessões concluídas no menor número de folhas: a data, a hora e a nota, se existir, separam-nas. Apagar um cliente tira as sessões futuras; os treinos passados ficam para o relatório.';
 
   @override
   String get instructionTrainerScheduleTitle => 'Agenda';
@@ -1456,7 +1456,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get instructionPrintSessionDesc =>
-      'Num treino concluído, o ícone de impressão no cabeçalho monta uma folha A4 com a composição e os números do dia. Depois a folha do sistema: impressora, PDF ou envio ao cliente.';
+      'Num treino concluído, o ícone de impressão no cabeçalho monta uma folha A4 com a composição e os números do dia. Na ficha do cliente, o mesmo ícone imprime todas as sessões concluídas de seguida, enchendo cada folha antes da seguinte, e separa-as pela data, hora e nota. Depois a folha do sistema: impressora, PDF ou envio ao cliente.';
 
   @override
   String get instructionImportAthleteTitle => 'Importar histórico de um atleta';
@@ -1474,6 +1474,24 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get printSessionShareText => 'Sessão IronVibe';
+
+  @override
+  String get printClientHistory => 'Imprimir todas as sessões';
+
+  @override
+  String get printClientHistoryEmpty =>
+      'Ainda não há nada para imprimir. Conclui pelo menos uma sessão.';
+
+  @override
+  String get printClientHistoryShareText => 'Sessões IronVibe';
+
+  @override
+  String get printClientHistoryHeading => 'Todas as sessões';
+
+  @override
+  String printClientHistorySpan(int count, String range) {
+    return '$count · $range';
+  }
 
   @override
   String get rhythmPerWeek => 'por semana';
